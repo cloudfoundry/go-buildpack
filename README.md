@@ -1,4 +1,35 @@
-# Heroku Buildpack: Go
+CloudFoundry build pack: Go(Lang)
+=================================
+
+This is a managed fork of the [Heroku Go build pack](https://github.com/kr/heroku-buildpack-go) by Keith Rarick.
+
+### Significant differences
+
+* Support on-premises deploys that have limited access to the internet.
+
+### Packager
+
+Package for on-premises distributions:
+
+    $ bundle install
+    $ bundle exec rake package
+
+Package for internet-connected distributions:
+
+    $ bundle install
+    $ ONLINE=1 bundle exec package
+
+Either approach produces _'go_buildpack.zip'_, which is a CloudFoundry compatible admin build pack.
+
+### Issues support
+
+This software is maintained by the Cloud Foundry Buildpack Team.
+
+You can [file issues and suggestions at Github](https://github.com/pivotal-cf-experimental/heroku-buildpack-go/issues)
+and [view our backlog here](https://www.pivotaltracker.com/s/projects/1042066).
+
+Upstream documentation
+======================
 
 This is a [Heroku buildpack][buildpack] for [Go][go].
 
