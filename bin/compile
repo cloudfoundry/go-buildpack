@@ -22,6 +22,8 @@ mkdir -p "$1" "$2"
 build=$(cd "$1/" && pwd)
 cache=$(cd "$2/" && pwd)
 buildpack=$(dirname $(dirname $0))
+buildpack_absolute=`pwd`
+
 arch=$(uname -m|tr A-Z a-z)
 if test $arch = x86_64
 then arch=amd64
@@ -72,8 +74,14 @@ else
     rm -rf $cache/* # be sure not to build up cruft
     mkdir -p $cache/$ver
     cd $cache/$ver
-    echo -n "-----> Installing $ver..."
-    curl -sO $url
+    if test -d $buildpack_absolute/dependencies
+    then
+    echo -n "-----> Installing $ver from buildpack..."
+      cp $buildpack_absolute/dependencies/$file .
+    else
+    echo -n "-----> Installing $ver from $url..."
+      curl -sO $url
+    fi
     tar zxf $file
     rm -f $file
     echo " done"
