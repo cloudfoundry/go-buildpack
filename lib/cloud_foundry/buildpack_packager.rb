@@ -56,7 +56,7 @@ module CloudFoundry
 
       def run_cmd(cmd)
         puts "$ #{cmd}"
-        `#{cmd}`
+        system "#{cmd}"
       end
     end
   end
