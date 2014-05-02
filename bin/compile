@@ -22,7 +22,7 @@ mkdir -p "$1" "$2"
 build=$(cd "$1/" && pwd)
 cache=$(cd "$2/" && pwd)
 buildpack=$(dirname $(dirname $0))
-buildpack_absolute=`pwd`
+buildpack_absolute="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
 
 arch=$(uname -m|tr A-Z a-z)
 if test $arch = x86_64
