@@ -46,6 +46,18 @@ plat=$(uname|tr A-Z a-z)-$arch
 # Python
 venv=$cache/venv
 mkdir -p $cache/pip
+
+export PYTHONHOME=$cache/python
+export PATH=$PYTHONHOME/bin:$PATH
+
+if test -d $PYTHONHOME
+then
+  echo "-----> Python 2.7.6 already installed"
+else
+  echo "-----> Installing Python 2.7.6"
+  $buildpack/builds/runtimes/python-2.7.6 $PYTHONHOME > /dev/null 2>&1
+fi
+
 python=python2.7
 PATH=$buildpack/$plat/bin:$venv/bin:$PATH
 
