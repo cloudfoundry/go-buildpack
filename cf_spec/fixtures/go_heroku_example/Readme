@@ -1,0 +1,13 @@
+This is a sample hello world Go app to illustrate what you'd get by
+following the guide at
+http://mmcgrana.github.com/2012/09/getting-started-with-go-on-heroku.html
+Additionally, there are extra packages to illustrate a Go app that
+contains more than one package and more than one command.
+
+You can deploy it to heroku with the following commands:
+
+$ git clone https://github.com/kr/go-heroku-example.git
+$ cd go-heroku-example
+$ heroku create
+$ git push heroku master
+$ heroku open
