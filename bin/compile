@@ -18,23 +18,10 @@ platext() {
     esac
 }
 
-install_python() {
-  export PYTHONHOME=$cache/python
-  export PATH=$PYTHONHOME/bin:$PATH
-
-  if test -d $PYTHONHOME
-  then
-    echo "-----> Python 2.7.6 already installed"
-  else
-    echo "-----> Installing Python 2.7.6"
-    $buildpack/builds/runtimes/python-2.7.6 $PYTHONHOME > /dev/null 2>&1
-  fi
-}
-
 mkdir -p "$1" "$2"
 build=$(cd "$1/" && pwd)
 cache=$(cd "$2/" && pwd)
-buildpack=$(dirname $(dirname $0))
+export buildpack=$(dirname $(dirname $0))
 buildpack_absolute="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
 
 arch=$(uname -m|tr A-Z a-z)
@@ -51,7 +38,6 @@ python=python2.7
 PATH=$buildpack/$plat/bin:$venv/bin:$PATH
 
 virtualenv() {
-    install_python
     python "$buildpack/vendor/virtualenv-1.7/virtualenv.py" "$@"
 }
 
@@ -108,6 +94,19 @@ GOROOT=$cache/$ver/go export GOROOT
 GOPATH=$build/.heroku/g export GOPATH
 PATH=$GOROOT/bin:$PATH
 
+install_python() {
+    export PYTHONHOME=$cache/python
+    export PATH=$PYTHONHOME/bin:$PATH
+
+    if test -d $PYTHONHOME
+    then
+        echo "-----> Python 2.7.6 already installed"
+    else
+        echo "-----> Installing Python 2.7.6..."
+        $buildpack/builds/runtimes/python-2.7.6 $PYTHONHOME
+        echo " done"
+    fi
+}
 
 if ! (test -d $build/Godeps || (which hg >/dev/null && which bzr >/dev/null))
 then
@@ -116,17 +115,19 @@ then
     echo "       Try github.com/kr/godep for faster deploys."
     echo
 
+    install_python
+
     echo -n "       Installing Virtualenv..."
     virtualenv --python $python --distribute --never-download --prompt='(venv) ' $venv > /dev/null 2>&1
     . $venv/bin/activate > /dev/null 2>&1
     echo " done"
 
     echo -n "       Installing Mercurial..."
-    pip install mercurial > /dev/null 2>&1
+    pip install mercurial --no-index --find-links=file://$buildpack/vendor > /dev/null 2>&1
     echo " done"
 
     echo -n "       Installing Bazaar..."
-    pip install bzr > /dev/null 2>&1
+    pip install bzr --no-index --find-links=file://$buildpack/vendor > /dev/null 2>&1
     echo " done"
 fi
 
