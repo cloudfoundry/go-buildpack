@@ -1,3 +1,4 @@
 .idea
 go_buildpack.zip
 .DS_Store
+log/
