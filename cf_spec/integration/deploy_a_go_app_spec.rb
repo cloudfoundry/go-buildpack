@@ -10,7 +10,7 @@ describe 'CF Go Buildpack' do
         let(:app_name) { 'go_app_with_dependencies/src/go_app_with_dependencies' }
 
         specify do
-          expect(app).to be_staged
+          expect(app).to be_running
           expect(app.logs).to include 'Hello from foo!'
           expect(app.homepage_html).to include 'hello, world'
           expect(app).to have_no_internet_traffic
@@ -21,7 +21,7 @@ describe 'CF Go Buildpack' do
         let(:app_name) { 'go_app/src/go_app' }
 
         specify do
-          expect(app).to be_staged
+          expect(app).to be_running
           expect(app.homepage_html).to include 'go, world'
           expect(app).to have_no_internet_traffic
         end
@@ -31,7 +31,7 @@ describe 'CF Go Buildpack' do
         let(:app_name) { 'go_heroku_example/src/go_heroku_example' }
 
         specify do
-          expect(app).to be_staged
+          expect(app).to be_running
           expect(app.homepage_html).to include 'hello, heroku'
           expect(app).to have_no_internet_traffic
         end
@@ -45,7 +45,7 @@ describe 'CF Go Buildpack' do
         let(:app_name) { 'go_app_with_dependencies/src/go_app_with_dependencies' }
 
         specify do
-          expect(app).to be_staged
+          expect(app).to be_running
           expect(app.logs).to include 'Hello from foo!'
           expect(app.homepage_html).to include 'hello, world'
         end
@@ -55,7 +55,7 @@ describe 'CF Go Buildpack' do
         let(:app_name) { 'go_app/src/go_app' }
 
         specify do
-          expect(app).to be_staged
+          expect(app).to be_running
           expect(app.homepage_html).to include 'go, world'
         end
       end
@@ -64,7 +64,7 @@ describe 'CF Go Buildpack' do
         let(:app_name) { 'go_heroku_example/src/go_heroku_example' }
 
         specify do
-          expect(app).to be_staged
+          expect(app).to be_running
           expect(app.homepage_html).to include 'hello, heroku'
         end
       end
