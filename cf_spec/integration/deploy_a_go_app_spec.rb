@@ -11,9 +11,9 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.logs).to include 'Hello from foo!'
-          expect(app.homepage_html).to include 'hello, world'
-          expect(app).to have_no_internet_traffic
+          expect(app).to have_logged 'Hello from foo!'
+          expect(app.homepage_body).to include 'hello, world'
+          expect(app.host).not_to have_internet_traffic
         end
       end
 
@@ -22,8 +22,8 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.homepage_html).to include 'go, world'
-          expect(app).to have_no_internet_traffic
+          expect(app.homepage_body).to include 'go, world'
+          expect(app.host).not_to have_internet_traffic
         end
       end
 
@@ -32,8 +32,8 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.homepage_html).to include 'hello, heroku'
-          expect(app).to have_no_internet_traffic
+          expect(app.homepage_body).to include 'hello, heroku'
+          expect(app.host).not_to have_internet_traffic
         end
       end
     end
@@ -46,8 +46,8 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.logs).to include 'Hello from foo!'
-          expect(app.homepage_html).to include 'hello, world'
+          expect(app).to have_logged 'Hello from foo!'
+          expect(app.homepage_body).to include 'hello, world'
         end
       end
 
@@ -56,7 +56,7 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.homepage_html).to include 'go, world'
+          expect(app.homepage_body).to include 'go, world'
         end
       end
 
@@ -65,7 +65,7 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.homepage_html).to include 'hello, heroku'
+          expect(app.homepage_body).to include 'hello, heroku'
         end
       end
     end
