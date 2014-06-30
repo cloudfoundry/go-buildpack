@@ -110,20 +110,6 @@ GOROOT=$cache/$ver/go export GOROOT
 GOPATH=$build/.heroku/g export GOPATH
 PATH=$GOROOT/bin:$PATH
 
-install_python() {
-    export PYTHONHOME=$cache/python
-    export PATH=$PYTHONHOME/bin:$PATH
-
-    if test -d $PYTHONHOME
-    then
-        echo "-----> Python 2.7.6 already installed"
-    else
-        echo -n "-----> Installing Python 2.7.6..."
-        $buildpack/builds/runtimes/python-2.7.6 $PYTHONHOME > /dev/null 2>&1
-        echo " done"
-    fi
-}
-
 if ! (test -d $build/Godeps || (which hg >/dev/null && which bzr >/dev/null))
 then
     echo
@@ -131,7 +117,7 @@ then
     echo "       Try github.com/kr/godep for faster deploys."
     echo
 
-    install_python
+    install_python $cache
 
     echo -n "       Installing Virtualenv..."
     virtualenv --python $python --distribute --never-download --prompt='(venv) ' $venv > /dev/null 2>&1

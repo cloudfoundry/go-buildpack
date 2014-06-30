@@ -5,7 +5,7 @@
 OUT_PREFIX=$1
 
 echo "Building Python..."
-tar xzf $buildpack/builds/src/Python-2.7.6.tgz
+tar xzf $BUILDPACK_PATH/builds/src/Python-2.7.6.tgz
 mv Python-2.7.6 src
 cd src
 
