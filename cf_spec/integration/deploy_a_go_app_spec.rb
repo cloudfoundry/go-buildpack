@@ -11,8 +11,8 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app).to have_logged 'Hello from foo!'
-          expect(app.homepage_body).to include 'hello, world'
+          expect(app).to have_logged('Hello from foo!')
+          expect(app).to have_page_body('hello, world')
           expect(app.host).not_to have_internet_traffic
         end
       end
@@ -22,7 +22,7 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.homepage_body).to include 'go, world'
+          expect(app).to have_page_body('go, world')
           expect(app.host).not_to have_internet_traffic
         end
       end
@@ -32,7 +32,7 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.homepage_body).to include 'hello, heroku'
+          expect(app).to have_page_body('hello, heroku')
           expect(app.host).not_to have_internet_traffic
         end
       end
@@ -46,8 +46,8 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app).to have_logged 'Hello from foo!'
-          expect(app.homepage_body).to include 'hello, world'
+          expect(app).to have_logged('Hello from foo!')
+          expect(app).to have_page_body('hello, world')
         end
       end
 
@@ -56,7 +56,7 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.homepage_body).to include 'go, world'
+          expect(app).to have_page_body('go, world')
         end
       end
 
@@ -65,7 +65,7 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app.homepage_body).to include 'hello, heroku'
+          expect(app).to have_page_body('hello, heroku')
         end
       end
     end
