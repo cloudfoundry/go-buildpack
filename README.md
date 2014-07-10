@@ -6,15 +6,11 @@ This is based on the [Heroku buildpack] (https://github.com/kr/heroku-buildpack-
 
 ## Usage
 
-### Go
-
-Example Usage:
+This buildpack will get used if you have any files with the `.go` extension in your repository.
 
 ```bash
 cf push my_app -b https://github.com/cloudfoundry/buildpack-go.git
 ```
-
-This buildpack will get used if you have any files with the `.go` extension in your repository.
 
 ## Cloud Foundry Extensions - Offline Mode
 
