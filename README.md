@@ -1,102 +1,96 @@
-CloudFoundry build pack: Go(Lang)
-=================================
+# CloudFoundry build pack: Go(Lang)
 
-This is a managed fork of the [Heroku Go build pack](https://github.com/kr/heroku-buildpack-go) by Keith Rarick.
+A Cloud Foundry [buildpack](http://docs.cloudfoundry.org/buildpacks/) for Go(lang) based apps.
 
-### Significant differences
+This is based on the [Heroku buildpack] (https://github.com/kr/heroku-buildpack-go).
 
-* Support on-premises deploys that have limited access to the internet.
+## Usage
 
-### Packager
+### Go
 
-Package for on-premises distributions:
+Example Usage:
 
-    $ bundle install
-    $ bundle exec rake package
-
-Package for internet-connected distributions:
-
-    $ bundle install
-    $ ONLINE=1 bundle exec package
-
-Either approach produces _'go_buildpack.zip'_, which is a CloudFoundry compatible admin build pack.
-
-### Issues support
-
-This software is maintained by the Cloud Foundry Buildpack Team.
-
-You can [file issues and suggestions at Github](https://github.com/pivotal-cf-experimental/heroku-buildpack-go/issues)
-and [view our backlog here](https://www.pivotaltracker.com/s/projects/1042066).
-
-Upstream documentation
-======================
-
-This is a [Heroku buildpack][buildpack] for [Go][go].
-
-## Getting Started
-
-Follow the guide at
-<http://mmcgrana.github.com/2012/09/getting-started-with-go-on-heroku.html>.
-
-There's also a hello world sample app at
-<https://github.com/kr/go-heroku-example>.
-
-## Example
-
-```
-$ ls -A1
-./.git
-./.godir
-./Procfile
-./web.go
-
-$ heroku create -b https://github.com/kr/heroku-buildpack-go.git
-...
-
-$ git push heroku master
-...
------> Fetching custom git buildpack... done
------> Go app detected
------> Installing Go 1.0.3... done
-       Installing Virtualenv... done
-       Installing Mercurial... done
-       Installing Bazaar... done
------> Running: go get -tags heroku ./...
------> Discovering process types
-       Procfile declares types -> web
------> Compiled slug size: 1.0MB
------> Launching... done, v5
-       http://pure-sunrise-3607.herokuapp.com deployed to Heroku
+```bash
+cf push my_app -b https://github.com/cloudfoundry/buildpack-go.git
 ```
 
-The buildpack will detect your repository as Go if it
-contains a `.go` file.
+This buildpack will get used if you have any files with the `.go` extension in your repository.
 
-The buildpack adds a `heroku` [build constraint][build-constraint],
-to enable heroku-specific code. See the [App Engine build constraints article][app-engine-build-constraints]
-for more.
+## Cloud Foundry Extensions - Offline Mode
 
-## Hacking on this Buildpack
+The primary purpose of extending the heroku buildpack is to cache system dependencies for firewalled or other non-internet accessible environments. This is called 'offline' mode.
 
-To change this buildpack, fork it on GitHub. Push
-changes to your fork, then create a test app with
-`--buildpack YOUR_GITHUB_GIT_URL` and push to it. If you
-already have an existing app you may use `heroku config:add
-BUILDPACK_URL=YOUR_GITHUB_GIT_URL` instead of `--buildpack`.
+'offline' buildpacks can be used in any environment where you would prefer the system dependencies to be cached instead of fetched from the internet.
+ 
+The list of what is cached is maintained in [bin/package](bin/package).
+ 
+Using cached system dependencies is accomplished by overriding curl during staging. See [bin/compile](bin/compile#L43-47)  
 
-[go]: http://golang.org/
-[buildpack]: http://devcenter.heroku.com/articles/buildpacks
-[quickstart]: http://mmcgrana.github.com/2012/09/getting-started-with-go-on-heroku.html
-[build-constraint]: http://golang.org/pkg/go/build/
-[app-engine-build-constraints]: http://blog.golang.org/2013/01/the-app-engine-sdk-and-workspaces-gopath.html
+### App Dependencies in Offline Mode
+Offline mode expects each app to use [Godep](https://github.com/tools/godep) to manage dependencies. The Godep folder should be populated before pushing your app.
 
-## .godir and Godeps
+_Deprecated_
 
-Early versions of this buildpack required users to
-create a `.godir` file in the root of the project,
-containing the application name in order to build the
-project. While using a `.godir` file is still supported,
-it has been deprecated in favor of using
-[godep](https://github.com/kr/godep) in your project to
-manage dependencies, and including the generated `Godep`
-directory in your git repository.
+A .godir file containing the name of your application can be used to build the project.
+
+## Building
+
+1. Make sure you have fetched submodules
+
+  ```bash
+  git submodule update --init
+  ```
+
+1. Build the buildpack
+    
+  ```bash
+  bin/package [ online | offline ]
+  ```
+    
+1. Use in Cloud Foundry
+
+    Upload the buildpack to your Cloud Foundry and optionally specify it by name
+        
+    ```bash
+    cf create-buildpack custom_go_buildpack go_buildpack-offline-custom.zip 1
+    cf push my_app -b custom_go_buildpack
+    ```  
+
+## Contributing
+
+### Run the tests
+
+There are [Machete](https://github.com/pivotal-cf-experimental/machete) based integration tests available in [cf_spec](cf_spec).
+
+The test script is included in machete and can be run as follows:
+
+```bash
+BUNDLE_GEMFILE=cf.Gemfile bundle install
+git submodule update --init
+`BUNDLE_GEMFILE=cf.Gemfile bundle show machete`/scripts/buildpack-build [mode]
+```
+
+`buildpack-build` will create a buildpack in one of two modes and upload it to your local bosh-lite based Cloud Foundry installations.
+
+Valid modes:
+
+online : Dependencies can be fetched from the internet.
+
+offline : System dependencies, such as python, are installed from a cache included in the buildpack.
+
+The tests expect two Cloud Foundry installations to be present, an online one at 10.244.0.34 and an offline one at 10.245.0.34.
+
+We use [bosh-lite](https://github.com/cloudfoundry/bosh-lite) for the online instance and [bosh-lite-2nd-instance](https://github.com/cf-buildpacks/bosh-lite-2nd-instance) for the offline instance.
+
+### Pull Requests
+
+1. Fork the project
+1. Submit a pull request
+
+## Reporting Issues
+
+Open an issue on this project
+
+## Active Development
+
+The project backlog is on [Pivotal Tracker](https://www.pivotaltracker.com/projects/1042066)
