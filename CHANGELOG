@@ -1,0 +1,6 @@
+v1.0.0 Jun 17, 2014
+===================
+
+* Modify [KRs Go buildpack](https://github.com/kr/heroku-buildpack-go) to
+  support offline mode.
+
