@@ -3,6 +3,7 @@ require 'spec_helper'
 
 describe 'CF Go Buildpack' do
   subject(:app) { Machete.deploy_app(app_name) }
+  let(:browser) { Machete::Browser.new(app) }
 
   context 'with cached buildpack dependencies' do
     context 'in an offline environment', if: Machete::BuildpackMode.offline? do
@@ -12,7 +13,10 @@ describe 'CF Go Buildpack' do
         specify do
           expect(app).to be_running
           expect(app).to have_logged('Hello from foo!')
-          expect(app).to have_page_body('hello, world')
+
+          browser.visit_path('/')
+          expect(browser).to have_body('hello, world')
+
           expect(app.host).not_to have_internet_traffic
         end
       end
@@ -22,7 +26,10 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app).to have_page_body('go, world')
+
+          browser.visit_path('/')
+          expect(browser).to have_body('go, world')
+
           expect(app.host).not_to have_internet_traffic
         end
       end
@@ -32,7 +39,10 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app).to have_page_body('hello, heroku')
+
+          browser.visit_path('/')
+          expect(browser).to have_body('hello, heroku')
+
           expect(app.host).not_to have_internet_traffic
         end
       end
@@ -47,7 +57,9 @@ describe 'CF Go Buildpack' do
         specify do
           expect(app).to be_running
           expect(app).to have_logged('Hello from foo!')
-          expect(app).to have_page_body('hello, world')
+
+          browser.visit_path('/')
+          expect(browser).to have_body('hello, world')
         end
       end
 
@@ -56,7 +68,9 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app).to have_page_body('go, world')
+
+          browser.visit_path('/')
+          expect(browser).to have_body('go, world')
         end
       end
 
@@ -65,7 +79,9 @@ describe 'CF Go Buildpack' do
 
         specify do
           expect(app).to be_running
-          expect(app).to have_page_body('hello, heroku')
+
+          browser.visit_path('/')
+          expect(browser).to have_body('hello, heroku')
         end
       end
     end
