@@ -141,11 +141,11 @@ unset GIT_DIR # unset git dir or it will mess with goinstall
 cd $p
 if test -e $build/Godeps
 then
-    echo "-----> Running: godep go install -tags heroku ./..."
-    godep go install -tags heroku ./...
+    echo "-----> Running: godep go install -tags cloudfoundry ./..."
+    godep go install -tags cloudfoundry ./...
 else
-    echo "-----> Running: go get -tags heroku ./..."
-    go get -tags heroku ./...
+    echo "-----> Running: go get -tags cloudfoundry ./..."
+    go get -tags cloudfoundry ./...
 fi
 
 rm -rf $build/.heroku
