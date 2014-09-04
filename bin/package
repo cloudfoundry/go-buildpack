@@ -18,7 +18,6 @@ excluded_files=(
   '.gitmodules'
   'cf_spec/'
   'log/'
-  'test/'
   'bin/package'
   'buildpack-packager/'
   'test-godir/'

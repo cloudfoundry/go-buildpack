@@ -44,6 +44,8 @@ export buildpack=$(dirname $(dirname $0))
 BUILDPACK_PATH=$buildpack
 export BUILDPACK_PATH
 source $buildpack/compile-extensions/lib/common
+export PYTHONHOME=$BUILDPACK_PATH/builds/runtimes/python-2.7.6
+export PATH=$PYTHONHOME/bin:$PATH
 # END CF Common
 
 arch=$(uname -m|tr A-Z a-z)
@@ -116,8 +118,6 @@ then
     echo "       Tired of waiting for bzr and hg?"
     echo "       Try github.com/kr/godep for faster deploys."
     echo
-
-    install_python $cache
 
     echo -n "       Installing Virtualenv..."
     virtualenv --python $python --distribute --never-download --prompt='(venv) ' $venv > /dev/null 2>&1
