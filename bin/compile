@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: bin/compile <build-dir> <cache-dir>
+# usage: bin/compile <build-dir> <cache-dir> <env-dir>
 
 set -eo pipefail
 
@@ -60,7 +60,7 @@ python=python2.7
 PATH=$buildpack/$plat/bin:$venv/bin:$PATH
 
 virtualenv() {
-    python "$buildpack/vendor/virtualenv-1.7/virtualenv.py" "$@"
+    python "$buildpack/vendor/virtualenv-1.11.6/virtualenv.py" "$@"
 }
 
 if test -f $build/Godeps
@@ -74,7 +74,7 @@ then
 elif test -f $build/.godir
 then
     name=$(cat $build/.godir)
-    ver=go${GOVERSION:-1.2.1}
+    ver=go${GOVERSION:-1.3}
 else
     echo >&2 " !     A .godir is required. For instructions:"
     echo >&2 " !     http://mmcgrana.github.io/2012/09/getting-started-with-go-on-heroku"
@@ -137,15 +137,37 @@ p=$GOPATH/src/$name
 mkdir -p $p
 cp -R $build/* $p
 
+# allow apps to specify cgo flags and set up /app symlink so things like CGO_CFLAGS=-I/app/... work
+env_dir="$3"
+if [ -d "$env_dir" ]
+then
+    ln -sfn $build /app/code
+    for cgo_opt in CGO_CFLAGS CGO_CPPFLAGS CGO_CXXFLAGS CGO_LDFLAGS
+    do
+        if [ -f "$env_dir/$cgo_opt" ]
+        then
+            export "$cgo_opt=$(cat "$env_dir/$cgo_opt")"
+        fi
+    done
+fi
+
+FLAGS=(-tags cloudfoundry)
+if test -f "$env_dir/GO_GIT_DESCRIBE_SYMBOL"
+then
+    git_describe=$(git describe --tags --always)
+    git_describe_symbol=$(cat "$env_dir/GO_GIT_DESCRIBE_SYMBOL")
+    FLAGS=(${FLAGS[@]} -ldflags "-X $git_describe_symbol $git_describe")
+fi
+
 unset GIT_DIR # unset git dir or it will mess with goinstall
 cd $p
 if test -e $build/Godeps
 then
-    echo "-----> Running: godep go install -tags cloudfoundry ./..."
-    godep go install -tags cloudfoundry ./...
+    echo "-----> Running: godep go install ${FLAGS[@]} ./..."
+    godep go install "${FLAGS[@]}" ./...
 else
-    echo "-----> Running: go get -tags cloudfoundry ./..."
-    go get -tags cloudfoundry ./...
+    echo "-----> Running: go get ${FLAGS[@]} ./..."
+    go get "${FLAGS[@]}" ./...
 fi
 
 rm -rf $build/.heroku

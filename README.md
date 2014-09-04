@@ -85,6 +85,17 @@ We use [bosh-lite](https://github.com/cloudfoundry/bosh-lite) for the online ins
 1. Fork the project
 1. Submit a pull request
 
+## .godir and Godeps
+
+Early versions of this buildpack required users to
+create a `.godir` file in the root of the project,
+containing the application name in order to build the
+project. While using a `.godir` file is still supported,
+it has been deprecated in favor of using
+[godep](https://github.com/kr/godep) in your project to
+manage dependencies, and including the generated `Godep`
+directory in your git repository.
+
 ## Reporting Issues
 
 Open an issue on this project
