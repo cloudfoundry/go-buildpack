@@ -10,6 +10,9 @@ dependencies=(
   'http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz'
   'https://storage.googleapis.com/golang/go1.2.2.linux-amd64.tar.gz'
   'https://storage.googleapis.com/golang/go1.3.linux-amd64.tar.gz'
+  'https://storage.googleapis.com/golang/go1.3.1.linux-amd64.tar.gz'
+  'https://storage.googleapis.com/golang/go1.3.2.linux-amd64.tar.gz'
+  'https://storage.googleapis.com/golang/go1.3.3.linux-amd64.tar.gz'
 )
 
 excluded_files=(
