@@ -1,0 +1,5 @@
+{
+	"ImportPath": "go-online",
+	"GoVersion": "go99.99.99",
+	"Deps": []
+}

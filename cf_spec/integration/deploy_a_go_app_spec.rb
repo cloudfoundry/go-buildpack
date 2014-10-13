@@ -34,6 +34,19 @@ describe 'CF Go Buildpack' do
         end
       end
 
+      context 'expects a non-packaged version of go' do
+        let(:app_name) { 'go99/src/go99' }
+        let(:resource_url) { "https://storage.googleapis.com/golang/go99.99.99.linux-amd64.tar.gz" }
+
+        it "displays useful understandable errors" do
+          expect(app).not_to be_running
+
+          expect(app).to have_logged("Resource #{resource_url} is not provided by this buildpack. Please upgrade your buildpack to receive the latest resources.")
+
+          expect(app.host).not_to have_internet_traffic
+        end
+      end
+
       context 'heroku example' do
         let(:app_name) { 'go_heroku_example/src/go_heroku_example' }
 
