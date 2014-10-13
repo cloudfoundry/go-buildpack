@@ -100,7 +100,7 @@ else
     mkdir -p $cache/$ver
     cd $cache/$ver
     echo -n "-----> Installing $ver..."
-    curl -sO $url
+    curl -sO $url --fail || (echo -e "\n-----> Resource $url does not exist." 1>&2 ; exit 22)
     tar zxf $file
     rm -f $file
     echo " done"
