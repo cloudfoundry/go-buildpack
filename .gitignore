@@ -2,3 +2,4 @@
 go_buildpack.zip
 .DS_Store
 log/
+/go_buildpack-v*.zip
