@@ -144,8 +144,8 @@ mkdir -p $p
 cp -R $build/* $p
 
 # allow apps to specify cgo flags and set up /app symlink so things like CGO_CFLAGS=-I/app/... work
-env_dir="$3"
-if [ -d "$env_dir" ]
+env_dir=${3:-''}
+if [ -d $env_dir ]
 then
     ln -sfn $build /app/code
     for cgo_opt in CGO_CFLAGS CGO_CPPFLAGS CGO_CXXFLAGS CGO_LDFLAGS
