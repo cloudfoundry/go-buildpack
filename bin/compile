@@ -114,6 +114,9 @@ PATH=$GOROOT/bin:$PATH
 
 if ! (test -d $build/Godeps || (which hg >/dev/null && which bzr >/dev/null))
 then
+    ## Allow unset variables for virtualenv
+    set +u
+
     echo
     echo "       Tired of waiting for bzr and hg?"
     echo "       Try github.com/kr/godep for faster deploys."
@@ -131,6 +134,9 @@ then
     echo -n "       Installing Bazaar..."
     pip install bzr --no-index --find-links=file://$buildpack/vendor > /dev/null 2>&1
     echo " done"
+
+    ## Re-disable unset variables
+    set -u
 fi
 
 p=$GOPATH/src/$name
