@@ -92,6 +92,13 @@ then
     exit 1
 fi
 
+if is_cached
+then
+  resource_error_msg="\n-----> Resource $url is not provided by this buildpack. Please upgrade your buildpack to receive the latest resources."
+else
+  resource_error_msg="\n-----> Resource $url does not exist."
+fi
+
 if test -d $cache/$ver/go
 then
     echo "-----> Using $ver"
@@ -100,9 +107,7 @@ else
     mkdir -p $cache/$ver
     cd $cache/$ver
     echo -n "-----> Installing $ver..."
-    curl -sO $url --fail || (echo -e "\n-----> Resource $url does not exist." 1>&2 ; exit 22)
-    tar zxf $file
-    rm -f $file
+    (curl `translate_dependency_url $url` -s --fail -o - | tar xzf - -C $cache/$ver 2>/dev/null) || (echo -e $resource_error_msg 1>&2 ; exit 22)
     echo " done"
 fi
 
