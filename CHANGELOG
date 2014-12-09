@@ -1,3 +1,26 @@
+v1.1.0 Dec 09, 2014
+====================
+
+* Merge upstream changes
+  (https://www.pivotaltracker.com/story/show/83960140)
+  * Update Godep
+    (https://github.com/kr/heroku-buildpack-go/commit/6ddc65c22aad89eb449dbbb903f31818fd9d0a1c)
+  * GO_GIT_DESCRIBE_SYMBOL is no longer a special case
+    (https://github.com/kr/heroku-buildpack-go/commit/abcb5af1c533e50c64de6ed95f8b413b71f457a0)
+    (https://github.com/cloudfoundry/go-buildpack/commit/b3804c9b2ed7b5973c83b025ffac481b78a67bb8)
+
+* Introduce new offline dependency packaging system
+  (https://www.pivotaltracker.com/story/show/82513994)
+  (https://www.pivotaltracker.com/story/show/83886038)
+
+* Introduce new runtime dependency translation system
+  (https://www.pivotaltracker.com/story/show/82513994)
+  (https://www.pivotaltracker.com/story/show/83483872)
+  (https://www.pivotaltracker.com/story/show/83504664)
+
+* Update the README with Machete instructions
+  (https://www.pivotaltracker.com/story/show/82692644)
+
 v1.0.4 Oct 06, 2014
 ====================
 
