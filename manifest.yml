@@ -22,3 +22,4 @@ exclude_files:
   - bin/package
   - buildpack-packager/
   - test-godir/
+  - go_buildpack-*v*.zip
