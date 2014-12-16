@@ -1,3 +1,16 @@
+v1.1.1 Dec 16, 2014
+====================
+
+* Introduce versioned manifest.yml
+  (https://www.pivotaltracker.com/story/show/84330748)
+
+* Merged pull request
+  (https://github.com/cloudfoundry/go-buildpack/commits/d4d37d93a2220fb7ee63a7252894afca308756a9)
+
+* Merge upstream changes
+  * use Go 1.4 when Godep is not present
+    (https://github.com/kr/heroku-buildpack-go/commits/3a2cc0fa0e3f12f4920d9bec1f6744e4261d4c7f)
+
 v1.1.0 Dec 09, 2014
 ====================
 
