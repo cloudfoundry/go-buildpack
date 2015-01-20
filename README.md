@@ -11,7 +11,7 @@ Additional documentation can be found at [CloudFoundry.org](http://docs.cloudfou
 This buildpack will get used if you have any files with the `.go` extension in your repository.
 
 ```bash
-cf push my_app -b https://github.com/cloudfoundry/buildpack-go.git
+cf push my_app -b https://github.com/cloudfoundry/go-buildpack.git
 ```
 
 ## Cloud Foundry Extensions - Offline Mode
