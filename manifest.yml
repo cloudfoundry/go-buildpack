@@ -40,6 +40,9 @@ dependencies:
   - name: go
     version: 1.4
     uri: https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz
+  - name: go
+    version: 1.4.1
+    uri: https://storage.googleapis.com/golang/go1.4.1.linux-amd64.tar.gz
 
 exclude_files:
   - .git/
