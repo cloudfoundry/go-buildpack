@@ -1,3 +1,20 @@
+v1.1.2 Feb 02, 2015
+====================
+
+* Update documentation for use in offline environments
+  (https://www.pivotaltracker.com/story/show/86952360)
+
+* Support version 1.4.1
+* Default to version 1.4.1 if no version specified
+  (https://www.pivotaltracker.com/story/show/86334724)
+
+* Update buildpack-packager to v.2.0.0
+  (https://www.pivotaltracker.com/story/show/84805200)
+
+* Merged upstream changes
+  * Remove use of GO_GIT_DESCRIBE_SYMBOL
+  (https://github.com/cloudfoundry/go-buildpack/commits/d36476a80efb196676091c07acfe54e4443f974e3)
+
 v1.1.1 Dec 16, 2014
 ====================
 
