@@ -11,25 +11,17 @@ Additional documentation can be found at [CloudFoundry.org](http://docs.cloudfou
 This buildpack will get used if you have any files with the `.go` extension in your repository.
 
 ```bash
-cf push my_app -b https://github.com/cloudfoundry/buildpack-go.git
+cf push my_app -b https://github.com/cloudfoundry/go-buildpack.git
 ```
+## Disconnected environments
+To use this buildpack on Cloud Foundry, where the Cloud Foundry instance limits some or all internet activity, please read the [Disconnected Environments documentation](https://github.com/cf-buildpacks/buildpack-packager/blob/master/doc/disconnected_environments.md).
 
-## Cloud Foundry Extensions - Offline Mode
+### Vendoring app dependencies
+As stated in the [Disconnected Environments documentation](https://github.com/cf-buildpacks/buildpack-packager/blob/master/doc/disconnected_environments.md), your application must 'vendor' it's dependencies.
 
-The primary purpose of extending the heroku buildpack is to cache system dependencies for firewalled or other non-internet accessible environments. This is called 'offline' mode.
+For the Go buildpack, use [Godep](https://github.com/tools/godep):
 
-'offline' buildpacks can be used in any environment where you would prefer the system dependencies to be cached instead of fetched from the internet.
- 
-The list of what is cached is maintained in [bin/package](bin/package).
- 
-Using cached system dependencies is accomplished by overriding curl during staging. See [bin/compile](bin/compile#L43-47)  
-
-### App Dependencies in Offline Mode
-Offline mode expects each app to use [Godep](https://github.com/tools/godep) to manage dependencies. The Godep folder should be populated before pushing your app.
-
-_Deprecated_
-
-A .godir file containing the name of your application can be used to build the project.
+```cf push``` uploads your vendored dependencies. The buildpack will compile any dependencies requiring compilation while staging your application.
 
 ## Building
 
@@ -39,10 +31,15 @@ A .godir file containing the name of your application can be used to build the p
   git submodule update --init
   ```
 
+1. Get latest buildpack dependencies
+  ```shell
+  BUNDLE_GEMFILE=cf.Gemfile bundle
+  ```
+
 1. Build the buildpack
-    
-  ```bash
-  bin/package [ online | offline ]
+
+  ```shell
+  BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager [ online | offline ]
   ```
     
 1. Use in Cloud Foundry

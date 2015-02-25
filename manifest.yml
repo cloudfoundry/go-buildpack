@@ -51,6 +51,10 @@ dependencies:
     version: 1.4
     uri: https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz
     cf_stacks: all
+  - name: go
+    version: 1.4.1
+    uri: https://storage.googleapis.com/golang/go1.4.1.linux-amd64.tar.gz
+    cf_stacks: all
 
 exclude_files:
   - .git/
