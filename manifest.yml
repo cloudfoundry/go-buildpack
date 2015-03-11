@@ -2,7 +2,7 @@
 language: go
 
 url_to_dependency_map:
-- match: go(\d+\.\d+(\.\d+)?)
+- match: go(\d+\.\d+\.*\d*)
   name: go
   version: $1
 
