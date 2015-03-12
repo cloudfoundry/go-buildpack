@@ -2,9 +2,9 @@
 language: go
 
 url_to_dependency_map:
-- match: go(.*)
-  name: go
-  version: $1
+  - match: go(.*)
+    name: go
+    version: $1
 
 dependencies:
   - name: go
