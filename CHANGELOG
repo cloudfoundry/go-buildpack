@@ -1,3 +1,133 @@
+v1.2.0 Mar 17, 2015
+====================
+
+* Support cflinuxfs2 stack.
+	(https://www.pivotaltracker.com/story/show/88174336)
+
+* Reference git repos by https in cf.Gemfile
+  (https://www.pivotaltracker.com/story/show/90365848)
+
+* Add checksum to `manifest.yml` for all binaries.
+  (https://www.pivotaltracker.com/story/show/89503120)
+
+
+commit 8aea0e7cbccdb4f4315d5d4ddd79e39be77389cf
+Author: JT Archie and Sai To Yeung <pair+jarchie+syeung@pivotal.io>
+Date:   Mon Mar 16 11:23:02 2015 -0400
+
+    update Gemfile to https:// [#90365848]
+
+commit 0084eeaef667ead48e60275bae6831a309bd3fe3
+Author: JT Archie <pair+jarchie@pivotal.io>
+Date:   Thu Mar 12 15:57:01 2015 -0400
+
+    Bump buildpack-packager [#90196104]
+
+commit 3f65030e4a4f8514a14e84816fd745d3024d5898
+Author: Sai To Yeung <pair+syeung@pivotal.io>
+Date:   Thu Mar 12 10:00:34 2015 -0400
+
+    Add test for 2 digit go versions
+
+commit 8949f2ef82102cac0cfb3099e79cc709838cdc1d
+Author: Jared Gordon and Sai To Yeung <pair+jgordon+syeung@pivotal.io>
+Date:   Thu Mar 12 09:26:34 2015 -0400
+
+    Further fix 2 digit versions with new compile extensions
+    
+    [#90128514]
+
+commit 989e6e5ad00c2e0053a7df44956e0f686a379a41
+Author: Jared Gordon and Sai To Yeung <pair+jgordon+syeung@pivotal.io>
+Date:   Wed Mar 11 17:34:23 2015 -0400
+
+    Fix failures on go versions with only 2 digits
+    
+    [#90128514]
+
+commit 76c21c5c751717e2d851d6ebc4dd6c6332a3f351
+Author: Anthony Emengo <pair+aemengo@pivotal.io>
+Date:   Tue Mar 10 11:16:35 2015 -0400
+
+    Migrate relevant dependencies to cloudfoundry-incubator
+    
+    [#89014508]
+
+commit 48efa6206cb1fe3401d1996fb876d5ea72b6fc7f
+Author: Colin Jackson and Rasheed Abdul-Aziz <pair+crawsible+squeedee@pivotal.io>
+Date:   Fri Mar 6 16:12:02 2015 -0500
+
+    Update compile extensions
+    
+    [#89756284]
+
+commit 285b7c3b2aa76c38f827047af9b29e4ab0f24c71
+Author: Anthony Emengo and Jared Gordon <pair+aemengo+jgordon@pivotal.io>
+Date:   Thu Mar 5 17:10:31 2015 -0500
+
+    Add md5 checksums to all dependencies
+    
+    [#89503120]
+
+commit f06212fc42c706ebda23fce35c348da0717afcdc
+Author: Anthony Emengo and Sai To Yeung <pair+aemengo+syeung@pivotal.io>
+Date:   Fri Feb 27 12:27:11 2015 -0500
+
+    Do not use 'all' for cf_stacks
+    
+    [#88174336]
+
+commit 21e8c152281fb1c2cdd6bf6a183ccf1ee4c3aa93
+Author: Mike Dalessio <mike.dalessio@gmail.com>
+Date:   Thu Feb 26 20:50:26 2015 -0500
+
+    Testing Github → Tracker integration
+    
+    [#89253462]
+
+commit e792d229888463a0ddaa820995f203432bb74fa2
+Author: Anthony Emengo and Sai To Yeung <pair+aemengo+syeung@pivotal.io>
+Date:   Thu Feb 26 17:22:05 2015 -0500
+
+    Update compile-extensions to point to master
+
+commit d3a5a92b0563a5fa1db5fb8d75712a2a12f4f3d3
+Author: Anthony Emengo and Sai To Yeung <pair+aemengo+syeung@pivotal.io>
+Date:   Thu Feb 26 10:43:35 2015 -0500
+
+    Replace input to translate_dependency_url from url to version.
+    
+    - So no internet traffic is logged for offline environment with
+    dependencies that are not present in the manifest
+    
+    [#89198726]
+
+commit bbed630d97cdcd6385c3c8d07c967e0e82e882fc
+Author: Colin Jackson and Rasheed Abdul-Aziz <pair+crawsible+squeedee@pivotal.io>
+Date:   Wed Feb 25 18:02:10 2015 -0500
+
+    bump compile extensions
+
+commit 22633724e0066a9a1bf73c7ad93af6767943053f
+Merge: 6c794c7 e024177
+Author: Colin Jackson and Rasheed Abdul-Aziz <pair+crawsible+squeedee@pivotal.io>
+Date:   Wed Feb 25 17:26:39 2015 -0500
+
+    Merge branch 'master' of https://github.com/cloudfoundry/go-buildpack
+    
+    [#88174336]
+
+commit 6c794c7aa6af0bc2e31dbc92e50cb0df64b36711
+Author: Colin Jackson and Rasheed Abdul-Aziz <pair+crawsible+squeedee@pivotal.io>
+Date:   Wed Feb 25 17:21:30 2015 -0500
+
+    Update manifest.yml to support dependency-switching logic
+    
+    - compile extensions now points to rootfs-sensitive commit
+    
+    [#88174336]
+
+
 v1.1.2 Feb 02, 2015
 ====================
 
