@@ -91,7 +91,13 @@ dependencies:
     cf_stacks:
       - lucid64
       - cflinuxfs2
-
+  - name: go
+    version: 1.4.2
+    uri: https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz
+    md5: cdc1ff96c6c99b918402693a5cf0e1f3 
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
 exclude_files:
   - .git/
   - .gitignore
