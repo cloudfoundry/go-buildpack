@@ -2,7 +2,7 @@
 
 A Cloud Foundry [buildpack](http://docs.cloudfoundry.org/buildpacks/) for Go(lang) based apps.
 
-This is based on the [Heroku buildpack] (https://github.com/kr/heroku-buildpack-go).
+This is based on the [Heroku buildpack] (https://github.com/heroku/heroku-buildpack-go).
 
 Additional documentation can be found at [CloudFoundry.org](http://docs.cloudfoundry.org/buildpacks/).
 
