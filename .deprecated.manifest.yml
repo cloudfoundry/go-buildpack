@@ -1,0 +1,111 @@
+---
+language: go
+
+url_to_dependency_map:
+  - match: go(.*)
+    name: go
+    version: $1
+
+dependencies:
+  - name: go
+    version: 1.1.1
+    uri: http://go.googlecode.com/files/go1.1.1.linux-amd64.tar.gz
+    md5: ab7ebd9c9e945e3ea91c8dd0c6aa3562
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.1.2
+    uri: http://go.googlecode.com/files/go1.1.2.linux-amd64.tar.gz
+    md5: 72b4d193a11766e2a4c45c1fed65754c
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.1
+    uri: http://go.googlecode.com/files/go1.1.linux-amd64.tar.gz
+    md5: f55f28330ae5fb07df0ae31fbab713e6
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.2.1
+    uri: http://go.googlecode.com/files/go1.2.1.linux-amd64.tar.gz
+    md5: 683a18e2565b1b29933321852fb7bdb8
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.2
+    uri: http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz
+    md5: 68901bbf8a04e71e0b30aa19c3946b21
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.2.2
+    uri: https://storage.googleapis.com/golang/go1.2.2.linux-amd64.tar.gz
+    md5: 57ca0f3a7897d37383b8d50b5ef4358b
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.3
+    uri: https://storage.googleapis.com/golang/go1.3.linux-amd64.tar.gz
+    md5: 85ea5f5d17eb82ae2c11bb64fe7f8b92
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.3.1
+    uri: https://storage.googleapis.com/golang/go1.3.1.linux-amd64.tar.gz
+    md5: c91847e63449d982f53ba94bacc99d50
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.3.2
+    uri: https://storage.googleapis.com/golang/go1.3.2.linux-amd64.tar.gz
+    md5: 180846a4f106745094552069d1564a7a
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.3.3
+    uri: https://storage.googleapis.com/golang/go1.3.3.linux-amd64.tar.gz
+    md5: 07f9eef17299cd528f03ab95f9fd47f6
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.4
+    uri: https://storage.googleapis.com/golang/go1.4.linux-amd64.tar.gz
+    md5: 9b44606c28c88a5c3d0cb4a36ce7de54
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.4.1
+    uri: https://storage.googleapis.com/golang/go1.4.1.linux-amd64.tar.gz
+    md5: ba9696cb65817d04f1a12c358ff7d376
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
+    version: 1.4.2
+    uri: https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz
+    md5: cdc1ff96c6c99b918402693a5cf0e1f3
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+
+exclude_files:
+  - .git/
+  - .gitignore
+  - .gitmodules
+  - cf_spec/
+  - log/
+  - bin/package
+  - buildpack-packager/
+  - test-godir/
+  - go_buildpack-*v*.zip
