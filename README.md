@@ -41,7 +41,7 @@ The buildpack only supports the two most stable patches for each dependency in t
 1. Build the buildpack
 
   ```shell
-  BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager [ online | offline ]
+  BUNDLE_GEMFILE=cf.Gemfile bundle exec buildpack-packager [ uncached | cached ]
   ```
 
 1. Use in Cloud Foundry
@@ -49,7 +49,7 @@ The buildpack only supports the two most stable patches for each dependency in t
     Upload the buildpack to your Cloud Foundry and optionally specify it by name
         
     ```bash
-    cf create-buildpack custom_go_buildpack go_buildpack-offline-custom.zip 1
+    cf create-buildpack custom_go_buildpack go_buildpack-cached-custom.zip 1
     cf push my_app -b custom_go_buildpack
     ```  
 
