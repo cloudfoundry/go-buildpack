@@ -53,15 +53,7 @@ For the Go buildpack, use [Godep](https://github.com/tools/godep):
 
 ## Contributing
 
-### Run the tests
-
-See the [Machete](https://github.com/cf-buildpacks/machete) CF buildpack test framework for more information.
-
-
-### Pull Requests
-
-1. Fork the project
-1. Submit a pull request
+Find our guidelines [here](./CONTRIBUTING.md).
 
 ## .godir and Godeps
 
