@@ -1,3 +1,20 @@
+v1.3.0 Apr 22, 2015
+====================
+
+* Deprecated many go versions. Currently supported versions:
+ 	(https://www.pivotaltracker.com/story/show/90697198)
+	* 1.4.2
+	* 1.4.1
+	* 1.3.3
+	* 1.3.2
+	* 1.2.2
+	* 1.2.1
+	* 1.1.2
+	* 1.1.1
+
+* Merge upstream changes from Heroku up to SHA 98f37cce4924567a3e049dc36167e43c8c25f8f8
+	(https://www.pivotaltracker.com/story/show/90537736)
+
 v1.2.0 Mar 17, 2015
 ====================
 
