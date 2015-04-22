@@ -34,6 +34,7 @@ The buildpack only supports the two most stable patches for each dependency in t
   ```
 
 1. Get latest buildpack dependencies
+
   ```shell
   BUNDLE_GEMFILE=cf.Gemfile bundle
   ```
