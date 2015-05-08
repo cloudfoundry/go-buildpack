@@ -8,6 +8,13 @@ url_to_dependency_map:
 
 dependencies:
   - name: go
+    version: 1.1
+    uri: http://go.googlecode.com/files/go1.1.linux-amd64.tar.gz
+    md5: f55f28330ae5fb07df0ae31fbab713e6
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
     version: 1.1.1
     uri: http://go.googlecode.com/files/go1.1.1.linux-amd64.tar.gz
     md5: ab7ebd9c9e945e3ea91c8dd0c6aa3562
@@ -22,9 +29,9 @@ dependencies:
       - lucid64
       - cflinuxfs2
   - name: go
-    version: 1.1
-    uri: http://go.googlecode.com/files/go1.1.linux-amd64.tar.gz
-    md5: f55f28330ae5fb07df0ae31fbab713e6
+    version: 1.2
+    uri: http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz
+    md5: 68901bbf8a04e71e0b30aa19c3946b21
     cf_stacks:
       - lucid64
       - cflinuxfs2
@@ -32,13 +39,6 @@ dependencies:
     version: 1.2.1
     uri: http://go.googlecode.com/files/go1.2.1.linux-amd64.tar.gz
     md5: 683a18e2565b1b29933321852fb7bdb8
-    cf_stacks:
-      - lucid64
-      - cflinuxfs2
-  - name: go
-    version: 1.2
-    uri: http://go.googlecode.com/files/go1.2.linux-amd64.tar.gz
-    md5: 68901bbf8a04e71e0b30aa19c3946b21
     cf_stacks:
       - lucid64
       - cflinuxfs2
