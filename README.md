@@ -73,6 +73,13 @@ it has been deprecated in favor of using
 manage dependencies, and including the generated `Godep`
 directory in your git repository.
 
+This buildpack supports building with C dependencies via
+[cgo][cgo]. You can set config vars to specify CGO flags
+to, e.g., specify paths for vendored dependencies. E.g., to build
+[gopgsqldriver](https://github.com/jbarham/gopgsqldriver), add the config var
+`CGO_CFLAGS` with the value `-I/app/code/vendor/include/postgresql` and include
+the relevant Postgres header files in `vendor/include/postgresql/` in your app.
+
 ## Reporting Issues
 
 Open an issue on this project
