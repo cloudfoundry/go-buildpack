@@ -43,6 +43,9 @@ describe 'CF Go Buildpack' do
 
           expect(app).to have_logged("Resource #{resource_url} is not provided by this buildpack. Please upgrade your buildpack to receive the latest resources.")
 
+          expect(app).to have_logged('App staging failed in the buildpack compile phase')
+          expect(app).to_not have_logged('Uploading droplet')
+
           expect(app.host).not_to have_internet_traffic
         end
       end

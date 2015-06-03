@@ -107,7 +107,11 @@ else
     mkdir -p $cache/$ver
     cd $cache/$ver
     echo -n "-----> Installing $ver..."
-    (curl `translate_dependency_url $ver` -s --fail -o - | tar xzf - -C $cache/$ver 2>/dev/null) || (echo -e $resource_error_msg 1>&2 ; exit 22)
+    (curl `translate_dependency_url $ver` -s --fail -o - | tar xzf - -C $cache/$ver 2>/dev/null)
+    if [ $? -ne 0 ]; then
+      echo -e $resource_error_msg 1>&2
+      exit 22
+    fi
     echo " done"
     cd - >/dev/null
 fi
