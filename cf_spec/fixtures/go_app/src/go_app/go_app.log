@@ -576,8 +576,8 @@ X-Vcap-Request-Id: f089f9c8-f045-4608-654f-e89bd27a4016::f74f443c-066e-43ef-9c3e
         "updated_at": null
       },
       "entity": {
-        "name": "lucid64",
-        "description": "Ubuntu 10.04 on x86-64"
+        "name": "cflinuxfs2",
+        "description": "Cloud Foundry Linux-based filesystem"
       }
     },
     "events_url": "/v2/apps/ff4f1208-66c5-4d90-969a-9ac199e66eff/events",
@@ -963,8 +963,8 @@ X-Vcap-Request-Id: ac34c6ed-bc35-4753-61cd-62640568f9c8::5ccb5ccc-c0dd-4642-83a0
             "updated_at": null
           },
           "entity": {
-            "name": "lucid64",
-            "description": "Ubuntu 10.04 on x86-64"
+            "name": "cflinuxfs2",
+            "description": "Cloud Foundry Linux-based filesystem"
           }
         },
         "events_url": "/v2/apps/ff4f1208-66c5-4d90-969a-9ac199e66eff/events",
