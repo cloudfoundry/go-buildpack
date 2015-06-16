@@ -46,6 +46,7 @@ export BUILDPACK_PATH
 source $buildpack/compile-extensions/lib/common
 export PYTHONHOME=$BUILDPACK_PATH/builds/runtimes/python-2.7.6
 export PATH=$PYTHONHOME/bin:$PATH
+$BUILDPACK_PATH/compile-extensions/bin/check_stack_support
 # END CF Common
 
 arch=$(uname -m|tr A-Z a-z)
