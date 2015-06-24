@@ -1,3 +1,18 @@
+v1.4.0 Jun 24, 2015
+====================
+
+* Remove lucid64 references from manifest.yml
+  (https://www.pivotaltracker.com/story/show/96135874)
+
+* Alert user about incompatible stack usage
+  (https://www.pivotaltracker.com/story/show/96590164)
+
+* Fail staging on missing resource
+  (https://www.pivotaltracker.com/story/show/95737420)
+
+* Update Godeps instructions
+  (https://www.pivotaltracker.com/story/show/94986104)
+
 v1.3.1 May 08, 2015
 ====================
 
