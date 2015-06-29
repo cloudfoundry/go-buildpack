@@ -6,7 +6,7 @@ describe 'CF Go Buildpack' do
   let(:browser) { Machete::Browser.new(app) }
 
   context 'with cached buildpack dependencies' do
-    context 'in an offline environment', if: Machete::BuildpackMode.offline? do
+    context 'in an offline environment', if: Machete::BuildpackMode.cached? do
       context 'app has dependencies' do
         let(:app_name) { 'go_app_with_dependencies/src/go_app_with_dependencies' }
 
@@ -66,7 +66,7 @@ describe 'CF Go Buildpack' do
   end
 
   context 'without cached buildpack dependencies' do
-    context 'in an online environment', if: Machete::BuildpackMode.online? do
+    context 'in an online environment', if: Machete::BuildpackMode.uncached? do
       context 'app has dependencies' do
         let(:app_name) { 'go_app_with_dependencies/src/go_app_with_dependencies' }
 
