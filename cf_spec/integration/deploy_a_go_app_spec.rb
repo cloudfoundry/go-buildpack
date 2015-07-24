@@ -113,4 +113,13 @@ describe 'CF Go Buildpack' do
       end
     end
   end
+
+  context 'deprecated heroku example' do
+    let(:app_name) { 'go_deprecated_heroku_example/src/go_heroku_example' }
+
+    specify do
+      expect(app).to be_running
+      expect(app).to have_logged('Deprecated, .godir file found!')
+    end
+  end
 end
