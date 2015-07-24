@@ -5,6 +5,8 @@ v1.5.0 Jul 24, 2015
 
   Note that ./Godeps and .godir are deprecated.
 
+  (See README.md for additional notes about the Godeps upgrade.)
+
 * Include current stack in unsupported stack message
   (https://www.pivotaltracker.com/story/show/98579464)
 
