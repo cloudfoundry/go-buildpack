@@ -216,6 +216,10 @@ else
     go get "${FLAGS[@]}" ./...
 fi
 
+if [ $? -ne 0 ] ; then 
+	exit 1
+fi
+
 rm -rf $build/.heroku
 
 mkdir -p $build/.profile.d
