@@ -2,7 +2,9 @@
 # bin/detect <build-dir>
 set -e
 
+BP=$(dirname $(dirname $0))
+
 if test -n "$(find "$1" -type f -name '*.go' | sed 1q)"
-then echo Go
+then echo "go `cat $BP/VERSION`"
 else echo no; exit 1
 fi
