@@ -58,7 +58,7 @@ dependencies:
   - name: go
     version: 1.5
     uri: https://storage.googleapis.com/golang/go1.5.linux-amd64.tar.gz
-    md5: d32ba4e554cc421b3c5ae43775d04be5 
+    md5: d32ba4e554cc421b3c5ae43775d04be5
     cf_stacks:
       - cflinuxfs2
 
