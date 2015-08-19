@@ -1,6 +1,6 @@
 {
 	"ImportPath": "go_app_with_dependencies",
-	"GoVersion": "go1.1.2",
+	"GoVersion": "go1.4.2",
 	"Deps": [
 		{
 			"ImportPath": "github.com/ZiCog/shiny-thing/foo",
