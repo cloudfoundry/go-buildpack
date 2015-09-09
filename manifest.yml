@@ -49,6 +49,13 @@ dependencies:
     md5: d32ba4e554cc421b3c5ae43775d04be5
     cf_stacks:
       - cflinuxfs2
+  - name: go
+    version: 1.5.1
+    uri: https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz
+    md5: 73fe663350c79d73b16f3f7a899ae61e 
+    cf_stacks:
+      - cflinuxfs2
+
 
 exclude_files:
   - .git/
