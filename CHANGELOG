@@ -1,3 +1,13 @@
+v1.6.1 Sep 14, 2015
+====================
+
+* Adding support for Go 1.5.1
+  (https://www.pivotaltracker.com/story/show/102971246)
+
+* Update default GOVERSION to 1.5.1 for .godir.
+  (https://www.pivotaltracker.com/story/show/103219562)
+
+
 v1.6.0 Aug 20, 2015
 ====================
 
