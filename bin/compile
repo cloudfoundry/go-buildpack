@@ -142,6 +142,7 @@ else
           exit 22
         fi
     finished
+    echo "Downloaded [`translate_dependency_url $ver`]"
     cd - >/dev/null
 fi
 
