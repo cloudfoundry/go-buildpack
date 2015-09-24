@@ -32,15 +32,15 @@ dependencies:
     cf_stacks:
       - cflinuxfs2
   - name: go
-    version: 1.4.1
-    uri: https://storage.googleapis.com/golang/go1.4.1.linux-amd64.tar.gz
-    md5: ba9696cb65817d04f1a12c358ff7d376
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
     version: 1.4.2
     uri: https://storage.googleapis.com/golang/go1.4.2.linux-amd64.tar.gz
     md5: cdc1ff96c6c99b918402693a5cf0e1f3
+    cf_stacks:
+      - cflinuxfs2
+  - name: go
+    version: 1.4.3
+    uri: https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz
+    md5: 814fad4ac7dedfb5e286df83cdc7fc21
     cf_stacks:
       - cflinuxfs2
   - name: go
@@ -52,7 +52,7 @@ dependencies:
   - name: go
     version: 1.5.1
     uri: https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz
-    md5: 73fe663350c79d73b16f3f7a899ae61e 
+    md5: 73fe663350c79d73b16f3f7a899ae61e
     cf_stacks:
       - cflinuxfs2
 

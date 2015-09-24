@@ -99,6 +99,13 @@ dependencies:
       - lucid64
       - cflinuxfs2
   - name: go
+    version: 1.4.3
+    uri: https://storage.googleapis.com/golang/go1.4.3.linux-amd64.tar.gz
+    md5: 814fad4ac7dedfb5e286df83cdc7fc21
+    cf_stacks:
+      - lucid64
+      - cflinuxfs2
+  - name: go
     version: 1.5
     uri: https://storage.googleapis.com/golang/go1.5.linux-amd64.tar.gz
     md5: d32ba4e554cc421b3c5ae43775d04be5
@@ -107,7 +114,7 @@ dependencies:
   - name: go
     version: 1.5.1
     uri: https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz
-    md5: 73fe663350c79d73b16f3f7a899ae61e 
+    md5: 73fe663350c79d73b16f3f7a899ae61e
     cf_stacks:
       - cflinuxfs2
 
