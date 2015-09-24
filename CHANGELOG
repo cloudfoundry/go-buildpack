@@ -1,3 +1,20 @@
+v1.6.2 Sep 24, 2015
+====================
+
+* Add support for Go `1.4.3` and removed support for Go `1.4.1`
+(https://www.pivotaltracker.com/story/show/103969132)
+   
+   Go `1.4.3` is a security update for the following CVEs:
+   
+	* [CVE-2015-5739](https://go-review.googlesource.com/#/c/11772/)
+	  Content Length treated as valid header
+	
+	* [CVE-2015-5740](https://go-review.googlesource.com/#/c/11810/)
+	  Double content-length headers does not return 400 error
+	
+	* [CVE-2015-5741](https://go-review.googlesource.com/#/c/11810/)
+	    Additional hardening, not sending Content-Length w/Transfer-Encoding
+
 v1.6.1 Sep 14, 2015
 ====================
 
