@@ -20,6 +20,20 @@ describe 'CF Go Buildpack' do
       end
     end
 
+    context 'app has vendored dependencies' do
+      let(:app_name) { 'go_with_vendor_experiment_flag/src/go_app' }
+
+      specify do
+        expect(app).to be_running
+        expect(app).to have_logged('Init: a.A == 1')
+
+        browser.visit_path('/')
+        expect(browser).to have_body('Read: a.A == 1')
+
+        expect(app.host).not_to have_internet_traffic
+      end
+    end
+
     context 'app has no dependencies' do
       let(:app_name) { 'go_app/src/go_app' }
 
@@ -75,6 +89,18 @@ describe 'CF Go Buildpack' do
 
         browser.visit_path('/')
         expect(browser).to have_body('hello, world')
+      end
+    end
+
+    context 'app has vendored dependencies' do
+      let(:app_name) { 'go_with_vendor_experiment_flag/src/go_app' }
+
+      specify do
+        expect(app).to be_running
+        expect(app).to have_logged('Init: a.A == 1')
+
+        browser.visit_path('/')
+        expect(browser).to have_body('Read: a.A == 1')
       end
     end
 
