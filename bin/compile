@@ -40,15 +40,6 @@ build=$(cd "$1/" && pwd)
 cache=$(cd "$2/" && pwd)
 buildpack=$(cd "$(dirname $0)/.." && pwd)
 
-# CF Common
-BUILDPACK_PATH=$buildpack
-export BUILDPACK_PATH
-source $buildpack/compile-extensions/lib/common
-export PYTHONHOME=$BUILDPACK_PATH/builds/runtimes/python-2.7.6
-export PATH=$PYTHONHOME/bin:$PATH
-$BUILDPACK_PATH/compile-extensions/bin/check_stack_support
-# END CF Common
-
 arch=$(uname -m|tr A-Z a-z)
 if test $arch = x86_64
 then arch=amd64
@@ -62,6 +53,18 @@ mkdir -p $cache/pip
 python=python2.7
 PATH=$buildpack/$plat/bin:$venv/bin:$PATH
 steptxt="----->"
+
+# CF Common
+BUILDPACK_PATH=$buildpack
+export BUILDPACK_PATH
+source $buildpack/compile-extensions/lib/common
+export PYTHONHOME=$BUILDPACK_PATH/builds/runtimes/python-2.7.6
+export PATH=$PYTHONHOME/bin:$PATH
+$BUILDPACK_PATH/compile-extensions/bin/check_stack_support
+$BUILDPACK_PATH/compile-extensions/bin/download_dependency godep /tmp
+tar -xzf /tmp/godep -C /tmp
+PATH=/tmp/bin:$PATH
+# END CF Common
 
 virtualenv() {
     python "$buildpack/vendor/virtualenv-1.11.6/virtualenv.py" "$@"

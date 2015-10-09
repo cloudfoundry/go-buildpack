@@ -2,9 +2,12 @@
 language: go
 
 url_to_dependency_map:
-  - match: go(.*)
+  - match: go(\d+\.\d+(.*))
     name: go
     version: $1
+  - match: godep
+    name: godep
+    version: v14
 
 dependencies:
   - name: go
@@ -115,6 +118,12 @@ dependencies:
     version: 1.5.1
     uri: https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz
     md5: 73fe663350c79d73b16f3f7a899ae61e
+    cf_stacks:
+      - cflinuxfs2
+  - name: godep
+    version: v14
+    uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/godep/godep-v14-linux-x64.tgz
+    md5: 9c7b65d026d5e05e724a08fb95d952f2
     cf_stacks:
       - cflinuxfs2
 
