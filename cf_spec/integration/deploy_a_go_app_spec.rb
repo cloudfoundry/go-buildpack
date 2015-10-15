@@ -86,6 +86,7 @@ describe 'CF Go Buildpack' do
           expect(app).to be_running
           browser.visit_path('/')
           expect(browser).to have_body('flag_linked')
+          expect(app).to have_logged('main.linker_flag=flag_linked')
           expect(app.host).not_to have_internet_traffic
         end
       end
@@ -171,6 +172,7 @@ describe 'CF Go Buildpack' do
           expect(app).to be_running
           browser.visit_path('/')
           expect(browser).to have_body('flag_linked')
+          expect(app).to have_logged('main.linker_flag=flag_linked')
         end
       end
       context 'with version 1.4.2 or less' do
