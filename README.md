@@ -26,8 +26,6 @@ For the Go buildpack, use [Godep](https://github.com/tools/godep):
 
 ## Building
 
-The buildpack only supports the two most stable patches for each dependency in the [manifest.yml](manifest.yml).
-
 1. Make sure you have fetched submodules
 
   ```bash
@@ -55,9 +53,20 @@ The buildpack only supports the two most stable patches for each dependency in t
     cf push my_app -b custom_go_buildpack
     ```  
 
-### Deprecated Versions
+## Supported binary dependencies
 
-If you would like to build the buildpack with previously supported dependency versions, provide the `--use-custom-manifest=manifest-including-unsupported.yml` option to `buildpack-packager`.
+The buildpack only supports the stable patches for each dependency listed in the [manifest.yml](manifest.yml) and [releases page](https://github.com/cloudfoundry/go-buildpack/releases).
+
+
+If you try to use a binary that is not currently supported, staging your app will fail and you will see the following error message:
+
+```
+       Could not get translated url, exited with: DEPENDENCY_MISSING_IN_MANIFEST: ...
+ !
+ !     exit
+ !
+Staging failed: Buildpack compilation step failed
+```
 
 ## Contributing
 
@@ -75,7 +84,7 @@ manage dependencies, and including the generated `Godep`
 directory in your git repository.
 
 This buildpack supports building with C dependencies via
-[cgo][cgo]. You can set config vars to specify CGO flags
+[cgo](https://golang.org/cmd/cgo/). You can set config vars to specify CGO flags
 to, e.g., specify paths for vendored dependencies. E.g., to build
 [gopgsqldriver](https://github.com/jbarham/gopgsqldriver), add the config var
 `CGO_CFLAGS` with the value `-I/app/code/vendor/include/postgresql` and include
