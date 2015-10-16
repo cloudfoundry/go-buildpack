@@ -1,3 +1,14 @@
+v1.6.3 Oct 16, 2015
+====================
+
+* adding support for Go 1.4.1 for upgrade paths
+  (https://www.pivotaltracker.com/story/show/105722210)
+
+* Adding Godep binary to the manifest
+  (https://www.pivotaltracker.com/story/show/103326142)
+
+* use new linker -X option format for go1.5
+
 v1.6.2 Sep 24, 2015
 ====================
 
