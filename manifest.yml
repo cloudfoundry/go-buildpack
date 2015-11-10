@@ -11,30 +11,6 @@ url_to_dependency_map:
 
 dependencies:
   - name: go
-    version: 1.2.1
-    uri: http://go.googlecode.com/files/go1.2.1.linux-amd64.tar.gz
-    md5: 683a18e2565b1b29933321852fb7bdb8
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
-    version: 1.2.2
-    uri: https://storage.googleapis.com/golang/go1.2.2.linux-amd64.tar.gz
-    md5: 57ca0f3a7897d37383b8d50b5ef4358b
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
-    version: 1.3.2
-    uri: https://storage.googleapis.com/golang/go1.3.2.linux-amd64.tar.gz
-    md5: 180846a4f106745094552069d1564a7a
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
-    version: 1.3.3
-    uri: https://storage.googleapis.com/golang/go1.3.3.linux-amd64.tar.gz
-    md5: 07f9eef17299cd528f03ab95f9fd47f6
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
     version: 1.4.1
     uri: https://storage.googleapis.com/golang/go1.4.1.linux-amd64.tar.gz
     md5: ba9696cb65817d04f1a12c358ff7d376
