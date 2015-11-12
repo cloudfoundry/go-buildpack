@@ -124,13 +124,6 @@ then
     exit 1
 fi
 
-if is_cached
-then
-  resource_error_msg="\n-----> Resource $url is not provided by this buildpack. Please upgrade your buildpack to receive the latest resources."
-else
-  resource_error_msg="\n-----> Resource $url does not exist."
-fi
-
 if test -d $cache/$ver/go
 then
     step "Using $ver"
@@ -138,14 +131,17 @@ else
     rm -rf $cache/* # be sure not to build up cruft
     mkdir -p $cache/$ver
     cd $cache/$ver
-    start "Installing $ver"
-        (curl `translate_dependency_url $ver` -s --fail -o - | tar xzf - 2>/dev/null)
-        if [ $? -ne 0 ]; then
-          echo -e $resource_error_msg 1>&2
+        exit_code=0
+        url=$(translate_dependency_url $ver) || exit_code=$?
+        if [ $exit_code -ne 0 ]; then
+          echo -e "`$buildpack/compile-extensions/bin/recommend_dependency $ver`" 1>&2
           exit 22
         fi
+
+    start "Installing $ver"
+        (curl $url -s --fail -o - | tar xzf - 2>/dev/null)
     finished
-    echo "Downloaded [`translate_dependency_url $ver`]"
+    echo "Downloaded [$url]"
     cd - >/dev/null
 fi
 
@@ -157,21 +153,17 @@ PATH=$GOROOT/bin:$PATH
 
 if ! (test -d $build/Godeps || (which hg >/dev/null && which bzr >/dev/null))
 then
-    ## Allow unset variables for virtualenv
-    set +u
-
     echo
     echo "       Tired of waiting for bzr and hg?"
     echo "       Use github.com/tools/godep for faster deploys."
     echo
 
     start "Installing Virtualenv"
-        virtualenv --python $python --distribute --never-download --prompt='(venv) ' $venv > /dev/null 2>&1
-        . $venv/bin/activate > /dev/null 2>&1
+        blah=$(virtualenv --python $python --distribute --never-download --prompt='(venv) ' $venv > /dev/null 2>&1) || exit_code=$?
+        echo virtualenv returns $exit_code
+        blah=$($venv/bin/activate > /dev/null 2>&1) || exitcode=$?
+        echo virturalenv activat returns $exit_code
     finished
-
-    ## Re-disable unset variables
-    set -u
 
     start "Installing Mercurial"
         pip install mercurial --no-index --find-links=file://$buildpack/vendor > /dev/null 2>&1
@@ -260,7 +252,7 @@ else
 fi
 set -u
 
-if [ $? -ne 0 ] ; then 
+if [ $? -ne 0 ] ; then
 	exit 1
 fi
 

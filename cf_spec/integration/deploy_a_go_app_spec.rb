@@ -56,9 +56,9 @@ describe 'CF Go Buildpack' do
       it "displays useful understandable errors" do
         expect(app).not_to be_running
 
-        expect(app).to have_logged("Resource #{resource_url} is not provided by this buildpack. Please upgrade your buildpack to receive the latest resources.")
-
         expect(app).to have_logged('App staging failed in the buildpack compile phase')
+        expect(app).to have_logged 'DEPENDENCY MISSING IN MANIFEST: go 99.99.99'
+        expect(app).to_not have_logged 'Installing go99.99.99'
         expect(app).to_not have_logged('Uploading droplet')
 
         expect(app.host).not_to have_internet_traffic
@@ -149,7 +149,8 @@ describe 'CF Go Buildpack' do
       it "displays useful understandable errors" do
         expect(app).not_to be_running
 
-        expect(app).to have_logged("Resource #{resource_url} does not exist.")
+        expect(app).to have_logged 'DEPENDENCY MISSING IN MANIFEST: go 99.99.99'
+        expect(app).to_not have_logged 'Installing go99.99.99'
       end
     end
 
@@ -191,7 +192,7 @@ describe 'CF Go Buildpack' do
     let(:app_name) { 'go_deprecated_heroku_example/src/go_heroku_example' }
 
     specify do
-      expect(app).to be_running
+      expect(app).to_not be_running
       expect(app).to have_logged('Deprecated, .godir file found!')
     end
   end
