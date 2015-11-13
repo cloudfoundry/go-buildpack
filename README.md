@@ -83,16 +83,25 @@ More options can be found on Machete's [Github page.](https://github.com/cloudfo
 
 Find our guidelines [here](./CONTRIBUTING.md).
 
-## .godir and Godeps
 
-Early versions of this buildpack required users to
-create a `.godir` file in the root of the project,
-containing the application name in order to build the
-project. While using a `.godir` file is still supported,
-it has been deprecated in favor of using
-[godep](https://github.com/kr/godep) in your project to
+## Dependency managment
+
+### .godir
+
+If you use `.godir` your app will no longer stage.
+
+`.godir` has been retired in favor of using
+[godep](https://github.com/tools/godep) in your project to
 manage dependencies, and including the generated `Godep`
 directory in your git repository.
+
+### Godeps
+
+[Godeps](https://github.com/tools/godep) is the buildpack's only supported
+package manager. The buildpack will run `godep` to install your dependencies at
+staging.
+
+### C dependencies
 
 This buildpack supports building with C dependencies via
 [cgo](https://golang.org/cmd/cgo/). You can set config vars to specify CGO flags

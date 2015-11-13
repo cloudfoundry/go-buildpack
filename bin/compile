@@ -105,10 +105,9 @@ then
     ver=$(<$build/Godeps/Godeps.json jq -r .GoVersion)
 elif test -f $build/.godir
 then
-    warn "Deprecated, .godir file found!"
-    warn "Please switch to godeps (github.com/tools/godep) ASAP"
-    name=$(cat $build/.godir)
-    ver=go${GOVERSION:-1.5.1}
+    warn "Deprecated, .godir file found! Please update to supported Godeps dependency manager."
+    warn "See https://github.com/tools/godep for usage information."
+    exit 1
 else
     warn "Godeps are required. For instructions:"
     warn "https://devcenter.heroku.com/articles/go-support"
@@ -150,29 +149,6 @@ GOBIN=$build/bin export GOBIN
 GOROOT=$cache/$ver/go export GOROOT
 GOPATH=$build/.heroku/go export GOPATH
 PATH=$GOROOT/bin:$PATH
-
-if ! (test -d $build/Godeps || (which hg >/dev/null && which bzr >/dev/null))
-then
-    echo
-    echo "       Tired of waiting for bzr and hg?"
-    echo "       Use github.com/tools/godep for faster deploys."
-    echo
-
-    start "Installing Virtualenv"
-        blah=$(virtualenv --python $python --distribute --never-download --prompt='(venv) ' $venv > /dev/null 2>&1) || exit_code=$?
-        echo virtualenv returns $exit_code
-        blah=$($venv/bin/activate > /dev/null 2>&1) || exitcode=$?
-        echo virturalenv activat returns $exit_code
-    finished
-
-    start "Installing Mercurial"
-        pip install mercurial --no-index --find-links=file://$buildpack/vendor > /dev/null 2>&1
-    finished
-
-    start "Installing Bazaar"
-        pip install bzr --no-index --find-links=file://$buildpack/vendor > /dev/null 2>&1
-    finished
-fi
 
 p=$GOPATH/src/$name
 mkdir -p $p

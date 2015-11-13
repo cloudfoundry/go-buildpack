@@ -188,12 +188,13 @@ describe 'CF Go Buildpack' do
     end
   end
 
-  context 'deprecated heroku example' do
+  context 'a .godir file is detected' do
     let(:app_name) { 'go_deprecated_heroku_example/src/go_heroku_example' }
 
-    specify do
+    it 'fails with a deprecation message' do
       expect(app).to_not be_running
-      expect(app).to have_logged('Deprecated, .godir file found!')
+      expect(app).to have_logged('Deprecated, .godir file found! Please update to supported Godeps dependency manager.')
+      expect(app).to have_logged('See https://github.com/tools/godep for usage information.')
     end
   end
 end
