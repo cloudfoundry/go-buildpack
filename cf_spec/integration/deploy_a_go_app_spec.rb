@@ -37,7 +37,7 @@ describe 'CF Go Buildpack' do
     context 'app with vendored dependencies has Godeps.json with no Packages array' do
       let(:app_name) { 'go15vendorexperiment_no_packages_array/src/go_app' }
 
-      pending 'merge with upstream' do
+      specify do
         expect(app).to be_running
         expect(app).to have_logged('Init: a.A == 1')
 
@@ -146,7 +146,7 @@ describe 'CF Go Buildpack' do
     context 'app with vendored dependencies has Godeps.json with no Packages array' do
       let(:app_name) { 'go15vendorexperiment_no_packages_array/src/go_app' }
 
-      pending 'merge with upstream' do
+      specify do
         expect(app).to be_running
         expect(app).to have_logged('Init: a.A == 1')
 
