@@ -7,7 +7,7 @@ url_to_dependency_map:
     version: $1
   - match: godep
     name: godep
-    version: v17
+    version: v28
 
 dependencies:
   - name: go
@@ -121,9 +121,9 @@ dependencies:
     cf_stacks:
       - cflinuxfs2
   - name: godep
-    version: v17
-    uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/godep/godep-v17-linux-x64.tgz
-    md5: 551c7fe20eb6981595280d9561e7b609
+    version: v28
+    uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/godep/godep-v28-linux-x64.tgz
+    md5: 95be3576e796acf0978d8d8df6b4b710
     cf_stacks:
       - cflinuxfs2
 
