@@ -5,6 +5,8 @@ describe 'CF Go Buildpack' do
   subject(:app) { Machete.deploy_app(app_name) }
   let(:browser) { Machete::Browser.new(app) }
 
+  after { Machete::CF::DeleteApp.new.execute(app) }
+
   context 'with cached buildpack dependencies', :cached do
     context 'app has dependencies' do
       let(:app_name) { 'go_app_with_dependencies/src/go_app_with_dependencies' }
