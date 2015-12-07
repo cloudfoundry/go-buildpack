@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+Deprecate .godir, Godeps file (not Godeps/Godeps.json) and older Go versions.
+Specifying a major version of go (e.g. go1.5) in Godeps/Godeps.json will cause the buildpack to select the current minor rev of Go (for bugfix goodness).
+
+## V22 (2015-12-03)
+
+Default back to `./...` when not using Godeps/Godeps.json at all (.godir & old Godeps file).
+
+## V21 (2015-12-03)
+
 Always detect packages from Godeps.json file. Previously this was only done for projects using GO15VENDOREXPERIMENT.
 
 ## V20 (2015-11-10)
