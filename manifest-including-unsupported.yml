@@ -120,6 +120,12 @@ dependencies:
     md5: 73fe663350c79d73b16f3f7a899ae61e
     cf_stacks:
       - cflinuxfs2
+  - name: go
+    version: 1.5.2
+    uri: https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz
+    md5: 7326543a5282cac87a892d8289714777
+    cf_stacks:
+      - cflinuxfs2
   - name: godep
     version: v28
     uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/godep/godep-v28-linux-x64.tgz
