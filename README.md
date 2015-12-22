@@ -110,6 +110,10 @@ to, e.g., specify paths for vendored dependencies. E.g., to build
 `CGO_CFLAGS` with the value `-I/app/code/vendor/include/postgresql` and include
 the relevant Postgres header files in `vendor/include/postgresql/` in your app.
 
+## Help and Support
+
+Join the #buidpacks channel in our [Slack community] (http://slack.cloudfoundry.org/) 
+
 ## Reporting Issues
 
 Open an issue on this project
