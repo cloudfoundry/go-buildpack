@@ -112,7 +112,7 @@ the relevant Postgres header files in `vendor/include/postgresql/` in your app.
 
 ## Help and Support
 
-Join the #buidpacks channel in our [Slack community] (http://slack.cloudfoundry.org/) 
+Join the #buildpacks channel in our [Slack community] (http://slack.cloudfoundry.org/) 
 
 ## Reporting Issues
 
