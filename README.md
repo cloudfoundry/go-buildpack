@@ -1,4 +1,4 @@
-# Cloud Foundry Go(Lang) Buildpack:
+# Cloud Foundry Go(Lang) Buildpack
 [![CF Slack](https://s3.amazonaws.com/buildpacks-assets/buildpacks-slack.svg)](http://slack.cloudfoundry.org)
 
 A Cloud Foundry [buildpack](http://docs.cloudfoundry.org/buildpacks/) for Go(lang) based apps.
