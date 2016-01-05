@@ -69,18 +69,10 @@ describe 'CF Go Buildpack' do
       let(:app_name) { 'go99/src/go99' }
       let(:resource_url) { "https://storage.googleapis.com/golang/go99.99.99.linux-amd64.tar.gz" }
 
-      def diego_enabled?(app_name)
-        `cf has-diego-enabled #{app_name}`.chomp == 'true'
-      end
-
       it "displays useful understandable errors" do
         expect(app).not_to be_running
 
-        if diego_enabled?(app_name)
-          expect(app).to have_logged('Failed to stage application: staging failed')
-        else
-          expect(app).to have_logged('App staging failed in the buildpack compile phase')
-        end
+        expect(app).to have_logged(/failed/i)
         expect(app).to have_logged 'DEPENDENCY MISSING IN MANIFEST: go 99.99.99'
         expect(app).to_not have_logged 'Installing go99.99.99'
         expect(app).to_not have_logged('Uploading droplet')
