@@ -29,15 +29,15 @@ dependencies:
     cf_stacks:
       - cflinuxfs2
   - name: go
-    version: 1.5.1
-    uri: https://storage.googleapis.com/golang/go1.5.1.linux-amd64.tar.gz
-    md5: 73fe663350c79d73b16f3f7a899ae61e
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
     version: 1.5.2
     uri: https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz
     md5: 7326543a5282cac87a892d8289714777
+    cf_stacks:
+      - cflinuxfs2
+  - name: go
+    version: 1.5.3
+    uri: https://storage.googleapis.com/golang/go1.5.3.linux-amd64.tar.gz
+    md5: 31717324cabc5f8c537deee00a5a2b3c
     cf_stacks:
       - cflinuxfs2
   - name: godep
