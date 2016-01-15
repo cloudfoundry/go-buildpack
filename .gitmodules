@@ -1,4 +1,4 @@
 [submodule "compile-extensions"]
 	path = compile-extensions
-	url = ssh://git@github.com:cloudfoundry/compile-extensions.git
+	url = git@github.com:cloudfoundry/compile-extensions.git
   branch = master
