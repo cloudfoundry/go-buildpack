@@ -225,4 +225,27 @@ describe 'CF Go Buildpack' do
       expect(app).to have_logged('See https://github.com/tools/godep for usage information.')
     end
   end
+
+  context 'a go app with wildcard matcher' do
+    let(:app_name) { 'go_app_with_wildcard_version/src/go_app' }
+
+    specify do
+      expect(app).to be_running
+      browser.visit_path('/')
+      expect(browser).to have_body('go, world')
+      expect(app).to have_logged(/Installing go1.4.3\.\.\. done/)
+    end
+  end
+
+  context 'a go app with an invalid wildcard matcher' do
+    let(:app_name) { 'go_app_with_invalid_wildcard_version/src/go_app' }
+
+    specify do
+      expect(app).to_not be_running
+
+      expect(app).to have_logged 'DEPENDENCY MISSING IN MANIFEST: go 1.3'
+      expect(app).to_not have_logged 'Installing go1.3'
+    end
+  end
+
 end

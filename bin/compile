@@ -26,7 +26,15 @@ urlfor() {
 # Expand to supported versions of Go, (e.g. expand "go1.5" to latest release go1.5.2)
 # All specific or other versions, take as is.
 expand_ver() {
-  echo "$1"
+  buildpack_dir=$1
+  target_version=$2
+  highest_ver="$($buildpack_dir/compile-extensions/bin/highest_version $buildpack_dir/manifest.yml go $target_version)"
+
+  if [ "$highest_ver" = "" ]; then
+    echo $target_version
+  else
+    echo $highest_ver
+  fi
 }
 
 # Report deprecated versions to user
@@ -131,7 +139,7 @@ else
     exit 1
 fi
 
-ver=$(expand_ver $ver)
+ver=$(expand_ver $buildpack $ver)
 
 file=${GOFILE:-$ver.linux-amd64.tar.gz}
 url=${GOURL:-$(urlfor $ver $file)}
