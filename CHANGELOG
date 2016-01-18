@@ -1,3 +1,15 @@
+v1.7.2 Jan 18, 2016
+====================
+
+* Add support for Go patch version wildcard matching.
+  (https://www.pivotaltracker.com/story/show/106117500)
+
+* Add support for go1.5.3 and remove support for go1.5.1
+  (https://www.pivotaltracker.com/story/show/111646892)
+
+* Updated to Godep v45.
+  (https://www.pivotaltracker.com/story/show/110776726)
+
 v1.7.1 Dec 17, 2015
 ====================
 
