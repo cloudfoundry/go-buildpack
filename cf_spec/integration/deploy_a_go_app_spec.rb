@@ -18,7 +18,7 @@ describe 'CF Go Buildpack' do
         browser.visit_path('/')
         expect(browser).to have_body('hello, world')
 
-        expect(app.host).not_to have_internet_traffic
+        expect(app).not_to have_internet_traffic
       end
     end
 
@@ -32,7 +32,7 @@ describe 'CF Go Buildpack' do
         browser.visit_path('/')
         expect(browser).to have_body('Read: a.A == 1')
 
-        expect(app.host).not_to have_internet_traffic
+        expect(app).not_to have_internet_traffic
       end
     end
 
@@ -46,7 +46,7 @@ describe 'CF Go Buildpack' do
         browser.visit_path('/')
         expect(browser).to have_body('Read: a.A == 1')
 
-        expect(app.host).not_to have_internet_traffic
+        expect(app).not_to have_internet_traffic
       end
     end
 
@@ -61,7 +61,7 @@ describe 'CF Go Buildpack' do
         expect(app).to have_logged(/Installing go[\d\.]+\.\.\. done/)
         expect(app).to have_logged(/Downloaded \[file:\/\/.*\]/)
 
-        expect(app.host).not_to have_internet_traffic
+        expect(app).not_to have_internet_traffic
       end
     end
 
@@ -77,7 +77,7 @@ describe 'CF Go Buildpack' do
         expect(app).to_not have_logged 'Installing go99.99.99'
         expect(app).to_not have_logged('Uploading droplet')
 
-        expect(app.host).not_to have_internet_traffic
+        expect(app).not_to have_internet_traffic
       end
     end
 
@@ -90,7 +90,7 @@ describe 'CF Go Buildpack' do
         browser.visit_path('/')
         expect(browser).to have_body('hello, heroku')
 
-        expect(app.host).not_to have_internet_traffic
+        expect(app).not_to have_internet_traffic
       end
     end
 
@@ -103,7 +103,7 @@ describe 'CF Go Buildpack' do
           browser.visit_path('/')
           expect(browser).to have_body('flag_linked')
           expect(app).to have_logged('main.linker_flag=flag_linked')
-          expect(app.host).not_to have_internet_traffic
+          expect(app).not_to have_internet_traffic
         end
       end
       context 'with version 1.4.2 or less' do
@@ -113,7 +113,7 @@ describe 'CF Go Buildpack' do
           expect(app).to be_running
           browser.visit_path('/')
           expect(browser).to have_body('flag_linked')
-          expect(app.host).not_to have_internet_traffic
+          expect(app).not_to have_internet_traffic
         end
       end
     end
