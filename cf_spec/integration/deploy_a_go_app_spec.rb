@@ -76,8 +76,6 @@ describe 'CF Go Buildpack' do
         expect(app).to have_logged 'DEPENDENCY MISSING IN MANIFEST: go 99.99.99'
         expect(app).to_not have_logged 'Installing go99.99.99'
         expect(app).to_not have_logged('Uploading droplet')
-
-        expect(app).not_to have_internet_traffic
       end
     end
 
