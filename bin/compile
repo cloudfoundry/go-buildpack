@@ -40,17 +40,7 @@ expand_ver() {
 # Report deprecated versions to user
 # Use after expand_ver
 report_ver() {
-  case $1 in
-    go1.6beta1|go1.5.2|go1.4.3)
-      # Noop
-    ;;
-    *)
-      warn ""
-      warn "Deprecated version of go ($1)"
-      warn "See https://devcenter.heroku.com/articles/go-support#go-versions for supported version information."
-      warn ""
-    ;;
-  esac
+  : # unsupported versions in Cloud Foundry will fail to push; no deprecation warnings needed
 }
 
 mkdir -p "$1" "$2"
