@@ -134,8 +134,8 @@ then
     ver=${GOVERSION:-$DEFAULT_GO_VERSION}
     TOOL="gb"
 else
-    warn "Godep or GB are required. For instructions:"
-    warn "https://devcenter.heroku.com/articles/go-support"
+    warn "Godep is required. For instructions:"
+    warn "https://github.com/cloudfoundry/go-buildpack"
     exit 1
 fi
 
@@ -193,7 +193,6 @@ then
     FLAGS=(${FLAGS[@]} -ldflags "-X $xval")
 fi
 
-# GB installation
 case $TOOL in
     godep)
         GOBIN=$build/bin export GOBIN
@@ -248,37 +247,14 @@ case $TOOL in
             godep go install "${FLAGS[@]}" $pkgs
         fi
     ;;
+# GB installation currently unsupported
     gb)
         warn ""
-        warn "GB support is experimental"
-        warn "Please see https://devcenter.heroku.com/articles/go-dependencies-via-gb for more info"
-        warn "For support please file an issue: https://github.com/heroku/heroku-buildpack-go/issues"
+        warn "Error: Cloud Foundry does not support your app's package manager"
+        warn "We currently only support the 'Godep' package manager for go apps"
+        warn "For support please file an issue: https://github.com/cloudfoundry/go-buildpack/issues"
         warn ""
-        gbver="0.4.0"
-        GOPATH="$cache/gb/$gbver" export GOPATH
-        PATH=$GOPATH/bin:$GOROOT/bin:$PATH export PATH
-        cp="$GOPATH/src/github.com/constabulary"
-        if test -d "$GOPATH"
-        then
-            step "Using GB $gbver"
-        else
-            rm -rf "$cache/gb/*" # cruft bad
-            mkdir -p "$cp"
-            cd $cp
-            start "Installing GB v$gbver"
-            curl -s "https://codeload.github.com/constabulary/gb/tar.gz/v$gbver" | tar zxf -
-            mv gb-$gbver gb
-            go install ./...
-            finished
-        fi
-
-        cd $build
-        step "Running: gb build ${FLAGS[@]}"
-        gb build "${FLAGS[@]}"
-
-        step "Post Compile Cleanup"
-        for f in bin/*-heroku; do mv "$f" "${f/-heroku}"; done
-        rm -rf pkg
+        exit 1
     ;;
 esac
 
