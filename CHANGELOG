@@ -1,3 +1,44 @@
+v1.7.3 Feb 29, 2016
+====================
+
+* Update godeps to v55
+  (https://www.pivotaltracker.com/story/show/114349455)
+
+* Add golang 1.6 and drop golang 1.4.1
+  (https://www.pivotaltracker.com/story/show/114349455)
+
+* Merge remote-tracking branch 'upstream/master' into develop
+  (https://github.com/cloudfoundry/go-buildpack/commit/06a5e8993e2db5bfa229d0f291caf2da1ab2ca18)
+
+* Merge pull request #31 from d-lorenc/develop
+  (https://github.com/cloudfoundry/go-buildpack/pull/31)
+
+  * fix typo
+
+* Merge pull request #1 from d-lorenc/d-lorenc-patch-1
+  (https://github.com/cloudfoundry/go-buildpack/pull/29)
+
+  * fix typo
+
+* Merge remote-tracking branch 'upstream/master' into develop
+  (https://github.com/cloudfoundry/go-buildpack/commit/22ef9108b89bac4813e033854af0b5a1484cabb)
+
+* Merge remote-tracking branch 'upstream/master' into develop
+  (https://github.com/cloudfoundry/go-buildpack/commit/964e433b37498d52d6ce69dec3e792e6d29c4bc9)
+
+
+* Merge remote-tracking branch 'upstream/master' into develop
+  (https://github.com/cloudfoundry/go-buildpack/commit/8319c0e0d24641b4885d5d56c522ebb853f36498)
+
+* Remove deprecation warnings from compile script.
+  (https://www.pivotaltracker.com/story/show/111837573)
+
+* Better support for go1.6*
+  (https://github.com/cloudfoundry/go-buildpack/commit/0a5492cb3e0d19ee688f1d6e353948300d95ac3b)
+
+  * Support GO15VENDOREXPERIMENT=0
+  * go.1.6 uses newer -X $GO_LINKER_SYMBOL=$GO_LINKER_VALUE ldflag, like 1.5
+
 v1.7.2 Jan 18, 2016
 ====================
 
