@@ -8,7 +8,6 @@ This is based on the [Heroku buildpack] (https://github.com/heroku/heroku-buildp
 Additional documentation can be found at [CloudFoundry.org](http://docs.cloudfoundry.org/buildpacks/).
 
 ## Usage
-=======
 
 This buildpack will get used if you have any files with the `.go` extension in your repository, or you request the buildpack with
 
