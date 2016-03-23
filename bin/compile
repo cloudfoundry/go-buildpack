@@ -230,6 +230,7 @@ case $TOOL in
             else
                 VendorExperiment="true"
             fi
+            FLAGS=(${FLAGS[@]} --buildmode=pie)
         ;;
         *)
             VendorExperiment="false"
