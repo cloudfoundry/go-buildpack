@@ -6,6 +6,7 @@ build=$(cd "$1/" && pwd)
 
 if test -f "$build/Godeps/Godeps.json" ||
    (test -d "$build/src" && test -n "$(find "$build/src" -type f -name '*.go' | sed 1q)") || # gb info will detect any dir with a src/ dir in it as good :-()
+	 test -f "$build/Godeps" -o -f "$build/.godir" || # success on .godir so that bin/compile can give error
    test -f "$build/vendor/vendor.json" # govendor vendor.json file
 then
   echo Go
