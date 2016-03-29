@@ -7,6 +7,14 @@ TOOL=""
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+handleDefaultPkgSpec() {
+    if [ "$pkgs" = "default" ];
+    then
+        warn "Installing package '.' (default)"
+        pkgs="."
+    fi
+}
+
 # Go releases have moved to a new URL scheme
 # starting with Go version 1.2.2. Return the old
 # location for known old versions and the new
@@ -115,8 +123,9 @@ fi
 
 if test -f "$build/Godeps/Godeps.json"
 then
+    TOOL="godep"
     step "Checking Godeps/Godeps.json file."
-    if ! jq -r . < $build/Godeps/Godeps.json > /dev/null
+    if ! jq -r . < "$build/Godeps/Godeps.json" > /dev/null
     then
         warn "Bad Godeps/Godeps.json file"
         exit 1
@@ -131,8 +140,12 @@ then
     exit 1
 elif (test -d "$build/src" && test -n "$(find "$build/src" -type f -name '*.go' | sed 1q)")
 then
-    ver=${GOVERSION:-$DEFAULT_GO_VERSION}
     TOOL="gb"
+    ver=${GOVERSION:-$DEFAULT_GO_VERSION}
+elif test -f "$build/vendor/vendor.json"
+then
+    TOOL="govendor"
+    ver=${GOVERSION:-$DEFAULT_GO_VERSION}
 else
     warn "Godep is required. For instructions:"
     warn "https://github.com/cloudfoundry/go-buildpack"
@@ -198,12 +211,13 @@ case $TOOL in
         GOBIN=$build/bin export GOBIN
         GOPATH=$build/.heroku/go export GOPATH
         PATH=$GOROOT/bin:$PATH
-        
+
         p=$GOPATH/src/$name
         mkdir -p $p
         cp -R $build/* $p
 
-        pkgs=$(<$build/Godeps/Godeps.json jq -r 'if .Packages then .Packages | join(" ") else "." end')
+        pkgs=$(<$build/Godeps/Godeps.json jq -r 'if .Packages then .Packages | join(" ") else "default" end')
+        handleDefaultPkgSpec
 
         case $ver in
         go1.5*)
@@ -248,10 +262,19 @@ case $TOOL in
             godep go install "${FLAGS[@]}" $pkgs
         fi
     ;;
+# govendor installation currently unsupported
+    govendor)
+        warn ""
+        warn "Error: Cloud Foundry does not support the govendor package manager"
+        warn "We currently only support the 'Godep' package manager for go apps"
+        warn "For support please file an issue: https://github.com/cloudfoundry/go-buildpack/issues"
+        warn ""
+        exit 1
+    ;;
 # GB installation currently unsupported
     gb)
         warn ""
-        warn "Error: Cloud Foundry does not support your app's package manager"
+        warn "Error: Cloud Foundry does not support the GB package manager"
         warn "We currently only support the 'Godep' package manager for go apps"
         warn "For support please file an issue: https://github.com/cloudfoundry/go-buildpack/issues"
         warn ""
