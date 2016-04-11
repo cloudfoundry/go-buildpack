@@ -6,6 +6,7 @@ set -eo pipefail
 TOOL=""
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
+CURL="curl -s --retry 15 --retry-delay 2" # retry for up to 30 seconds
 
 handleDefaultPkgSpec() {
     if [ "$pkgs" = "default" ];
@@ -182,7 +183,7 @@ else
         fi
 
     start "Installing $ver"
-        curl -s $url | tar zxf -
+        $CURL $url | tar zxf -
     finished
     echo "Downloaded [$url]"
     cd - >/dev/null
