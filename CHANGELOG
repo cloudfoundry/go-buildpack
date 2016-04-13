@@ -1,3 +1,12 @@
+v1.7.5 Apr 13, 2016
+====================
+
+* Add godep v62, remove godep v61
+  (https://www.pivotaltracker.com/story/show/117258211)
+
+* Add go 1.5.4, go 1.6.1, remove go 1.5.2
+  (https://www.pivotaltracker.com/story/show/117405095)
+
 v1.7.4 Apr 11, 2016
 ====================
 
