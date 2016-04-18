@@ -148,3 +148,30 @@ Open an issue on this project
 ## Active Development
 
 The project backlog is on [Pivotal Tracker](https://www.pivotaltracker.com/projects/1042066)
+
+## Passing a symbol (and optional string) to the linker
+
+This buildpack supports the go [linker's][go-linker] ability (`-X symbol
+value`) to set the value of a string at link time. This can be done by setting
+`GO_LINKER_SYMBOL` and `GO_LINKER_VALUE` in the application's config before
+pushing code. If `GO_LINKER_SYMBOL` is set, but `GO_LINKER_VALUE` isn't set
+then `GO_LINKER_VALUE` defaults to [`$SOURCE_VERSION`][source-version].
+
+This can be used to embed the commit sha, or other build specific data directly
+into the compiled executable.
+
+[go]: http://golang.org/
+[buildpack]: http://devcenter.heroku.com/articles/buildpacks
+[go-linker]: https://golang.org/cmd/ld/
+[godep]: https://github.com/tools/godep
+[govendor]: https://github.com/kardianos/govendor
+[gb]: https://getgb.io/
+[quickstart]: http://mmcgrana.github.com/2012/09/getting-started-with-go-on-heroku.html
+[build-constraint]: http://golang.org/pkg/go/build/
+[app-engine-build-constraints]: http://blog.golang.org/2013/01/the-app-engine-sdk-and-workspaces-gopath.html
+[source-version]: https://devcenter.heroku.com/articles/buildpack-api#bin-compile
+[cgo]: http://golang.org/cmd/cgo/
+[vendor.json]: https://github.com/kardianos/vendor-spec
+[gopgsqldriver]: https://github.com/jbarham/gopgsqldriver
+[grp]: https://github.com/kardianos/govendor/commit/81ca4f23cab56f287e1d5be5ab920746fd6fb834
+>>>>>>> upstream/master
