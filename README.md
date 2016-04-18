@@ -174,4 +174,3 @@ into the compiled executable.
 [vendor.json]: https://github.com/kardianos/vendor-spec
 [gopgsqldriver]: https://github.com/jbarham/gopgsqldriver
 [grp]: https://github.com/kardianos/govendor/commit/81ca4f23cab56f287e1d5be5ab920746fd6fb834
->>>>>>> upstream/master
