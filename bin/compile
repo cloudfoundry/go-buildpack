@@ -204,7 +204,7 @@ then
         xval="$GO_LINKER_SYMBOL $GO_LINKER_VALUE"
         ;;
     esac
-    FLAGS=(${FLAGS[@]} -ldflags "-X $xval")
+    FLAGS+=(-ldflags "-X $xval")
 fi
 
 case $TOOL in
@@ -245,7 +245,7 @@ case $TOOL in
             else
                 VendorExperiment="true"
             fi
-            FLAGS=(${FLAGS[@]} --buildmode=pie)
+            FLAGS+=(--buildmode=pie)
         ;;
         *)
             VendorExperiment="false"

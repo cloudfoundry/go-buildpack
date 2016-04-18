@@ -93,17 +93,6 @@ describe 'CF Go Buildpack' do
     end
 
     context 'a go app using ldflags' do
-      context 'with version 1.5 or greater' do
-        let(:app_name) { 'go1.5_app_using_ldflags/src/go_app' }
-
-        specify do
-          expect(app).to be_running
-          browser.visit_path('/')
-          expect(browser).to have_body('flag_linked')
-          expect(app).to have_logged('main.linker_flag=flag_linked')
-          expect(app).not_to have_internet_traffic
-        end
-      end
       context 'with version 1.4.2 or less' do
         let(:app_name) { 'go1.4.2_app_using_ldflags/src/go_app' }
 
@@ -114,8 +103,31 @@ describe 'CF Go Buildpack' do
           expect(app).not_to have_internet_traffic
         end
       end
-    end
 
+      context 'with version 1.5~' do
+        let(:app_name) { 'go1.5_app_using_ldflags/src/go_app' }
+
+        specify do
+          expect(app).to be_running
+          browser.visit_path('/')
+          expect(browser).to have_body('flag_linked')
+          expect(app).to have_logged('main.linker_flag=flag_linked')
+          expect(app).not_to have_internet_traffic
+        end
+      end
+
+      context 'with version 1.6~' do
+        let(:app_name) { 'go1.6_app_using_ldflags/src/go_app' }
+
+        specify do
+          expect(app).to be_running
+          browser.visit_path('/')
+          expect(browser).to have_body('flag_linked')
+          expect(app).to have_logged('main.linker_flag=flag_linked')
+          expect(app).not_to have_internet_traffic
+        end
+      end
+    end
   end
 
   context 'without cached buildpack dependencies', :uncached do
