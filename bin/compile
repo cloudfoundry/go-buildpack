@@ -228,14 +228,7 @@ case $TOOL in
                 warn "\$GO15VENDOREXPERIMENT=1. This is an experiment. Things may not work as expected."
                 warn "See https://devcenter.heroku.com/articles/go-support#go-1-5-vendor-experiment for more info."
                 warn ""
-                if test ! -d "$build/vendor"
-                then
-                    warn ""
-                    warn "vendor/ directory does not exist."
-                    warn ""
-                    exit 1
-                fi
-                VendorExperiment="true"
+               VendorExperiment="true"
             fi
         ;;
         go1.6*)
@@ -256,6 +249,12 @@ case $TOOL in
         cd $p
         if test "$VendorExperiment" = "true"
         then
+            if test ! -d "$build/vendor"
+            then
+              warn ""
+              warn "vendor/ directory does not exist."
+              warn ""
+            fi
             step "Running: go install -v ${FLAGS[@]} $pkgs"
             go install -v "${FLAGS[@]}" $pkgs
         else

@@ -20,6 +20,31 @@ describe 'CF Go Buildpack' do
 
         expect(app).not_to have_internet_traffic
       end
+
+      context 'app uses go1.6' do
+        subject(:app) do
+          Machete.deploy_app('go1.6_app_with_dependencies/src/go_app_with_dependencies',
+            env: {"GO15VENDOREXPERIMENT" => "0"})
+        end
+
+        specify do
+          expect(app).to be_running
+          expect(app).to have_logged('Hello from foo!')
+
+          browser.visit_path('/')
+          expect(browser).to have_body('hello, world')
+        end
+      end
+
+      context 'app uses go1.6 without a vendor dir' do
+        subject(:app) do
+          Machete.deploy_app('go1.6_app_with_dependencies/src/go_app_with_dependencies')
+        end
+
+        specify do
+          expect(app).to have_logged('vendor/ directory does not exist.')
+        end
+      end
     end
 
     context 'app has vendored dependencies' do
