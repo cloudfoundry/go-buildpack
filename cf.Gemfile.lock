@@ -10,10 +10,10 @@ GIT
 
 GIT
   remote: https://github.com/cloudfoundry/machete
-  revision: d83e602a0a367a8bce8390759a5c734c798de5ab
-  tag: v0.0.42
+  revision: 143a81238819217dd570aa896aa9b3e5d8a259d5
+  tag: v0.0.43
   specs:
-    machete (0.0.42)
+    machete (0.0.43)
       httparty
 
 GEM
