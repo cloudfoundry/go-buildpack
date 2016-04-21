@@ -35,17 +35,18 @@ dependencies:
     cf_stacks:
       - cflinuxfs2
   - name: go
-    version: 1.6
-    uri: https://storage.googleapis.com/golang/go1.6.linux-amd64.tar.gz
-    md5: 6a33d46fa4646b2ccfa7612b939677fa
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
     version: 1.6.1
     uri: https://storage.googleapis.com/golang/go1.6.1.linux-amd64.tar.gz
     md5: e277d18dac8a0b9945d4c53adf6e52ee
     cf_stacks:
       - cflinuxfs2
+  - name: go
+    version: 1.6.2
+    uri: https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz
+    md5: ebfb8b38330c8779b121c43433c4b9be
+    cf_stacks:
+      - cflinuxfs2
+
   - name: godep
     version: v62
     uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/godep/godep-v62-linux-x64.tgz
