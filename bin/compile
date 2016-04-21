@@ -334,7 +334,7 @@ case $TOOL in
     ;;
 esac
 
-echo -e "---\ndefault_process_types:\n  web: $(ls $GOBIN)" >> /tmp/buildpack-release-step.yml
+echo -e "---\ndefault_process_types:\n  web: $(basename $name)" >> /tmp/buildpack-release-step.yml
 
 rm -rf $build/.heroku
 
