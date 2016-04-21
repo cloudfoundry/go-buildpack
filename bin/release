@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # bin/release <build-dir>
 
-echo "--- {}"
+echo "$(cat /tmp/buildpack-release-step.yml)"

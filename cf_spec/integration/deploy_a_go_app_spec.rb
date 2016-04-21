@@ -104,6 +104,21 @@ describe 'CF Go Buildpack' do
       end
     end
 
+    context 'app has no Procfile' do
+      let(:app_name) { 'go_app_without_procfile/src/go_app_without_procfile' }
+
+      specify do
+        expect(app).to be_running
+
+        browser.visit_path('/')
+        expect(browser).to have_body('go, world')
+        expect(app).to have_logged(/Installing go[\d\.]+\.\.\. done/)
+        expect(app).to have_logged(/Downloaded \[file:\/\/.*\]/)
+
+        expect(app).not_to have_internet_traffic
+      end
+    end
+
     context 'expects a non-packaged version of go' do
       let(:app_name) { 'go99/src/go99' }
       let(:resource_url) { "https://storage.googleapis.com/golang/go99.99.99.linux-amd64.tar.gz" }
