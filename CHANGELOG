@@ -1,3 +1,25 @@
+v1.7.6 Apr 22, 2016
+====================
+
+* Allow deploying of go apps without a Procfile
+  (https://www.pivotaltracker.com/story/show/117929711)
+
+* Add go 1.6.2, remove go 1.6
+  (https://www.pivotaltracker.com/story/show/117966791)
+
+* Allow native go vendoring
+  (https://www.pivotaltracker.com/story/show/117638407)
+
+commit e7a51484243a979d2534d1b27d63d8a7ede80581
+Author: David Jahn <david.a.jahn@gmail.com>
+Date:   Tue Apr 19 12:07:34 2016 -0400
+
+* Print a warning when the app uses go1.6 with vendor experiment and doesn't have a vendor dir
+  (https://www.pivotaltracker.com/story/show/117840949)
+
+* Fix bug where apps using go1.6 and ldflags could not stage
+  (https://www.pivotaltracker.com/story/show/117841169)
+
 v1.7.5 Apr 13, 2016
 ====================
 
