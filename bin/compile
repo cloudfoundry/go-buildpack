@@ -287,10 +287,10 @@ case $TOOL in
 
         case $ver in
         go1.5*)
-            if test "$GO15VENDOREXPERIMENT" = "0"
+            if ! test "$GO15VENDOREXPERIMENT" = "1"
             then
                 warn ""
-                warn "\$GO15VENDOREXPERIMENT=0. To use vendor your packages in vendor/"
+                warn "\$GO15VENDOREXPERIMENT is not =1. To use vendor your packages in vendor/"
                 warn "for go 1.5 this environment variable must be set to 1."
                 warn ""
                 exit 1
@@ -299,7 +299,6 @@ case $TOOL in
         go1.6*)
             if test "$GO15VENDOREXPERIMENT" = "0"
             then
-            thegithub.com/cloudfoundry-incubator/cli-plugin-repon
                 warn ""
                 warn "\$GO15VENDOREXPERIMENT=0. To use vendor your packages in vendor/"
                 warn "for go 1.6 this environment variable must unset or set to 1."

@@ -64,14 +64,36 @@ describe 'CF Go Buildpack' do
     context 'app has vendored dependencies and no Godeps folder' do
       let(:app_name) { 'go_with_native_vendoring/src/go_app' }
 
-      specify do
+      it 'successfully stages' do
         expect(app).to be_running
         expect(app).to have_logged('Init: a.A == 1')
 
         browser.visit_path('/')
         expect(browser).to have_body('Read: a.A == 1')
 
-        #expect(app).not_to have_internet_traffic
+        expect(app).not_to have_internet_traffic
+      end
+    end
+
+    context 'app has vendored dependencies with go1.6, but GO15VENDOREXPERIMENT=0' do
+      let(:app_name) { 'go16_native_vendoring_bad_env/src/go_app' }
+
+      it 'fails with helpful error' do
+        expect(app).to_not be_running
+
+        expect(app).to have_logged(/failed/i)
+        expect(app).to have_logged 'for go 1.6 this environment variable must unset or set to 1'
+      end
+    end
+
+    context 'app has vendored dependencies with go1.5, but GO15VENDOREXPERIMENT=0' do
+      let(:app_name) { 'go15_native_vendoring_bad_env/src/go_app' }
+
+      it 'fails with helpful error' do
+        expect(app).to_not be_running
+
+        expect(app).to have_logged(/failed/i)
+        expect(app).to have_logged 'for go 1.5 this environment variable must be set to 1'
       end
     end
 

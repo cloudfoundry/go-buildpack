@@ -1,0 +1,5 @@
+---
+  env:
+    GOPACKAGENAME: go-online
+    GOVERSION: go1.6
+    GO15VENDOREXPERIMENT: 0
