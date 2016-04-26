@@ -1,3 +1,9 @@
+v1.7.7 Apr 26, 2016
+====================
+
+* Remove go1.4
+  (https://www.pivotaltracker.com/story/show/117556513)
+
 v1.7.6 Apr 22, 2016
 ====================
 
