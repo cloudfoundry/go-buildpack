@@ -16,6 +16,18 @@ handleDefaultPkgSpec() {
     fi
 }
 
+massagePkgSpecForVendor() {
+    local t=""
+    for p in $(echo $pkgs); do
+      if [ "${p:0:1}" = "." ] && [ ! -d "$name/vendor/$p" ]; then
+        t+="${p} "
+      else
+        t+="${name}/vendor/${p} "
+      fi
+    done
+    pkgs="${t}"
+}
+
 # Go releases have moved to a new URL scheme
 # starting with Go version 1.2.2. Return the old
 # location for known old versions and the new
@@ -267,11 +279,12 @@ case $TOOL in
               warn "vendor/ directory does not exist."
               warn ""
             fi
-            step "Running: go install -v ${FLAGS[@]} $pkgs"
-            go install -v "${FLAGS[@]}" $pkgs
+            massagePkgSpecForVendor
+            step "Running: go install -v ${FLAGS[@]} ${pkgs}"
+            go install -v "${FLAGS[@]}" ${pkgs}
         else
-            step "Running: godep go install ${FLAGS[@]} $pkgs"
-            godep go install "${FLAGS[@]}" $pkgs
+            step "Running: godep go install ${FLAGS[@]} ${pkgs}"
+            godep go install "${FLAGS[@]}" ${pkgs}
         fi
     ;;
     go_nativevendoring)
@@ -310,8 +323,8 @@ case $TOOL in
 
         unset GIT_DIR # unset git dir or it will mess with goinstall
         cd $p
-        step "Running: go install -v ${FLAGS[@]} $pkgs"
-        go install -v "${FLAGS[@]}" $pkgs
+        step "Running: go install -v ${FLAGS[@]} ${pkgs}"
+        go install -v "${FLAGS[@]}" ${pkgs}
     ;;
 # govendor installation currently unsupported
     govendor)
