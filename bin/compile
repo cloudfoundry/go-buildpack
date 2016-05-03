@@ -159,22 +159,16 @@ elif test -f "$build/vendor/vendor.json"
 then
     TOOL="govendor"
     ver=${GOVERSION:-$DEFAULT_GO_VERSION}
-elif (test -d "$build/vendor" && test -n "$(find "$build/" -type f -name '*.go' | sed 1q)")
-then
+else
     TOOL="go_nativevendoring"
     ver=${GOVERSION:-$DEFAULT_GO_VERSION}
     if [ -z $GOPACKAGENAME ]
     then
-        warn "To use vendor your dependencies in vendor/ you must set"
-        warn "the \$GOPACKAGENAME environment variable to your"
-        warn "app's package name"
+        warn 'To use go native vendoring set the $GOPACKAGENAME'
+        warn "environment variable to your app's package name"
         exit 1
     fi
     name=$GOPACKAGENAME
-else
-    warn "Godep is required. For instructions:"
-    warn "https://github.com/cloudfoundry/go-buildpack"
-    exit 1
 fi
 
 ver=$(expand_ver $buildpack $ver)

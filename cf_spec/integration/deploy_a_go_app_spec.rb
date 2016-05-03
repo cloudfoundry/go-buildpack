@@ -75,6 +75,28 @@ describe 'CF Go Buildpack' do
       end
     end
 
+    context 'app with only a single go file and GOPACKAGENAME specified' do
+      let(:app_name) { 'go_single_file/src/go_app' }
+
+      it 'successfully stages' do
+        expect(app).to be_running
+
+        browser.visit_path('/')
+        expect(browser).to have_body('simple apps are good')
+      end
+    end
+
+    context 'app with only a single go file, a vendor directory, and no GOPACKAGENAME specified' do
+      let(:app_name) { 'go_with_native_vendoring_no_gopackagename/src/go_app' }
+
+      it 'successfully stages' do
+        expect(app).to_not be_running
+
+        expect(app).to have_logged(/failed/i)
+        expect(app).to have_logged 'To use go native vendoring set the $GOPACKAGENAME'
+      end
+    end
+
     context 'app has vendored dependencies with go1.6, but GO15VENDOREXPERIMENT=0' do
       let(:app_name) { 'go16_native_vendoring_bad_env/src/go_app' }
 
