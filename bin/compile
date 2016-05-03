@@ -168,8 +168,8 @@ else
     ver=${GOVERSION:-$DEFAULT_GO_VERSION}
     if [ -z $GOPACKAGENAME ]
     then
-        warn 'To use go native vendoring set the $GOPACKAGENAME'
-        warn "environment variable to your app's package name"
+        err 'To use go native vendoring set the $GOPACKAGENAME'
+        err "environment variable to your app's package name"
         exit 1
     fi
     name=$GOPACKAGENAME
