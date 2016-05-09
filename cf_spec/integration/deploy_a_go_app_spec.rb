@@ -75,6 +75,18 @@ describe 'CF Go Buildpack' do
       end
     end
 
+    context 'app has vendored dependencies and a vendor.json file' do
+      let(:app_name) { 'go_with_native_vendoring_and_vendor_json/src/go_app' }
+
+      it 'successfully stages' do
+        expect(app).to be_running
+        expect(app).to have_logged('Init: a.A == 1')
+
+        browser.visit_path('/')
+        expect(browser).to have_body('Read: a.A == 1')
+      end
+    end
+
     context 'app with only a single go file and GOPACKAGENAME specified' do
       let(:app_name) { 'go_single_file/src/go_app' }
 

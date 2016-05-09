@@ -159,10 +159,6 @@ elif (test -d "$build/src" && test -n "$(find "$build/src" -type f -name '*.go' 
 then
     TOOL="gb"
     ver=${GOVERSION:-$DEFAULT_GO_VERSION}
-elif test -f "$build/vendor/vendor.json"
-then
-    TOOL="govendor"
-    ver=${GOVERSION:-$DEFAULT_GO_VERSION}
 else
     TOOL="go_nativevendoring"
     ver=${GOVERSION:-$DEFAULT_GO_VERSION}
@@ -323,15 +319,6 @@ case $TOOL in
         cd $p
         step "Running: go install -v ${FLAGS[@]} ${pkgs}"
         go install -v "${FLAGS[@]}" ${pkgs} 2>&1
-    ;;
-# govendor installation currently unsupported
-    govendor)
-        warn ""
-        warn "Error: Cloud Foundry does not support the govendor package manager"
-        warn "We currently only support the 'Godep' package manager for go apps"
-        warn "For support please file an issue: https://github.com/cloudfoundry/go-buildpack/issues"
-        warn ""
-        exit 1
     ;;
 # GB installation currently unsupported
     gb)
