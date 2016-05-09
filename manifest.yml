@@ -52,4 +52,8 @@ exclude_files:
   - bin/package
   - buildpack-packager/
   - test-godir/
+  - test/
+  - Makefile
+  - PULL_REQUEST_TEMPLATE
+  - ISSUE_TEMPLATE
   - go_buildpack-*v*.zip
