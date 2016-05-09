@@ -173,10 +173,6 @@ else
         exit 1
     fi
     name=$GOPACKAGENAME
-else
-    err "Godep is required. For instructions:"
-    err "https://github.com/cloudfoundry/go-buildpack"
-    exit 1
 fi
 
 ver=$(expand_ver $buildpack $ver)
