@@ -1,3 +1,20 @@
+v1.7.8 May 10, 2016
+====================
+
+* Update Godep to v65
+  (https://www.pivotaltracker.com/story/show/119235111)
+
+* Remove fail case for govendor
+  the bin/compile script now does not fail if it detects govendor,
+  because govendor should comply with native go vendoring in
+  (https://www.pivotaltracker.com/story/show/119184383)
+
+* Allow go native vendoring to skip `vendor/` directory
+  Detect now has an "extra" option to allow an app with `.go` files and
+  $GOPACKAGENAME even if it is missing a vendor directory
+  (https://www.pivotaltracker.com/story/show/118519961)
+
+
 v1.7.7 Apr 26, 2016
 ====================
 
