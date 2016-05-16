@@ -47,7 +47,6 @@ urlfor() {
 }
 
 DEFAULT_GO_VERSION="go1.6"
-
 # Expand to supported versions of Go, (e.g. expand "go1.5" to latest release go1.5.2)
 # All specific or other versions, take as is.
 expand_ver() {
@@ -125,6 +124,7 @@ finished() {
 }
 
 # allow apps to specify cgo flags and set up /app symlink so things like CGO_CFLAGS=-I/app/... work
+
 if [ ! -z "$env_dir" ]
 then
     mkdir -p "$env_dir"
@@ -133,7 +133,7 @@ then
     do
         if [ -f "$env_dir/$key" ]
         then
-            export "$key=$(cat "$env_dir/$key")"
+            export "$key=$(cat "$env_dir/$key" | sed -e "s:\${build_dir}:${build}:")"
         fi
     done
 fi
@@ -250,7 +250,7 @@ case $TOOL in
             fi
         ;;
         go1.6*)
-            if test "$GO15VENDOREXPERIMENT" = "0"
+            if test "$GO15VENDOREXPERIMENT" = "0" 
             then
                 VendorExperiment="false"
             else
@@ -337,4 +337,19 @@ rm -rf $build/.heroku
 
 mkdir -p $build/.profile.d
 echo 'PATH=$PATH:$HOME/bin' > $build/.profile.d/go.sh
-cp $buildpack/vendor/concurrency.sh $build/.profile.d/
+
+# For older version of Go we need to keep concurrency.sh
+need_concurrency() {
+  case $1 in
+    go1.6*|go1.5*)
+      return 1
+      ;;
+    *)
+      return 0
+      ;;
+  esac
+}
+if need_concurrency ${ver};
+  then
+  cp $buildpack/vendor/concurrency.sh $build/.profile.d/
+fi
