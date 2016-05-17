@@ -1,57 +1,54 @@
 ---
 language: go
-
 url_to_dependency_map:
-  - match: go(\d+\.\d+(.*))
-    name: go
-    version: $1
-  - match: godep
-    name: godep
-    version: v65
-
+- match: go(\d+\.\d+(.*))
+  name: go
+  version: "$1"
+- match: godep
+  name: godep
+  version: v69
 dependencies:
-  - name: go
-    version: 1.5.3
-    uri: https://storage.googleapis.com/golang/go1.5.3.linux-amd64.tar.gz
-    md5: 31717324cabc5f8c537deee00a5a2b3c
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
-    version: 1.5.4
-    uri: https://storage.googleapis.com/golang/go1.5.4.linux-amd64.tar.gz
-    md5: 27b1c469797292064c65c995ffe30386
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
-    version: 1.6.1
-    uri: https://storage.googleapis.com/golang/go1.6.1.linux-amd64.tar.gz
-    md5: e277d18dac8a0b9945d4c53adf6e52ee
-    cf_stacks:
-      - cflinuxfs2
-  - name: go
-    version: 1.6.2
-    uri: https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz
-    md5: ebfb8b38330c8779b121c43433c4b9be
-    cf_stacks:
-      - cflinuxfs2
-  - name: godep
-    version: v65
-    uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/godep/godep-v65-linux-x64.tgz
-    md5: f75da3a0c5ec08514ec2700c2a6d1187
-    cf_stacks:
-      - cflinuxfs2
-
+- name: go
+  version: 1.5.3
+  uri: https://storage.googleapis.com/golang/go1.5.3.linux-amd64.tar.gz
+  md5: 31717324cabc5f8c537deee00a5a2b3c
+  cf_stacks:
+  - cflinuxfs2
+- name: go
+  version: 1.5.4
+  uri: https://storage.googleapis.com/golang/go1.5.4.linux-amd64.tar.gz
+  md5: 27b1c469797292064c65c995ffe30386
+  cf_stacks:
+  - cflinuxfs2
+- name: go
+  version: 1.6.1
+  uri: https://storage.googleapis.com/golang/go1.6.1.linux-amd64.tar.gz
+  md5: e277d18dac8a0b9945d4c53adf6e52ee
+  cf_stacks:
+  - cflinuxfs2
+- name: go
+  version: 1.6.2
+  uri: https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz
+  md5: ebfb8b38330c8779b121c43433c4b9be
+  cf_stacks:
+  - cflinuxfs2
+- name: godep
+  version: v69
+  uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/godep/godep-v69-linux-x64.tgz
+  md5: 00288feeaddf5fc41a7f81f7f3ed8a50
+  cf_stacks:
+  - cflinuxfs2
 exclude_files:
-  - .git/
-  - .gitignore
-  - .gitmodules
-  - cf_spec/
-  - log/
-  - bin/package
-  - buildpack-packager/
-  - test-godir/
-  - test/
-  - Makefile
-  - PULL_REQUEST_TEMPLATE
-  - ISSUE_TEMPLATE
-  - go_buildpack-*v*.zip
+- ".git/"
+- ".gitignore"
+- ".gitmodules"
+- cf_spec/
+- log/
+- bin/package
+- buildpack-packager/
+- test-godir/
+- test/
+- Makefile
+- PULL_REQUEST_TEMPLATE
+- ISSUE_TEMPLATE
+- go_buildpack-*v*.zip
