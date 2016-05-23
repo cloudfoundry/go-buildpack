@@ -286,9 +286,9 @@ case $TOOL in
         GOPATH=$build/.heroku/go export GOPATH
         PATH=$GOROOT/bin:$PATH
 
-        p=$GOPATH/src/$name
-        mkdir -p $p
-        cp -R $build/* $p
+        p="$GOPATH/src/${name}"
+        mkdir -p ${p}
+        cp -R ${build}/* ${p}
 
         pkgs="."
 
