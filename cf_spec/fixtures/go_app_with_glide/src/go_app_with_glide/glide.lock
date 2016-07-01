@@ -1,0 +1,8 @@
+hash: 77b39ff0b1b7bc865505971851c3c60476276e186b961736e9fcd9204cdc54ba
+updated: 2016-07-01T14:33:51.220907438-04:00
+imports:
+- name: github.com/ZiCog/shiny-thing
+  version: e9e19444ccf5362bba846441c4700a49a94b8118
+  subpackages:
+  - foo
+devImports: []

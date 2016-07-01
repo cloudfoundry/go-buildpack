@@ -51,6 +51,8 @@ source $buildpack/compile-extensions/lib/common
 $BUILDPACK_PATH/compile-extensions/bin/check_stack_support
 $BUILDPACK_PATH/compile-extensions/bin/download_dependency godep /tmp
 tar -xzf /tmp/godep -C /tmp
+$BUILDPACK_PATH/compile-extensions/bin/download_dependency glide /tmp
+tar -xzf /tmp/glide -C /tmp
 PATH=/tmp/bin:$PATH
 # END CF Common
 

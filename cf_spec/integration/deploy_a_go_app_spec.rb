@@ -227,9 +227,40 @@ describe 'CF Go Buildpack' do
         end
       end
     end
+
+    context 'app uses glide and has vendored dependencies' do
+      let(:app_name) { 'go_app_with_glide_and_vendoring/src/go_app_with_glide_and_vendoring' }
+
+      specify do
+        expect(app).to be_running
+        expect(app).to have_logged('Hello from foo!')
+
+        browser.visit_path('/')
+        expect(browser).to have_body('hello, world')
+
+        expect(app).not_to have_internet_traffic
+      end
+    end
   end
 
   context 'without cached buildpack dependencies', :uncached do
+
+    context 'app uses glide' do
+      let(:app_name) { 'go_app_with_glide/src/go_app_with_glide' }
+
+      specify do
+        expect(app).to be_running
+        expect(app).to have_logged('Hello from foo!')
+
+        browser.visit_path('/')
+        expect(browser).to have_body('hello, world')
+      end
+
+      it "uses a proxy during staging if present" do
+        expect(app).to use_proxy_during_staging
+      end
+    end
+
     context 'app has dependencies' do
       let(:app_name) { 'go_app_with_dependencies/src/go_app_with_dependencies' }
 
@@ -326,6 +357,22 @@ describe 'CF Go Buildpack' do
           expect(browser).to have_body('flag_linked')
           expect(app).to have_logged('main.linker_flag=flag_linked')
         end
+      end
+    end
+
+    context 'app uses glide and has vendored dependencies' do
+      let(:app_name) { 'go_app_with_glide_and_vendoring/src/go_app_with_glide_and_vendoring' }
+
+      specify do
+        expect(app).to be_running
+        expect(app).to have_logged('Hello from foo!')
+
+        browser.visit_path('/')
+        expect(browser).to have_body('hello, world')
+      end
+
+      it "uses a proxy during staging if present" do
+        expect(app).to use_proxy_during_staging
       end
     end
   end

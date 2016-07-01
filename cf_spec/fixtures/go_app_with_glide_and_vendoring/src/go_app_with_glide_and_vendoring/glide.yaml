@@ -1,0 +1,5 @@
+package: go_app_with_glide_and_vendoring
+import:
+- package: github.com/ZiCog/shiny-thing
+  subpackages:
+  - foo
