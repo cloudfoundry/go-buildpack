@@ -9,7 +9,7 @@ url_to_dependency_map:
   version: v74
 - match: glide
   name: glide
-  version: 0.10.2
+  version: v0.11.0
 dependencies:
 - name: go
   version: 1.5.3
@@ -42,9 +42,9 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: glide
-  version: 0.10.2
-  uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/glide/glide-0.10.2-linux-x64.tgz
-  md5: 35fb606e31809e02317d8c3a9a2b1123
+  version: v0.11.0
+  uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/glide/glide-v0.11.0-linux-x64.tgz
+  md5: f17d6c3c8dd4dc5f7b3b6364c3ddc7c0
   cf_stacks:
   - cflinuxfs2
 exclude_files:
