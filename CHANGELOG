@@ -1,3 +1,18 @@
+v1.7.9 Jul 08, 2016
+====================
+
+* Add glide package manager support and add glide v0.11.0
+  (https://www.pivotaltracker.com/story/show/121673251)
+  (https://www.pivotaltracker.com/story/show/124886541)
+
+* Remove upstream vendored virtualenv, mercurial, bzr, concurrency.sh
+  artifacts
+  (https://www.pivotaltracker.com/story/show/122197731)
+
+* Update godep to v74
+  artifacts
+  (https://www.pivotaltracker.com/story/show/120737515)
+
 v1.7.8 May 10, 2016
 ====================
 
