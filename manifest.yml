@@ -37,13 +37,13 @@ dependencies:
   - cflinuxfs2
 - name: godep
   version: v74
-  uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/godep/godep-v74-linux-x64.tgz
+  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/godep/godep-v74-linux-x64.tgz
   md5: 70220eee9f9e654e0b85887f696b6add
   cf_stacks:
   - cflinuxfs2
 - name: glide
   version: v0.11.0
-  uri: https://pivotal-buildpacks.s3.amazonaws.com/concourse-binaries/glide/glide-v0.11.0-linux-x64.tgz
+  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/glide/glide-v0.11.0-linux-x64.tgz
   md5: f17d6c3c8dd4dc5f7b3b6364c3ddc7c0
   cf_stacks:
   - cflinuxfs2
