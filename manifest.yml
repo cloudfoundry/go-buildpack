@@ -24,9 +24,9 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: go
-  version: 1.6.1
-  uri: https://storage.googleapis.com/golang/go1.6.1.linux-amd64.tar.gz
-  md5: e277d18dac8a0b9945d4c53adf6e52ee
+  version: 1.6.3
+  uri: https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz
+  md5: 804291a6ffdafe3749b4cda60255dba6
   cf_stacks:
   - cflinuxfs2
 - name: go
