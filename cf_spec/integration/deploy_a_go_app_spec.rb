@@ -63,6 +63,9 @@ describe 'CF Go Buildpack' do
 
     context 'app has vendored dependencies and no Godeps folder' do
       let(:app_name) { 'go_with_native_vendoring/src/go_app' }
+      subject(:app) do
+        Machete.deploy_app(app_name, env: {'BP_DEBUG' => '1'})
+      end
 
       it 'successfully stages' do
         expect(app).to be_running
@@ -72,6 +75,10 @@ describe 'CF Go Buildpack' do
         expect(browser).to have_body('Read: a.A == 1')
 
         expect(app).not_to have_internet_traffic
+      end
+
+      it 'uses default_versions_for to pick the Go version' do
+        expect(app).to have_logged('DEBUG: default_version_for go is')
       end
     end
 
@@ -244,7 +251,6 @@ describe 'CF Go Buildpack' do
   end
 
   context 'without cached buildpack dependencies', :uncached do
-
     context 'app uses glide' do
       let(:app_name) { 'go_app_with_glide/src/go_app_with_glide' }
 

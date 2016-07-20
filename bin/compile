@@ -21,7 +21,8 @@ RED='\033[1;31m'
 NC='\033[0m' # No Color
 CURL="curl -s -L --retry 15 --retry-delay 2" # retry for up to 30 seconds
 
-DefaultGoVersion="go1.6"
+default_go_version="$($buildpack/compile-extensions/bin/default_version_for $buildpack/manifest.yml go)"
+DefaultGoVersion="go${default_go_version}"
 TOOL=""
 
 warn() {
