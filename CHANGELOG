@@ -1,3 +1,14 @@
+v1.7.11 Jul 27, 2016
+=====================
+
+* Add glide v0.11.1, remove glide v0.11.0
+  (https://www.pivotaltracker.com/story/show/126786257)
+
+* Add default_versions support to Go buildpack
+  - Add default_versions section to manifest.yml
+  - Modify bin/compile to use default_version_for script
+  (https://www.pivotaltracker.com/story/show/126420801)
+
 v1.7.10 Jul 19, 2016
 =====================
 
