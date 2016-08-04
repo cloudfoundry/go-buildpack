@@ -16,26 +16,26 @@ url_to_dependency_map:
 dependencies:
 - name: go
   version: 1.5.3
-  uri: https://storage.googleapis.com/golang/go1.5.3.linux-amd64.tar.gz
-  md5: 31717324cabc5f8c537deee00a5a2b3c
+  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/go/go1.5.3.linux-amd64.tar.gz
+  md5: 04b6198025b9a09889714d664bb94435
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.5.4
-  uri: https://storage.googleapis.com/golang/go1.5.4.linux-amd64.tar.gz
-  md5: 27b1c469797292064c65c995ffe30386
+  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/go/go1.5.4.linux-amd64.tar.gz
+  md5: 27e19442233106d4deb329edc0980a46
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.6.3
-  uri: https://storage.googleapis.com/golang/go1.6.3.linux-amd64.tar.gz
-  md5: 804291a6ffdafe3749b4cda60255dba6
+  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/go/go1.6.3.linux-amd64.tar.gz
+  md5: 5f7bf9d61d2b0dd75c9e2cd7a87272cc
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.6.2
-  uri: https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz
-  md5: ebfb8b38330c8779b121c43433c4b9be
+  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/go/go1.6.2.linux-amd64.tar.gz
+  md5: 6f1fd6eaf7d14b532e2a6c0e4840853b
   cf_stacks:
   - cflinuxfs2
 - name: godep
