@@ -197,10 +197,12 @@ else
           exit 22
         fi
 
+        filtered_url=$(filter_dependency_url $url)
+
     start "Installing $ver"
         $CURL $url | tar zxf -
     finished
-    echo "Downloaded [$url]"
+    echo "Downloaded [$filtered_url]"
     cd - >/dev/null
 fi
 
