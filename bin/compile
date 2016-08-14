@@ -287,7 +287,8 @@ case ${TOOL} in
         mkdir -p ${p}
         cp -R ${build}/* ${p}
 
-        pkgs="."
+        pkgs=${GO_INSTALL_PACKAGE_SPEC-"default"}
+        handleDefaultPkgSpec
 
         case $ver in
         go1.5*)
