@@ -388,8 +388,8 @@ describe 'CF Go Buildpack' do
 
     it 'fails with a deprecation message' do
       expect(app).to_not be_running
-      expect(app).to have_logged('Deprecated, .godir file found! Please update to supported Godeps dependency manager.')
-      expect(app).to have_logged('See https://github.com/tools/godep for usage information.')
+      expect(app).to have_logged('Deprecated, .godir file found! Please update to supported Godeps or Glide dependency managers.')
+      expect(app).to have_logged('See https://github.com/tools/godep or https://github.com/Masterminds/glide for usage information.')
     end
   end
 
