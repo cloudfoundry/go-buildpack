@@ -82,6 +82,23 @@ describe 'CF Go Buildpack' do
       end
     end
 
+    context 'app has vendored dependencies and custom package spec' do
+      let(:app_name) { 'go_with_native_vendoring_custom_install_spec/src/go_app' }
+      subject(:app) do
+        Machete.deploy_app(app_name, env: {'BP_DEBUG' => '1'})
+      end
+
+      it 'successfully stages' do
+        expect(app).to be_running
+        expect(app).to have_logged('Init: a.A == 1')
+
+        browser.visit_path('/')
+        expect(browser).to have_body('Read: a.A == 1')
+
+        expect(app).not_to have_internet_traffic
+      end
+    end
+
     context 'app has vendored dependencies and a vendor.json file' do
       let(:app_name) { 'go_with_native_vendoring_and_vendor_json/src/go_app' }
 
