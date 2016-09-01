@@ -1,3 +1,18 @@
+v1.7.12 Sep 01, 2016
+=====================
+
+* Add go 1.7
+  (https://www.pivotaltracker.com/story/show/128376229)
+
+* Respect GO_INSTALL_PACKAGE_SPEC environment variable for native vendoring
+  (https://www.pivotaltracker.com/story/show/128292483)
+
+* Filter credentials from dependency urls printed during staging
+  (https://www.pivotaltracker.com/story/show/127362787)
+
+* Use go binaries built from source by Cloud Foundry
+  (https://www.pivotaltracker.com/story/show/127362389)
+
 v1.7.11 Jul 27, 2016
 =====================
 
