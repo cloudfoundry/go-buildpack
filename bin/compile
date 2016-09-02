@@ -173,7 +173,7 @@ then
     warnGoVersionOverride
 elif test -f $build/.godir
 then
-    warn "Deprecated, .godir file found! Please update to supported Godeps or Glide dependency managers."
+    warn "Deprecated, .godir file found! Please update to supported Godep or Glide dependency managers."
     warn "See https://github.com/tools/godep or https://github.com/Masterminds/glide for usage information."
     exit 1
 elif test -f "${glideYAML}"
@@ -271,7 +271,7 @@ case ${TOOL} in
             then
                 warn ""
                 warn "\$GO15VENDOREXPERIMENT=1. This is an experiment. Things may not work as expected."
-                warn "See https://devcenter.heroku.com/articles/go-support#go-1-5-vendor-experiment for more info."
+                warn "See https://docs.cloudfoundry.org/buildpacks/go/index.html#go%201.5 for more info."
                 warn ""
                VendorExperiment="true"
             fi
@@ -389,7 +389,7 @@ case ${TOOL} in
     gb)
         warn ""
         warn "Error: Cloud Foundry does not support the GB package manager"
-        warn "We currently only support the 'Godep' package manager for go apps"
+        warn "We currently only support the Godep and Glide package managers for go apps"
         warn "For support please file an issue: https://github.com/cloudfoundry/go-buildpack/issues"
         warn ""
         exit 1
