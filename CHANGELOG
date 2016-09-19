@@ -1,3 +1,12 @@
+v1.7.13 Sep 19, 2016
+=====================
+
+* Add go 1.7.1
+  (https://www.pivotaltracker.com/story/show/129969725)
+
+* Remove reference to Heroku docs in staging output
+  (https://www.pivotaltracker.com/story/show/127931269)
+
 v1.7.12 Sep 01, 2016
 =====================
 
