@@ -21,7 +21,7 @@ describe 'CF Go Buildpack' do
         expect(app).not_to have_internet_traffic
       end
 
-      context 'app uses go1.6' do
+      context 'app uses go1.6 and godep with GO15VENDOREXPERIMENT=0' do
         subject(:app) do
           Machete.deploy_app('go1.6_app_with_dependencies/src/go_app_with_dependencies',
             env: {"GO15VENDOREXPERIMENT" => "0"})
@@ -36,9 +36,23 @@ describe 'CF Go Buildpack' do
         end
       end
 
-      context 'app uses go1.6 without a vendor dir' do
+      context 'app uses go1.6 and godep with Godeps/_workspace dir' do
         subject(:app) do
           Machete.deploy_app('go1.6_app_with_dependencies/src/go_app_with_dependencies')
+        end
+
+        specify do
+          expect(app).to be_running
+          expect(app).to have_logged('Hello from foo!')
+
+          browser.visit_path('/')
+          expect(browser).to have_body('hello, world')
+        end
+      end
+
+      context 'app uses go1.6 with godep and no vendor dir or Godeps/_workspace dir' do
+        subject(:app) do
+          Machete.deploy_app('go1.6_app_with_no_vendor/src/go_app_with_dependencies')
         end
 
         specify do
