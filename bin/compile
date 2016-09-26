@@ -139,6 +139,30 @@ warnPackageSpecOverride() {
   fi
 }
 
+# Sets up GOPATH (and posibly other GO* env vars) and returns the location of
+# the source code as $src. The output of this function is meant to be eval'd'
+setupGOPATH() {
+    local name="${1}"
+    local t="$(mktemp -d)"
+
+    if test "${GO_SETUP_GOPATH_IN_IMAGE}" = "true"
+    then
+        mv -t ${t} ${build}/*
+        GOPATH="${build}"
+    else
+        cp -R ${build}/* ${t}
+        GOPATH="${t}/.go"
+        echo export GOBIN="${build}/bin"
+    fi
+
+    local src="${GOPATH}/src/${name}"
+    mkdir -p "${src}"
+    mv -t "${src}" "${t}"/*
+
+    echo "GOPATH=${GOPATH}"
+    echo "src=${src}"
+}
+
 
 # -----------------------------------------
 # load environment variables
@@ -147,7 +171,7 @@ if [ ! -z "${env_dir}" ]
 then
     mkdir -p "${env_dir}"
     env_dir=$(cd "${env_dir}/" && pwd)
-  for key in CGO_CFLAGS CGO_CPPFLAGS CGO_CXXFLAGS CGO_LDFLAGS GO_LINKER_SYMBOL GO_LINKER_VALUE GO15VENDOREXPERIMENT GOVERSION GO_INSTALL_PACKAGE_SPEC
+  for key in CGO_CFLAGS CGO_CPPFLAGS CGO_CXXFLAGS CGO_LDFLAGS GO_LINKER_SYMBOL GO_LINKER_VALUE GO15VENDOREXPERIMENT GOVERSION GO_INSTALL_PACKAGE_SPEC GO_INSTALL_TOOLS_IN_IMAGE GO_SETUP_GOPATH_IN_IMAGE
     do
         if [ -f "${env_dir}/${key}" ]
         then
@@ -210,13 +234,13 @@ fi
 
 reportVer $ver
 
-if test -d $cache/$ver/go
+if test -d "${cache}/${ver}/go"
 then
-    step "Using $ver"
+    step "Using ${ver}"
 else
-    rm -rf $cache/* # be sure not to build up cruft
-    mkdir -p $cache/$ver
-    cd $cache/$ver
+    rm -rf ${cache}/* # be sure not to build up cruft
+    mkdir -p "${cache}/${ver}"
+    cd "${cache}/${ver}"
         exit_code=0
         url=$(translate_dependency_url $ver) || exit_code=$?
         if [ $exit_code -ne 0 ]; then
@@ -226,8 +250,8 @@ else
 
         filtered_url=$(filter_dependency_url $url)
 
-    start "Installing $ver"
-        $CURL $url | tar zxf -
+    start "Installing ${ver}"
+        ${CURL} ${url} | tar zxf -
     finished
     echo "Downloaded [$filtered_url]"
     cd - >/dev/null
@@ -235,6 +259,7 @@ fi
 
 mkdir -p $build/bin
 export GOROOT="${cache}/${ver}/go"
+PATH="${PATH}:${GOROOT}/bin"
 
 # If $GO_LINKER_SYMBOL and GO_LINKER_VALUE are set, tell the linker to DTRT
 FLAGS=(-tags cloudfoundry)
@@ -251,15 +276,12 @@ then
     FLAGS+=(-ldflags "-X ${xval}")
 fi
 
+export GOPATH
+
 case ${TOOL} in
     godep)
-        GOBIN=$build/bin export GOBIN
-        GOPATH=$build/.heroku/go export GOPATH
-        PATH=$GOROOT/bin:$PATH
-
-        p=$GOPATH/src/$name
-        mkdir -p $p
-        cp -R $build/* $p
+        eval "$(setupGOPATH ${name})"
+        godepsJSON="${src}/Godeps/Godeps.json"
 
         pkgs=${GO_INSTALL_PACKAGE_SPEC:-$(<${godepsJSON} jq -r 'if .Packages then .Packages | join(" ") else "default" end')}
         warnPackageSpecOverride
@@ -277,7 +299,7 @@ case ${TOOL} in
             fi
         ;;
         go1.6*)
-            if test "$GO15VENDOREXPERIMENT" = "0"
+            if test "$GO15VENDOREXPERIMENT" = "0" || test -d "${src}/Godeps/_workspace/src"
             then
                 VendorExperiment="false"
             else
@@ -303,7 +325,7 @@ case ${TOOL} in
         esac
 
         unset GIT_DIR # unset git dir or it will mess with goinstall
-        cd $p
+        cd "${src}"
         if test "$VendorExperiment" = "true"
         then
             if test ! -d "$build/vendor"
@@ -321,13 +343,7 @@ case ${TOOL} in
         fi
     ;;
     go_nativevendoring)
-        GOBIN=$build/bin export GOBIN
-        GOPATH=$build/.heroku/go export GOPATH
-        PATH=$GOROOT/bin:$PATH
-
-        p="$GOPATH/src/${name}"
-        mkdir -p ${p}
-        cp -R ${build}/* ${p}
+        eval "$(setupGOPATH ${name})"
 
         pkgs=${GO_INSTALL_PACKAGE_SPEC-"default"}
         handleDefaultPkgSpec
@@ -356,26 +372,25 @@ case ${TOOL} in
         esac
 
         unset GIT_DIR # unset git dir or it will mess with goinstall
-        cd $p
+        cd "${src}"
+
+        massagePkgSpecForVendor
+
         step "Running: go install -v ${FLAGS[@]} ${pkgs}"
         go install -v "${FLAGS[@]}" ${pkgs} 2>&1
     ;;
     glide)
-        export GOBIN="${build}/bin"
-        export GOPATH="${build}/.heroku/go"
-        PATH="${GOROOT}/bin:${PATH}"
-
+        # Do this before setupGOPATH as we need ${name} set first
         cd "${build}"
         name=$(glide name 2>/dev/null)
-        p="${GOPATH}/src/${name}"
-        mkdir -p "${p}"
-        cp -R "${build}/"* "${p}"
+
+        eval "$(setupGOPATH ${name})"
 
         pkgs=${GO_INSTALL_PACKAGE_SPEC:-"default"}
         handleDefaultPkgSpec
 
         unset GIT_DIR
-        cd $p
+        cd "${src}"
 
         step "Fetching any unsaved dependencies (glide install)"
         glide install 2>&1
@@ -398,7 +413,38 @@ esac
 
 echo -e "---\ndefault_process_types:\n  web: $(basename $name)" >> /tmp/buildpack-release-step.yml
 
-rm -rf $build/.heroku
+if test ! -z "${src}" -a "${src}" != "${build}" -a -e "${src}/Procfile"
+then
+  mv -t "${build}" "${src}/Procfile"
+fi
 
+if ! test -e $build/Procfile && test -n "${name}"
+then
+  echo -e "web: $(basename $name)" >> $build/Procfile
+fi
+
+cd $build
 mkdir -p $build/.profile.d
 echo 'PATH=$PATH:$HOME/bin' > $build/.profile.d/go.sh
+
+if test "${GO_INSTALL_TOOLS_IN_IMAGE}" = "true"
+then
+    start "Copying go tool chain to \$GOROOT=\$HOME/.heroku/go"
+        mkdir -p "${build}/.heroku/go"
+        cp -a "${GOROOT}/"* "${build}/.heroku/go"
+        echo 'export GOROOT=$HOME/.heroku/go' > "${build}/.profile.d/goroot.sh"
+        echo 'PATH=$PATH:$GOROOT/bin' >> "${build}/.profile.d/goroot.sh"
+    finished
+    step "Copying ${TOOL} binary"
+    cp $(which ${TOOL}) "${build}/bin"
+fi
+
+if test "${GO_SETUP_GOPATH_IN_IMAGE}" = "true"
+then
+    start "Cleaning up \$GOPATH/pkg"
+        rm -rf $GOPATH/pkg
+    finished
+    echo 'export GOPATH=$HOME' > "${build}/.profile.d/zzgopath.sh"  #Try to make sure it's down in towards the end
+    echo 'cd $GOPATH/src/'${name} >> "${build}/.profile.d/zzgopath.sh" # because of this
+fi
+
