@@ -279,6 +279,34 @@ describe 'CF Go Buildpack' do
         expect(app).not_to have_internet_traffic
       end
     end
+
+    context 'go 1.7 app with GO_SETUP_GOPATH_IN_IMAGE' do
+      let(:app_name) { 'go_app_gopath_in_container/src/go_app' }
+      subject(:app) do
+        Machete.deploy_app(app_name, env: {'GO_SETUP_GOPATH_IN_IMAGE' => 'true'})
+      end
+
+      it 'displays the GOPATH' do
+        expect(app).to be_running
+
+        browser.visit_path('/')
+        expect(browser).to have_body('GOPATH: /home/vcap/app')
+      end
+    end
+
+    context 'go 1.7 app with GO_INSTALL_TOOLS_IN_IMAGE' do
+      let(:app_name) { 'go_app_toolchain_in_container/src/go_app' }
+      subject(:app) do
+        Machete.deploy_app(app_name, env: {'GO_INSTALL_TOOLS_IN_IMAGE' => 'true'})
+      end
+
+      it 'displays the go version' do
+        expect(app).to be_running
+
+        browser.visit_path('/')
+        expect(browser).to have_body('go version go1.7.1 linux/amd64')
+      end
+    end
   end
 
   context 'without cached buildpack dependencies', :uncached do
