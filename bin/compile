@@ -240,14 +240,11 @@ export GOROOT="${cache}/${ver}/go"
 FLAGS=(-tags cloudfoundry)
 if [ -n "${GO_LINKER_SYMBOL}" -a -n "${GO_LINKER_VALUE}" ]
 then
-    case $ver in
-    go1.5*|go1.6*)
-        xval="${GO_LINKER_SYMBOL}=${GO_LINKER_VALUE}"
-        ;;
-    *)
+    if [[ "$ver" < "go1.5" ]]; then
         xval="${GO_LINKER_SYMBOL} ${GO_LINKER_VALUE}"
-        ;;
-    esac
+    else
+        xval="${GO_LINKER_SYMBOL}=${GO_LINKER_VALUE}"
+    fi
     FLAGS+=(-ldflags "-X ${xval}")
 fi
 
