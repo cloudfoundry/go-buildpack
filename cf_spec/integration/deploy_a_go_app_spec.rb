@@ -272,6 +272,7 @@ describe 'CF Go Buildpack' do
       specify do
         expect(app).to be_running
         expect(app).to have_logged('Hello from foo!')
+        expect(app).to have_logged('Note: skipping (glide install) due to non-empty vendor directory.')
 
         browser.visit_path('/')
         expect(browser).to have_body('hello, world')

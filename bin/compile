@@ -319,8 +319,15 @@ case ${TOOL} in
         unset GIT_DIR
         cd "${src}"
 
-        step "Fetching any unsaved dependencies (glide install)"
-        glide install 2>&1
+        number_of_vendor_subdirectories=$(find vendor -mindepth 1 -maxdepth 1 -type d | wc -l)
+
+        if [ "$number_of_vendor_subdirectories" -eq 0 ]
+        then
+            step "Fetching any unsaved dependencies (glide install)"
+            glide install 2>&1
+        else
+            step "Note: skipping (glide install) due to non-empty vendor directory."
+        fi
 
         massagePkgSpecForVendor
 
