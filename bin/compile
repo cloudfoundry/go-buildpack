@@ -319,7 +319,10 @@ case ${TOOL} in
         unset GIT_DIR
         cd "${src}"
 
-        number_of_vendor_subdirectories=$(find vendor -mindepth 1 -maxdepth 1 -type d | wc -l)
+        number_of_vendor_subdirectories=0
+        if [ -d "vendor" ]; then
+          number_of_vendor_subdirectories=$(find vendor -mindepth 1 -maxdepth 1 -type d | wc -l)
+        fi
 
         if [ "$number_of_vendor_subdirectories" -eq 0 ]
         then
