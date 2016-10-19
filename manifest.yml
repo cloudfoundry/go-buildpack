@@ -45,9 +45,9 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: go
-  version: 1.7.2
-  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/go/go1.7.2.linux-amd64.tar.gz
-  md5: 07cb604ab16d51aab740ded1f572e8c2
+  version: 1.7.3
+  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/go/go1.7.3.linux-amd64.tar.gz
+  md5: 3bf9e126791f1017b4ecf4a31fcab667
   cf_stacks:
   - cflinuxfs2
 - name: godep
