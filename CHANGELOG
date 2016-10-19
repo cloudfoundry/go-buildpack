@@ -1,3 +1,29 @@
+v1.7.14 Oct 19, 2016
+=====================
+
+* go-buildpack BOSH release now available on bosh.io at
+  http://bosh.io/releases/github.com/cloudfoundry/bosh
+  (https://www.pivotaltracker.com/story/show/130040305)
+
+* Add go 1.7.2, remove go 1.7
+  (https://www.pivotaltracker.com/story/show/132626707)
+
+* Add glide v0.12.3, remove glide v0.11.1
+  (https://www.pivotaltracker.com/story/show/129540793)
+
+* Do not glide install if vendor with subdirs present
+  (https://www.pivotaltracker.com/story/show/129540793)
+
+* Use `godep go install` if a go1.6 app has a Godeps/Godeps.json and a
+  Godeps/_workspace directory
+  (https://www.pivotaltracker.com/story/show/131074273)
+
+* Copy Go toolchain into container if GO_INSTALL_TOOLS_IN_IMAGE is set
+  (https://www.pivotaltracker.com/story/show/131074273)
+
+* Set $GOPATH in the runtime container if GO_SETUP_GO_PATH_IN_IMAGE is set
+  (https://www.pivotaltracker.com/story/show/131074273)
+
 v1.7.13 Sep 19, 2016
 =====================
 
