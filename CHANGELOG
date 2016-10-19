@@ -2,7 +2,7 @@ v1.7.14 Oct 19, 2016
 =====================
 
 * go-buildpack BOSH release now available on bosh.io at
-  http://bosh.io/releases/github.com/cloudfoundry/bosh
+  http://bosh.io/releases/github.com/cloudfoundry/go-buildpack-release
   (https://www.pivotaltracker.com/story/show/130040305)
 
 * Add go 1.7.2, remove go 1.7
