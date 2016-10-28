@@ -23,7 +23,6 @@ CURL="curl -s -L --retry 15 --retry-delay 2" # retry for up to 30 seconds
 
 default_go_version="$($buildpack/compile-extensions/bin/default_version_for $buildpack/manifest.yml go)"
 DefaultGoVersion="go${default_go_version}"
-GlideVersion="0.10.2"
 TOOL=""
 
 # CF Common
