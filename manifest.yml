@@ -7,12 +7,12 @@ url_to_dependency_map:
 - match: go(\d+\.\d+(.*))
   name: go
   version: "$1"
-- match: godep
-  name: godep
-  version: v74
 - match: glide
   name: glide
   version: v0.12.3
+- match: godep
+  name: godep
+  version: v75
 dependencies:
 - name: go
   version: 1.5.3
@@ -50,16 +50,16 @@ dependencies:
   md5: 3bf9e126791f1017b4ecf4a31fcab667
   cf_stacks:
   - cflinuxfs2
-- name: godep
-  version: v74
-  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/godep/godep-v74-linux-x64.tgz
-  md5: 70220eee9f9e654e0b85887f696b6add
-  cf_stacks:
-  - cflinuxfs2
 - name: glide
   version: v0.12.3
   uri: https://buildpacks.cloudfoundry.org/concourse-binaries/glide/glide-v0.12.3-linux-x64.tgz
   md5: 9fa8027cc1a0188dcc767666b949cb6a
+  cf_stacks:
+  - cflinuxfs2
+- name: godep
+  version: v75
+  uri: https://buildpacks.cloudfoundry.org/concourse-binaries/godep/godep-v75-linux-x64.tgz
+  md5: a69fc9633fb934ba62b3bdbeda28e601
   cf_stacks:
   - cflinuxfs2
 exclude_files:
