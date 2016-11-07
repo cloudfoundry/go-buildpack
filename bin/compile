@@ -167,19 +167,20 @@ else
     rm -rf ${cache}/* # be sure not to build up cruft
     mkdir -p "${cache}/${ver}"
     cd "${cache}/${ver}"
-        exit_code=0
-        url=$(translate_dependency_url $ver) || exit_code=$?
-        if [ $exit_code -ne 0 ]; then
-          echo -e "`$buildpack/compile-extensions/bin/recommend_dependency $ver`" 1>&2
-          exit 22
-        fi
+       exit_code=0
 
-        filtered_url=$(filter_dependency_url $url)
+      filtered_url=$($BUILDPACK_PATH/compile-extensions/bin/download_dependency $ver $PWD) || exit_code=$?
+      if [ $exit_code -ne 0 ]; then
+        echo -e "`$buildpack/compile-extensions/bin/recommend_dependency $ver`" 1>&2
+        exit 22
+      fi
 
-    start "Installing ${ver}"
-        ${CURL} ${url} | tar zxf -
-    finished
-    echo "Downloaded [$filtered_url]"
+      start "Installing ${ver}"
+        tar zxf $ver
+        rm $ver
+      finished
+
+      echo "Downloaded [$filtered_url]"
     cd - >/dev/null
 fi
 
