@@ -305,7 +305,7 @@ describe 'CF Go Buildpack' do
         expect(app).to be_running
 
         browser.visit_path('/')
-        expect(browser).to have_body('go version go1.7.1 linux/amd64')
+        expect(browser).to have_body('go version go1.7.4 linux/amd64')
       end
     end
   end

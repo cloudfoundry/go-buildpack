@@ -2,7 +2,7 @@
 language: go
 default_versions:
 - name: go
-  version: 1.7.3
+  version: 1.7.4
 url_to_dependency_map:
 - match: go(\d+\.\d+(.*))
   name: go
@@ -27,27 +27,27 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: go
-  version: 1.6.2
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.2.linux-amd64.tar.gz
-  md5: 9b2aec9a5d3e2d91142f6687fa380e0a
-  cf_stacks:
-  - cflinuxfs2
-- name: go
   version: 1.6.3
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.3.linux-amd64.tar.gz
   md5: 684cb84f270974a61cc3ecdf7fe9511b
   cf_stacks:
   - cflinuxfs2
 - name: go
-  version: 1.7.1
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.1.linux-amd64.tar.gz
-  md5: 1dbf920de27fd366471904ed243b6121
+  version: 1.6.4
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.4.linux-amd64.tar.gz
+  md5: 342b016400511ec1f6d97f49e72d2386
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.7.3
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.3.linux-amd64.tar.gz
   md5: a239725236fa371c52a452937d1a8817
+  cf_stacks:
+  - cflinuxfs2
+- name: go
+  version: 1.7.4
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.4.linux-amd64.tar.gz
+  md5: bb76b26f8dc9886d42291eba95c84f10
   cf_stacks:
   - cflinuxfs2
 - name: glide
