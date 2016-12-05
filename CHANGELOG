@@ -1,3 +1,22 @@
+v1.7.16 Dec 05, 2016
+=====================
+
+* Add go 1.6.4, remove go 1.6.2
+  (https://www.pivotaltracker.com/story/show/135369803)
+
+* Add go 1.7.4, remove go 1.7.1
+  (https://www.pivotaltracker.com/story/show/135369803)
+
+* Change default go version from 1.6.3 to 1.7.4
+  (https://www.pivotaltracker.com/story/show/132678773)
+  (https://www.pivotaltracker.com/story/show/135369803)
+
+* Rebuild and change path for go, godep, and glide binaries
+  - We identified a potential, but unlikely, attack vector in our continuous
+    integration system. Our own auditing strongly suggests that this attack
+    vector was not taken advantage of. However, out of an abundance of caution,
+    we are rebuilding all buildpack dependencies that we maintain.
+
 v1.7.15 Nov 09, 2016
 =====================
 
