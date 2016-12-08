@@ -192,14 +192,7 @@ PATH="${PATH}:${GOROOT}/bin"
 FLAGS=(-tags cloudfoundry)
 if [ -n "${GO_LINKER_SYMBOL}" -a -n "${GO_LINKER_VALUE}" ]
 then
-    case $ver in
-    go1.5*|go1.6*)
-        xval="${GO_LINKER_SYMBOL}=${GO_LINKER_VALUE}"
-        ;;
-    *)
-        xval="${GO_LINKER_SYMBOL} ${GO_LINKER_VALUE}"
-        ;;
-    esac
+    xval="${GO_LINKER_SYMBOL}=${GO_LINKER_VALUE}"
     FLAGS+=(-ldflags "-X ${xval}")
 fi
 
