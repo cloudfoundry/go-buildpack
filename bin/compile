@@ -35,6 +35,7 @@ tar -xzf /tmp/godep -C /tmp
 $BUILDPACK_PATH/compile-extensions/bin/download_dependency glide /tmp
 tar -xzf /tmp/glide -C /tmp
 PATH=/tmp/bin:$PATH
+$BUILDPACK_PATH/compile-extensions/bin/check_buildpack_version $BUILDPACK_PATH $cache
 # END CF Common
 
 handleDefaultPkgSpec() {
@@ -377,3 +378,5 @@ then
     echo 'export GOPATH=$HOME' > "${build}/.profile.d/zzgopath.sh"  #Try to make sure it's down in towards the end
     echo 'cd $GOPATH/src/'${name} >> "${build}/.profile.d/zzgopath.sh" # because of this
 fi
+
+$BUILDPACK_PATH/compile-extensions/bin/store_buildpack_metadata $BUILDPACK_PATH $cache
