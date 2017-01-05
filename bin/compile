@@ -21,7 +21,8 @@ RED='\033[1;31m'
 NC='\033[0m' # No Color
 CURL="curl -s -L --retry 15 --retry-delay 2" # retry for up to 30 seconds
 
-default_go_version="$($buildpack/compile-extensions/bin/default_version_for $buildpack/manifest.yml go)"
+manifest_file="$buildpack/manifest.yml"
+default_go_version="$($buildpack/compile-extensions/bin/default_version_for $manifest_file go)"
 DefaultGoVersion="go${default_go_version}"
 TOOL=""
 
@@ -31,8 +32,10 @@ export BUILDPACK_PATH
 source $buildpack/compile-extensions/lib/common
 $BUILDPACK_PATH/compile-extensions/bin/check_stack_support
 $BUILDPACK_PATH/compile-extensions/bin/download_dependency godep /tmp
+$BUILDPACK_PATH/compile-extensions/bin/warn_if_newer_patch godep $manifest_file
 tar -xzf /tmp/godep -C /tmp
 $BUILDPACK_PATH/compile-extensions/bin/download_dependency glide /tmp
+$BUILDPACK_PATH/compile-extensions/bin/warn_if_newer_patch glide $manifest_file
 tar -xzf /tmp/glide -C /tmp
 PATH=/tmp/bin:$PATH
 $BUILDPACK_PATH/compile-extensions/bin/check_buildpack_version $BUILDPACK_PATH $cache
@@ -175,6 +178,7 @@ else
         echo -e "`$buildpack/compile-extensions/bin/recommend_dependency $ver`" 1>&2
         exit 22
       fi
+      $BUILDPACK_PATH/compile-extensions/bin/warn_if_newer_patch $ver $manifest_file
 
       start "Installing ${ver}"
         tar zxf $ver
