@@ -12,7 +12,7 @@ url_to_dependency_map:
   version: v0.12.3
 - match: godep
   name: godep
-  version: v75
+  version: v76
 dependencies:
 - name: go
   version: 1.5.3
@@ -57,9 +57,9 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: godep
-  version: v75
-  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v75-linux-x64.tgz
-  md5: 3d23a0817bf4e30c6124e1412798debe
+  version: v76
+  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v76-linux-x64.tgz
+  md5: d0166fa1ed9be052097daab4c27406d3
   cf_stacks:
   - cflinuxfs2
 exclude_files:
