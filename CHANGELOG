@@ -1,3 +1,16 @@
+v1.7.17 Jan 10, 2017
+=====================
+
+* Add warning if downloaded dependency is not the latest patch version for a
+given major and minor version
+  (https://www.pivotaltracker.com/story/show/134863437)
+
+* Add warning if buildpack version used to stage an app changes
+  (https://www.pivotaltracker.com/story/show/135234395)
+
+* Add godep v76, remove godep v75
+  (https://www.pivotaltracker.com/story/show/137372669)
+
 v1.7.16 Dec 05, 2016
 =====================
 
