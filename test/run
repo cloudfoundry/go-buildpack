@@ -265,10 +265,7 @@ testCompileGodepBasicGo17WithGO15VENDOREXPERIMENT() {
   local env_dir=$(mktmpdir)
   echo '1' > "${env_dir}/GO15VENDOREXPERIMENT"
   compile "godep-basic-go17" ${cache} ${env_dir}
-  assertCaptured "GO15VENDOREXPERIMENT is set, but is not supported by go"
-  assertCaptured "run \`heroku config:unset GO15VENDOREXPERIMENT\` to unset."
-  assertCapturedSuccess
-  assertCompiledBinaryExists
+  assertCapturedError 1 "GO15VENDOREXPERIMENT is set, but is not supported by go1.7"
 }
 
 testDetectGovendorExcluded() {
@@ -276,11 +273,11 @@ testDetectGovendorExcluded() {
   assertCaptured "Go"
   assertCapturedSuccess
 }
-testCompileGovendorExcluded() {
+testCompuleGovendorExcluded() {
   compile "govendor-excluded"
   assertCaptured "Checking vendor/vendor.json file."
   assertCaptured "Installing go"
-  assertCaptured "Fetching govendor"
+  assertCaptured "Installing govendor"
   assertCaptured "Installing package '.' (default)"
   assertCaptured "Fetching any unsaved dependencies (govendor sync)"
   assertCaptured "Running: go install -v -tags heroku ."
@@ -400,8 +397,8 @@ testDetectGodepDevelGo() {
 testCompileGodepDevelGo() {
   compile "godep-devel-go"
   assertCaptured "You are using a development build of Go."
-  assertCaptured "Installing bootstrap go"
-  assertCaptured "Downloading development Go version devel-15f7a66"
+  assertCaptured "Installing devel-15f7a66"
+  assertCaptured "Installing bootstrap Go version go"
   assertCaptured "Compiling development Go version devel-15f7a66"
   assertCaptured "Installed Go for linux/amd64"
   assertCaptured "go version devel +15f7a66"
@@ -528,7 +525,7 @@ testCompileGodepLDSymbolGo14Value() {
   echo "main.fixture" > "${env_dir}/GO_LINKER_SYMBOL"
   echo "fixture" > "${env_dir}/GO_LINKER_VALUE"
   compile "godep-ld-symbol-value-go14" ${cache} ${env_dir}
-  assertCaptured "Running: go install -v -tags heroku -ldflags -X main.fixture fixture ." #Nothing vendored
+  assertCaptured "Running: godep go install -v -tags heroku -ldflags -X main.fixture fixture ."
   assertCaptured "Deprecated or unsupported version of go"
   assertCapturedSuccess
   assertCompiledBinaryExists
@@ -562,7 +559,7 @@ testCompileGodepBasicWithTools() {
   assertCaptured "Installing package '.' (default)"
   assertCaptured "github.com/heroku/fixture"
   assertCaptured "Copying go tool chain to"
-  assertNotCaptured "Copying godep binary" #We don't copy the binary when a workspace isn't present
+  assertCaptured "Copying godep binary"
   assertCapturedSuccess
   assertCompiledBinaryExists
   assertFileDoesNotExist ".profile.d/concurrency.sh"
