@@ -2,7 +2,7 @@
 language: go
 default_versions:
 - name: go
-  version: 1.7.4
+  version: 1.7.5
 url_to_dependency_map:
 - match: go(\d+\.\d+(.*))
   name: go
@@ -39,9 +39,9 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: go
-  version: 1.7.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.3.linux-amd64.tar.gz
-  md5: a239725236fa371c52a452937d1a8817
+  version: 1.7.5
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.5.linux-amd64.tar.gz
+  md5: c9de5bb95790044de676301898e92a1b
   cf_stacks:
   - cflinuxfs2
 - name: go
