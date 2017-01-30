@@ -1,3 +1,14 @@
+v1.7.18 Jan 30, 2017
+=====================
+
+* Add go1.7.5, remove go1.7.3
+  - make go1.7.5 the default version
+  (https://www.pivotaltracker.com/story/show/138452757)
+
+* Add godep v78, remove godep v76
+  (https://www.pivotaltracker.com/story/show/137992733)
+  (https://www.pivotaltracker.com/story/show/137618325)
+
 v1.7.17 Jan 10, 2017
 =====================
 
