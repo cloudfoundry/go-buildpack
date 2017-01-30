@@ -16,49 +16,49 @@ url_to_dependency_map:
 dependencies:
 - name: go
   version: 1.5.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.5.3.linux-amd64.tar.gz
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.5.3.linux-amd64-1d8bea79.tar.gz
   md5: 1d8bea79ece6dfceb70ecbfbc5941c28
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.5.4
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.5.4.linux-amd64.tar.gz
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.5.4.linux-amd64-347dda1c.tar.gz
   md5: 347dda1c50ed5bc1e60725f5cebf47d0
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.6.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.3.linux-amd64.tar.gz
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.3.linux-amd64-684cb84f.tar.gz
   md5: 684cb84f270974a61cc3ecdf7fe9511b
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.6.4
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.4.linux-amd64.tar.gz
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.4.linux-amd64-342b0164.tar.gz
   md5: 342b016400511ec1f6d97f49e72d2386
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.7.5
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.5.linux-amd64.tar.gz
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.5.linux-amd64-c9de5bb9.tar.gz
   md5: c9de5bb95790044de676301898e92a1b
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.7.4
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.4.linux-amd64.tar.gz
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.4.linux-amd64-bb76b26f.tar.gz
   md5: bb76b26f8dc9886d42291eba95c84f10
   cf_stacks:
   - cflinuxfs2
 - name: glide
   version: v0.12.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.12.3-linux-x64.tgz
+  uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.12.3-linux-x64-5b2e71ff.tgz
   md5: 5b2e71ff152b5f00a0f944d57ff25ca3
   cf_stacks:
   - cflinuxfs2
 - name: godep
   version: v78
-  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v78-linux-x64.tgz
+  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v78-linux-x64-aad73d18.tgz
   md5: aad73d18f44db4d0de4296cbf6bc0455
   cf_stacks:
   - cflinuxfs2
