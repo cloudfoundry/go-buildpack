@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+BUILDPACK="${1}"
+if [ -z "${BUILDPACK}" ]; then
+  echo "usage: $0 <build-pack>"
+  exit 1
+fi
+
+if ! git diff-index --quiet HEAD --; then
+  echo "git repository isn't clean"
+  exit 1
+fi
+
+function errExit {
+    echo "${1}"
+    cleanUp 1
+}
+
+tmp=$(mktemp -d)
+function cleanUp {
+    mv ${tmp}/file-cache .
+    rmdir ${tmp}
+    exit ${1}
+}
+
+trap cleanUp SIGHUP SIGINT SIGTERM
+
+mv file-cache ${tmp}
+
+CVER=$(heroku buildkits:revisions ${BUILDPACK} | head -n 2 | tail -n 1 | cut -d \  -f 1 | cut -d v -f 2)
+echo -e "\nCurrent Version: $CVER"
+
+if [ -z "${CVER}" ]; then
+  errExit "Unable to determine the current published version. A buildpack must be manually published once before using this script."
+fi
+
+NVER=$(( ${CVER} + 1 ))
+echo "Next Version: $NVER"
+DATE=$(date "+%Y-%m-%d")
+echo "Release Date: ${DATE}"
+
+CHANGES=$(
+sed -n "
+/## Unreleased/,/## v${CVER}/ {
+  /^$/,/^$/ {
+    /^$/ d
+    p
+  }
+}" < CHANGELOG.md
+)
+echo -e "\nCHANGES\n----------\n${CHANGES}\n----------\n"
+
+sed -i '' -e "
+/## Unreleased/ a\\
+\\
+## v${NVER} (${DATE})\
+
+" CHANGELOG.md
+
+echo ""
+echo "------------------------------"
+PAGER="" git diff -p -- CHANGELOG.md
+echo "------------------------------"
+echo ""
+
+read -n1 -r -p "If this looks good, press 'y' to continue..." key
+echo ""
+if [ "${key}" != "y" ]; then
+  errExit "aborting"
+fi
+
+echo "Publishing ${BUILDPACK}"
+t=$(heroku buildkits:publish ${BUILDPACK} 2>&1)
+PVER=$(echo ${t} | sed 's/[^0-9]*//g')
+
+if [ "${PVER}" != "${NVER}" ]; then
+  errExit "Published version (${PVER}) and calculated version (${NVER}) do not match."
+fi
+
+git add CHANGELOG.md
+git commit -m "Bump to v${NVER}" -m "${CHANGES}"
+git tag -m "v${NVER}" -m "${CHANGES}" "v${NVER}"
+git push origin master
+git push --tags
+
+cleanUp
