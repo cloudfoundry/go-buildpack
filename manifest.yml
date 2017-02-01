@@ -13,6 +13,15 @@ url_to_dependency_map:
 - match: godep
   name: godep
   version: v78
+dependency_deprecation_dates:
+- match: 1.5.\d+
+  version_line: "1.5"
+  name: go
+  date: 2016-08-15
+- match: 1.6.\d+
+  version_line: "1.6"
+  name: go
+  date: 2017-02-28
 dependencies:
 - name: go
   version: 1.5.3
