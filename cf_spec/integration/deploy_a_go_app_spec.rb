@@ -2,8 +2,9 @@ $: << 'cf_spec'
 require 'spec_helper'
 
 describe 'CF Go Buildpack' do
-  subject(:app) { Machete.deploy_app(app_name) }
+  subject(:app) { Machete.deploy_app(app_name, deploy_options) }
   let(:browser) { Machete::Browser.new(app) }
+  let(:deploy_options) { {} }
 
   after { Machete::CF::DeleteApp.new.execute(app) }
 
@@ -22,10 +23,8 @@ describe 'CF Go Buildpack' do
       end
 
       context 'app uses go1.6 and godep with GO15VENDOREXPERIMENT=0' do
-        subject(:app) do
-          Machete.deploy_app('go1.6_app_with_dependencies/src/go_app_with_dependencies',
-            env: {"GO15VENDOREXPERIMENT" => "0"})
-        end
+        let(:app_name) { 'go1.6_app_with_dependencies/src/go_app_with_dependencies' }
+        let(:deploy_options) { { env: {"GO15VENDOREXPERIMENT" => "0"} } }
 
         specify do
           expect(app).to be_running
@@ -37,9 +36,7 @@ describe 'CF Go Buildpack' do
       end
 
       context 'app uses go1.6 and godep with Godeps/_workspace dir' do
-        subject(:app) do
-          Machete.deploy_app('go1.6_app_with_dependencies/src/go_app_with_dependencies')
-        end
+        let(:app_name) { 'go1.6_app_with_dependencies/src/go_app_with_dependencies' }
 
         specify do
           expect(app).to be_running
@@ -51,9 +48,7 @@ describe 'CF Go Buildpack' do
       end
 
       context 'app uses go1.6 with godep and no vendor dir or Godeps/_workspace dir' do
-        subject(:app) do
-          Machete.deploy_app('go1.6_app_with_no_vendor/src/go_app_with_dependencies')
-        end
+        let(:app_name) { 'go1.6_app_with_no_vendor/src/go_app_with_dependencies' }
 
         specify do
           expect(app).to have_logged('vendor/ directory does not exist.')
@@ -77,9 +72,7 @@ describe 'CF Go Buildpack' do
 
     context 'app has vendored dependencies and no Godeps folder' do
       let(:app_name) { 'go_with_native_vendoring/src/go_app' }
-      subject(:app) do
-        Machete.deploy_app(app_name, env: {'BP_DEBUG' => '1'})
-      end
+      let(:deploy_options) { { env: {'BP_DEBUG' => '1'} } }
 
       it 'successfully stages' do
         expect(app).to be_running
@@ -98,9 +91,7 @@ describe 'CF Go Buildpack' do
 
     context 'app has vendored dependencies and custom package spec' do
       let(:app_name) { 'go_with_native_vendoring_custom_install_spec/src/go_app' }
-      subject(:app) do
-        Machete.deploy_app(app_name, env: {'BP_DEBUG' => '1'})
-      end
+      let(:deploy_options) { { env: {'BP_DEBUG' => '1'} } }
 
       it 'successfully stages' do
         expect(app).to be_running
@@ -283,9 +274,7 @@ describe 'CF Go Buildpack' do
 
     context 'go 1.7 app with GO_SETUP_GOPATH_IN_IMAGE' do
       let(:app_name) { 'go_app_gopath_in_container/src/go_app' }
-      subject(:app) do
-        Machete.deploy_app(app_name, env: {'GO_SETUP_GOPATH_IN_IMAGE' => 'true'})
-      end
+      let(:deploy_options) { { env: {'GO_SETUP_GOPATH_IN_IMAGE' => 'true'} } }
 
       it 'displays the GOPATH' do
         expect(app).to be_running
@@ -297,9 +286,7 @@ describe 'CF Go Buildpack' do
 
     context 'go 1.7 app with GO_INSTALL_TOOLS_IN_IMAGE' do
       let(:app_name) { 'go_app_toolchain_in_container/src/go_app' }
-      subject(:app) do
-        Machete.deploy_app(app_name, env: {'GO_INSTALL_TOOLS_IN_IMAGE' => 'true'})
-      end
+      let(:deploy_options) { { env: {'GO_INSTALL_TOOLS_IN_IMAGE' => 'true'} } }
 
       it 'displays the go version' do
         expect(app).to be_running
