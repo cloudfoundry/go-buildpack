@@ -12,14 +12,14 @@ url_to_dependency_map:
   version: v0.12.3
 - match: godep
   name: godep
-  version: v78
+  version: v79
 dependency_deprecation_dates:
 - match: 1.5.\d+
-  version_line: "1.5"
+  version_line: '1.5'
   name: go
   date: 2016-08-15
 - match: 1.6.\d+
-  version_line: "1.6"
+  version_line: '1.6'
   name: go
   date: 2017-02-28
 dependencies:
@@ -66,9 +66,9 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: godep
-  version: v78
-  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v78-linux-x64-aad73d18.tgz
-  md5: aad73d18f44db4d0de4296cbf6bc0455
+  version: v79
+  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v79-linux-x64-9e37ce0f.tgz
+  md5: 9e37ce0f6a258baf4848ded20ef49ba4
   cf_stacks:
   - cflinuxfs2
 exclude_files:
