@@ -14,27 +14,11 @@ url_to_dependency_map:
   name: godep
   version: v79
 dependency_deprecation_dates:
-- match: 1.5.\d+
-  version_line: '1.5'
-  name: go
-  date: 2016-08-15
 - match: 1.6.\d+
   version_line: '1.6'
   name: go
   date: 2017-02-28
 dependencies:
-- name: go
-  version: 1.5.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.5.3.linux-amd64-1d8bea79.tar.gz
-  md5: 1d8bea79ece6dfceb70ecbfbc5941c28
-  cf_stacks:
-  - cflinuxfs2
-- name: go
-  version: 1.5.4
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.5.4.linux-amd64-347dda1c.tar.gz
-  md5: 347dda1c50ed5bc1e60725f5cebf47d0
-  cf_stacks:
-  - cflinuxfs2
 - name: go
   version: 1.6.3
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.3.linux-amd64-684cb84f.tar.gz

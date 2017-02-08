@@ -57,16 +57,11 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has vendored dependencies' do
-      let(:app_name) { 'go_with_vendor_experiment_flag/src/go_app' }
+      let(:app_name) { 'go17_with_vendor_experiment_flag/src/go_app' }
 
       specify do
-        expect(app).to be_running
-        expect(app).to have_logged('Init: a.A == 1')
-
-        browser.visit_path('/')
-        expect(browser).to have_body('Read: a.A == 1')
-
-        expect(app).not_to have_internet_traffic
+        expect(app).not_to be_running
+        expect(app).to have_logged('GO15VENDOREXPERIMENT is set, but is not supported by go1.7')
       end
     end
 
@@ -149,31 +144,6 @@ describe 'CF Go Buildpack' do
       end
     end
 
-    context 'app has vendored dependencies with go1.5, but GO15VENDOREXPERIMENT=0' do
-      let(:app_name) { 'go15_native_vendoring_bad_env/src/go_app' }
-
-      it 'fails with helpful error' do
-        expect(app).to_not be_running
-
-        expect(app).to have_logged(/failed/i)
-        expect(app).to have_logged 'for go 1.5 this environment variable must be set to 1'
-      end
-    end
-
-    context 'app with vendored dependencies has Godeps.json with no Packages array' do
-      let(:app_name) { 'go15vendorexperiment_no_packages_array/src/go_app' }
-
-      specify do
-        expect(app).to be_running
-        expect(app).to have_logged('Init: a.A == 1')
-
-        browser.visit_path('/')
-        expect(browser).to have_body('Read: a.A == 1')
-
-        expect(app).not_to have_internet_traffic
-      end
-    end
-
     context 'app has no dependencies' do
       let(:app_name) { 'go_app/src/go_app' }
 
@@ -232,18 +202,6 @@ describe 'CF Go Buildpack' do
     end
 
     context 'a go app using ldflags' do
-      context 'with version 1.5~' do
-        let(:app_name) { 'go1.5_app_using_ldflags/src/go_app' }
-
-        specify do
-          expect(app).to be_running
-          browser.visit_path('/')
-          expect(browser).to have_body('flag_linked')
-          expect(app).to have_logged('main.linker_flag=flag_linked')
-          expect(app).not_to have_internet_traffic
-        end
-      end
-
       context 'with version 1.6~' do
         let(:app_name) { 'go1.6_app_using_ldflags/src/go_app' }
 
@@ -331,26 +289,11 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has vendored dependencies' do
-      let(:app_name) { 'go_with_vendor_experiment_flag/src/go_app' }
+      let(:app_name) { 'go17_with_vendor_experiment_flag/src/go_app' }
 
       specify do
-        expect(app).to be_running
-        expect(app).to have_logged('Init: a.A == 1')
-
-        browser.visit_path('/')
-        expect(browser).to have_body('Read: a.A == 1')
-      end
-    end
-
-    context 'app with vendored dependencies has Godeps.json with no Packages array' do
-      let(:app_name) { 'go15vendorexperiment_no_packages_array/src/go_app' }
-
-      specify do
-        expect(app).to be_running
-        expect(app).to have_logged('Init: a.A == 1')
-
-        browser.visit_path('/')
-        expect(browser).to have_body('Read: a.A == 1')
+        expect(app).not_to be_running
+        expect(app).to have_logged('GO15VENDOREXPERIMENT is set, but is not supported by go1.7')
       end
     end
 
@@ -391,16 +334,6 @@ describe 'CF Go Buildpack' do
     end
 
     context 'a go app using ldflags' do
-      context 'with version 1.5 or greater' do
-        let(:app_name) { 'go1.5_app_using_ldflags/src/go_app' }
-
-        specify do
-          expect(app).to be_running
-          browser.visit_path('/')
-          expect(browser).to have_body('flag_linked')
-          expect(app).to have_logged('main.linker_flag=flag_linked')
-        end
-      end
       context 'with version 1.6~' do
         let(:app_name) { 'go1.6_app_using_ldflags/src/go_app' }
 

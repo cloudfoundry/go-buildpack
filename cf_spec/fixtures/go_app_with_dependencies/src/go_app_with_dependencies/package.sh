@@ -15,9 +15,9 @@ cd -
 
 # remove workspace cache
 rm -rf Godeps/_workspace
-
+rm -rf vendor
 
 go install
 
-mkdir -p Godeps/_workspace/src
-cp -r ../github.com Godeps/_workspace/src/github.com
+mkdir -p vendor
+cp -r ../github.com vendor/github.com

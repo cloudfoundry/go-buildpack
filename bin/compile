@@ -68,14 +68,8 @@ massagePkgSpecForVendor() {
 urlFor() {
     ver=$1
     file=$2
-    case $ver in
-    go1.0*|go1.1beta*|go1.1rc*|go1.1|go1.1.*|go1.2beta*|go1.2rc*|go1.2|go1.2.1)
-        echo https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/go/$file
-        ;;
-    *)
-        echo https://storage.googleapis.com/golang/$file
-        ;;
-    esac
+
+    echo https://storage.googleapis.com/golang/$file
 }
 
 # Expand to supported versions of Go, (e.g. expand "go1.5" to latest release go1.5.2)
@@ -213,16 +207,6 @@ case ${TOOL} in
         handleDefaultPkgSpec
 
         case $ver in
-        go1.5*)
-            if test "$GO15VENDOREXPERIMENT" = "1"
-            then
-                warn ""
-                warn "\$GO15VENDOREXPERIMENT=1. This is an experiment. Things may not work as expected."
-                warn "See https://docs.cloudfoundry.org/buildpacks/go/index.html#go%201.5 for more info."
-                warn ""
-               VendorExperiment="true"
-            fi
-        ;;
         go1.6*)
             if test "$GO15VENDOREXPERIMENT" = "0" || test -d "${src}/Godeps/_workspace/src"
             then
@@ -237,7 +221,7 @@ case ${TOOL} in
           then
             err ""
             err "GO15VENDOREXPERIMENT is set, but is not supported by go1.7"
-            err "run `cf unset-env <app> GO15VENDOREXPERIMENT`"
+            err "run \`cf unset-env <app> GO15VENDOREXPERIMENT\`"
             err "before pushing again."
             err ""
             exit 1
@@ -274,16 +258,6 @@ case ${TOOL} in
         handleDefaultPkgSpec
 
         case $ver in
-        go1.5*)
-            if ! test "$GO15VENDOREXPERIMENT" = "1"
-            then
-                warn ""
-                warn "\$GO15VENDOREXPERIMENT is not =1. To use vendor your packages in vendor/"
-                warn "for go 1.5 this environment variable must be set to 1."
-                warn ""
-                exit 1
-            fi
-        ;;
         go1.6*)
             if test "$GO15VENDOREXPERIMENT" = "0"
             then

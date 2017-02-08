@@ -1,4 +1,0 @@
----
-  env:
-    GO_LINKER_SYMBOL: main.linker_flag
-    GO_LINKER_VALUE: flag_linked
