@@ -10,7 +10,7 @@ describe 'CF Go Buildpack' do
 
   context 'with cached buildpack dependencies', :cached do
     context 'app has dependencies' do
-      let(:app_name) { 'go_app_with_dependencies/src/go_app_with_dependencies' }
+      let(:app_name) { 'with_dependencies/src/with_dependencies' }
 
       specify do
         expect(app).to be_running
@@ -23,7 +23,7 @@ describe 'CF Go Buildpack' do
       end
 
       context 'app uses go1.6 and godep with GO15VENDOREXPERIMENT=0' do
-        let(:app_name) { 'go1.6_app_with_dependencies/src/go_app_with_dependencies' }
+        let(:app_name) { 'go16_dependencies/src/go16_dependencies' }
         let(:deploy_options) { { env: {"GO15VENDOREXPERIMENT" => "0"} } }
 
         specify do
@@ -36,7 +36,7 @@ describe 'CF Go Buildpack' do
       end
 
       context 'app uses go1.6 and godep with Godeps/_workspace dir' do
-        let(:app_name) { 'go1.6_app_with_dependencies/src/go_app_with_dependencies' }
+        let(:app_name) { 'go16_dependencies/src/go16_dependencies' }
 
         specify do
           expect(app).to be_running
@@ -48,7 +48,7 @@ describe 'CF Go Buildpack' do
       end
 
       context 'app uses go1.6 with godep and no vendor dir or Godeps/_workspace dir' do
-        let(:app_name) { 'go1.6_app_with_no_vendor/src/go_app_with_dependencies' }
+        let(:app_name) { 'go16_no_vendor/src/go16_no_vendor' }
 
         specify do
           expect(app).to have_logged('vendor/ directory does not exist.')
@@ -57,7 +57,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has vendored dependencies' do
-      let(:app_name) { 'go17_with_vendor_experiment_flag/src/go_app' }
+      let(:app_name) { 'go17_vendor_experiment_flag/src/go_app' }
 
       specify do
         expect(app).not_to be_running
@@ -66,7 +66,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has vendored dependencies and no Godeps folder' do
-      let(:app_name) { 'go_with_native_vendoring/src/go_app' }
+      let(:app_name) { 'native_vendoring/src/go_app' }
       let(:deploy_options) { { env: {'BP_DEBUG' => '1'} } }
 
       it 'successfully stages' do
@@ -85,7 +85,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has vendored dependencies and custom package spec' do
-      let(:app_name) { 'go_with_native_vendoring_custom_install_spec/src/go_app' }
+      let(:app_name) { 'vendored_custom_install_spec/src/go_app' }
       let(:deploy_options) { { env: {'BP_DEBUG' => '1'} } }
 
       it 'successfully stages' do
@@ -100,7 +100,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has vendored dependencies and a vendor.json file' do
-      let(:app_name) { 'go_with_native_vendoring_and_vendor_json/src/go_app' }
+      let(:app_name) { 'with_vendor_json/src/go_app' }
 
       it 'successfully stages' do
         expect(app).to be_running
@@ -112,7 +112,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app with only a single go file and GOPACKAGENAME specified' do
-      let(:app_name) { 'go_single_file/src/go_app' }
+      let(:app_name) { 'single_file/src/go_app' }
 
       it 'successfully stages' do
         expect(app).to be_running
@@ -123,7 +123,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app with only a single go file, a vendor directory, and no GOPACKAGENAME specified' do
-      let(:app_name) { 'go_with_native_vendoring_no_gopackagename/src/go_app' }
+      let(:app_name) { 'vendored_no_gopackagename/src/go_app' }
 
       it 'successfully stages' do
         expect(app).to_not be_running
@@ -134,7 +134,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has vendored dependencies with go1.6, but GO15VENDOREXPERIMENT=0' do
-      let(:app_name) { 'go16_native_vendoring_bad_env/src/go_app' }
+      let(:app_name) { 'go16_vendor_bad_env/src/go_app' }
 
       it 'fails with helpful error' do
         expect(app).to_not be_running
@@ -160,7 +160,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has no Procfile' do
-      let(:app_name) { 'go_app_without_procfile/src/go_app_without_procfile' }
+      let(:app_name) { 'no_procfile/src/no_procfile' }
 
       specify do
         expect(app).to be_running
@@ -189,7 +189,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'heroku example' do
-      let(:app_name) { 'go_heroku_example/src/go_heroku_example' }
+      let(:app_name) { 'heroku_example/src/heroku_example' }
 
       specify do
         expect(app).to be_running
@@ -203,7 +203,7 @@ describe 'CF Go Buildpack' do
 
     context 'a go app using ldflags' do
       context 'with version 1.6~' do
-        let(:app_name) { 'go1.6_app_using_ldflags/src/go_app' }
+        let(:app_name) { 'go16_ldflags/src/go_app' }
 
         specify do
           expect(app).to be_running
@@ -216,7 +216,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app uses glide and has vendored dependencies' do
-      let(:app_name) { 'go_app_with_glide_and_vendoring/src/go_app_with_glide_and_vendoring' }
+      let(:app_name) { 'glide_and_vendoring/src/glide_and_vendoring' }
 
       specify do
         expect(app).to be_running
@@ -231,7 +231,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'go 1.7 app with GO_SETUP_GOPATH_IN_IMAGE' do
-      let(:app_name) { 'go_app_gopath_in_container/src/go_app' }
+      let(:app_name) { 'gopath_in_container/src/go_app' }
       let(:deploy_options) { { env: {'GO_SETUP_GOPATH_IN_IMAGE' => 'true'} } }
 
       it 'displays the GOPATH' do
@@ -243,7 +243,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'go 1.7 app with GO_INSTALL_TOOLS_IN_IMAGE' do
-      let(:app_name) { 'go_app_toolchain_in_container/src/go_app' }
+      let(:app_name) { 'toolchain_in_container/src/go_app' }
       let(:deploy_options) { { env: {'GO_INSTALL_TOOLS_IN_IMAGE' => 'true'} } }
 
       it 'displays the go version' do
@@ -257,7 +257,7 @@ describe 'CF Go Buildpack' do
 
   context 'without cached buildpack dependencies', :uncached do
     context 'app uses glide' do
-      let(:app_name) { 'go_app_with_glide/src/go_app_with_glide' }
+      let(:app_name) { 'with_glide/src/with_glide' }
 
       specify do
         expect(app).to be_running
@@ -273,7 +273,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has dependencies' do
-      let(:app_name) { 'go_app_with_dependencies/src/go_app_with_dependencies' }
+      let(:app_name) { 'with_dependencies/src/with_dependencies' }
 
       specify do
         expect(app).to be_running
@@ -289,7 +289,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app has vendored dependencies' do
-      let(:app_name) { 'go17_with_vendor_experiment_flag/src/go_app' }
+      let(:app_name) { 'go17_vendor_experiment_flag/src/go_app' }
 
       specify do
         expect(app).not_to be_running
@@ -323,7 +323,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'heroku example' do
-      let(:app_name) { 'go_heroku_example/src/go_heroku_example' }
+      let(:app_name) { 'heroku_example/src/heroku_example' }
 
       specify do
         expect(app).to be_running
@@ -335,7 +335,7 @@ describe 'CF Go Buildpack' do
 
     context 'a go app using ldflags' do
       context 'with version 1.6~' do
-        let(:app_name) { 'go1.6_app_using_ldflags/src/go_app' }
+        let(:app_name) { 'go16_ldflags/src/go_app' }
 
         specify do
           expect(app).to be_running
@@ -347,7 +347,7 @@ describe 'CF Go Buildpack' do
     end
 
     context 'app uses glide and has vendored dependencies' do
-      let(:app_name) { 'go_app_with_glide_and_vendoring/src/go_app_with_glide_and_vendoring' }
+      let(:app_name) { 'glide_and_vendoring/src/glide_and_vendoring' }
 
       specify do
         expect(app).to be_running
@@ -364,7 +364,7 @@ describe 'CF Go Buildpack' do
   end
 
   context 'a .godir file is detected' do
-    let(:app_name) { 'go_deprecated_heroku_example/src/go_heroku_example' }
+    let(:app_name) { 'deprecated_heroku/src/deprecated_heroku' }
 
     it 'fails with a deprecation message' do
       expect(app).to_not be_running
@@ -374,7 +374,7 @@ describe 'CF Go Buildpack' do
   end
 
   context 'a go app with wildcard matcher' do
-    let(:app_name) { 'go_app_with_wildcard_version/src/go_app' }
+    let(:app_name) { 'wildcard_go_version/src/go_app' }
 
     specify do
       expect(app).to be_running
@@ -385,7 +385,7 @@ describe 'CF Go Buildpack' do
   end
 
   context 'a go 1.6 app' do
-    let(:app_name) { 'go_16_app/src/go_app' }
+    let(:app_name) { 'go16/src/go_app' }
 
     it 'should be compiled with buildmode=pie' do
       expect(app).to be_running
@@ -402,7 +402,7 @@ describe 'CF Go Buildpack' do
   end
 
   context 'a go app with an invalid wildcard matcher' do
-    let(:app_name) { 'go_app_with_invalid_wildcard_version/src/go_app' }
+    let(:app_name) { 'invalid_wildcard_version/src/go_app' }
 
     specify do
       expect(app).to_not be_running
