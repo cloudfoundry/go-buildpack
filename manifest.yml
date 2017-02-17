@@ -44,7 +44,7 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: go
-  version: 1.8
+  version: 1.8.0
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.linux-amd64-7eff0eab.tar.gz
   md5: 7eff0eab89b4bbdc4edea6beb672ed66
   cf_stacks:
