@@ -203,7 +203,7 @@ case ${TOOL} in
         eval "$(setupGOPATH ${name})"
         godepsJSON="${src}/Godeps/Godeps.json"
 
-        pkgs=${GO_INSTALL_PACKAGE_SPEC:-$(<${godepsJSON} jq -r 'if .Packages then .Packages | join(" ") else "default" end')}
+        pkgs=${GO_INSTALL_PACKAGE_SPEC:-$(<${godepsJSON} /usr/bin/ruby -rjson -e 'puts JSON.load(STDIN)["Packages"].join(" ") rescue puts "default"')}
         warnPackageSpecOverride
         handleDefaultPkgSpec
 
