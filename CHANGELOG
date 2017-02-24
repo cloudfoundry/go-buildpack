@@ -1,3 +1,18 @@
+v1.7.19 Feb 24, 2017
+=====================
+
+* Add go1.8.0
+  (https://www.pivotaltracker.com/story/show/140085065)
+
+* Remove go 1.5 support
+  (https://www.pivotaltracker.com/story/show/137306167)
+
+* Add godep v79, remove godep v78
+  (https://www.pivotaltracker.com/story/show/138883943)
+
+* Add EOL dates for go
+  (https://www.pivotaltracker.com/story/show/137374307)
+
 v1.7.18 Jan 30, 2017
 =====================
 
