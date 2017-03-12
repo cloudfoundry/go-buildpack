@@ -30,7 +30,7 @@ TOOL=""
 BUILDPACK_PATH=$buildpack
 export BUILDPACK_PATH
 source $buildpack/compile-extensions/lib/common
-$BUILDPACK_PATH/compile-extensions/bin/check_stack_support
+#$BUILDPACK_PATH/compile-extensions/bin/check_stack_support
 $BUILDPACK_PATH/compile-extensions/bin/download_dependency godep /tmp
 $BUILDPACK_PATH/compile-extensions/bin/warn_if_newer_patch godep $manifest_file
 tar -xzf /tmp/godep -C /tmp
