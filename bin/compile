@@ -7,6 +7,7 @@ mkdir -p "$1" "$2"
 build=$(cd "$1/" && pwd)
 cache=$(cd "$2/" && pwd)
 env_dir="${3}"
+deps_dir=${4:-}
 buildpack=$(cd "$(dirname $0)/.." && pwd)
 arch=$(uname -m|tr A-Z a-z)
 if test $arch = x86_64
@@ -31,6 +32,16 @@ BUILDPACK_PATH=$buildpack
 export BUILDPACK_PATH
 source $buildpack/compile-extensions/lib/common
 $BUILDPACK_PATH/compile-extensions/bin/check_stack_support
+$BUILDPACK_PATH/compile-extensions/bin/check_buildpack_version $BUILDPACK_PATH $cache
+
+if [ -n "$deps_dir" ]; then
+  env_vars=$($BUILDPACK_PATH/compile-extensions/bin/build_path_from_supply $deps_dir)
+  for env_var in $env_vars; do
+    export $env_var
+  done
+  $BUILDPACK_PATH/compile-extensions/bin/write_profiled_from_supply $deps_dir $build
+fi
+
 $BUILDPACK_PATH/compile-extensions/bin/download_dependency godep /tmp
 $BUILDPACK_PATH/compile-extensions/bin/warn_if_newer_patch godep $manifest_file
 tar -xzf /tmp/godep -C /tmp
@@ -38,7 +49,6 @@ $BUILDPACK_PATH/compile-extensions/bin/download_dependency glide /tmp
 $BUILDPACK_PATH/compile-extensions/bin/warn_if_newer_patch glide $manifest_file
 tar -xzf /tmp/glide -C /tmp
 PATH=/tmp/bin:$PATH
-$BUILDPACK_PATH/compile-extensions/bin/check_buildpack_version $BUILDPACK_PATH $cache
 # END CF Common
 
 handleDefaultPkgSpec() {
