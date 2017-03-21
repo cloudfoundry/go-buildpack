@@ -1,371 +1,42 @@
 #!/bin/bash
-# usage: bin/compile <build-dir> <cache-dir> <env-dir>
+set -euo pipefail
 
-set -eo pipefail
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=${3:-}
+DEPS_DIR=${4:-}
+export BUILDPACK_DIR=`dirname $(readlink -f ${BASH_SOURCE%/*})`
 
-mkdir -p "$1" "$2"
-build=$(cd "$1/" && pwd)
-cache=$(cd "$2/" && pwd)
-env_dir="${3}"
-deps_dir=${4:-}
-buildpack=$(cd "$(dirname $0)/.." && pwd)
-arch=$(uname -m|tr A-Z a-z)
-if test $arch = x86_64
-then arch=amd64
-fi
-plat=$(uname|tr A-Z a-z)-$arch
-PATH=$buildpack/$plat/bin:$PATH
+GO_VERSION="1.7.5"
+GO_MD5="c9de5bb95790044de676301898e92a1b"
 
-steptxt="----->"
-YELLOW='\033[1;33m'
-RED='\033[1;31m'
-NC='\033[0m' # No Color
-CURL="curl -s -L --retry 15 --retry-delay 2" # retry for up to 30 seconds
+URL=https://buildpacks.cloudfoundry.org/dependencies/go/go${GO_VERSION}.linux-amd64-c9de5bb9.tar.gz
 
-manifest_file="$buildpack/manifest.yml"
-default_go_version="$($buildpack/compile-extensions/bin/default_version_for $manifest_file go)"
-DefaultGoVersion="go${default_go_version}"
-TOOL=""
+echo "-----> Download go ${GO_VERSION}"
+curl -s -L --retry 15 --retry-delay 2 $URL -o /tmp/go.tar.gz
 
-# CF Common
-BUILDPACK_PATH=$buildpack
-export BUILDPACK_PATH
-source $buildpack/compile-extensions/lib/common
-$BUILDPACK_PATH/compile-extensions/bin/check_stack_support
-$BUILDPACK_PATH/compile-extensions/bin/check_buildpack_version $BUILDPACK_PATH $cache
+DOWNLOAD_MD5=$(md5sum /tmp/go.tar.gz | cut -d ' ' -f 1)
 
-if [ -n "$deps_dir" ]; then
-  env_vars=$($BUILDPACK_PATH/compile-extensions/bin/build_path_from_supply $deps_dir)
-  for env_var in $env_vars; do
-    export $env_var
-  done
-  $BUILDPACK_PATH/compile-extensions/bin/write_profiled_from_supply $deps_dir $build
+if [[ $DOWNLOAD_MD5 != $GO_MD5 ]]; then
+  echo "       **ERROR** MD5 mismatch: got $DOWNLOAD_MD5 expected $GO_MD5"
+  exit 1
 fi
 
-$BUILDPACK_PATH/compile-extensions/bin/download_dependency godep /tmp
-$BUILDPACK_PATH/compile-extensions/bin/warn_if_newer_patch godep $manifest_file
-tar -xzf /tmp/godep -C /tmp
-$BUILDPACK_PATH/compile-extensions/bin/download_dependency glide /tmp
-$BUILDPACK_PATH/compile-extensions/bin/warn_if_newer_patch glide $manifest_file
-tar -xzf /tmp/glide -C /tmp
-PATH=/tmp/bin:$PATH
-# END CF Common
+tar xzf /tmp/go.tar.gz -C /tmp
 
-handleDefaultPkgSpec() {
-    if [ "$pkgs" = "default" ];
-    then
-        warn "Installing package '.' (default)"
-        pkgs="."
-    fi
-}
+export GOROOT=/tmp/go
+export GOPATH=$BUILDPACK_DIR
 
-massagePkgSpecForVendor() {
-    local t=""
-    for pkg in $(echo $pkgs); do
-      if [ "${pkg:0:1}" = "." ] || [ ! -d "./vendor/$pkg" ]; then
-        t+="${pkg} "
-      else
-        t+="${name}/vendor/${pkg} "
-      fi
-    done
-    pkgs="${t}"
-}
-
-# Go releases have moved to a new URL scheme
-# starting with Go version 1.2.2. Return the old
-# location for known old versions and the new
-# location otherwise.
-urlFor() {
-    ver=$1
-    file=$2
-
-    echo https://storage.googleapis.com/golang/$file
-}
-
-# Expand to supported versions of Go, (e.g. expand "go1.5" to latest release go1.5.2)
-# All specific or other versions, take as is.
-expandVer() {
-  buildpack_dir=$1
-  target_version=$2
-  highest_ver="$($buildpack_dir/compile-extensions/bin/highest_version $buildpack_dir/manifest.yml go $target_version)"
-
-  if [ "$highest_ver" = "" ]; then
-    echo $target_version
-  else
-    echo $highest_ver
-  fi
-}
-
-# Report deprecated versions to user
-# Use after expandVer
-reportVer() {
-  : # unsupported versions in Cloud Foundry will fail to push; no deprecation warnings needed
-}
-
-warnGoVersionOverride() {
-  if test ! -z "${GOVERSION}"
-  then
-    warn "Using \$GOVERSION override."
-    warn "     \$GOVERSION = ${GOVERSION}"
-    warn ""
-    warn "If this isn't what you want please run:'"
-    warn "  cf unset-env <app> GOVERSION"
-    warn ""
-  fi
-}
-
-warnPackageSpecOverride() {
-  if test ! -z "${GO_INSTALL_PACKAGE_SPEC}"
-  then
-    warn "Using \$GO_INSTALL_PACKAGE_SPEC override."
-    warn "     \$GO_INSTALL_PACKAGE_SPEC = ${GO_INSTALL_PACKAGE_SPEC}"
-    warn ""
-    warn "If this isn't what you want please run:'"
-    warn "  cf unset-env <app> GO_INSTALL_PACKAGE_SPEC"
-    warn ""
-  fi
-}
-
-# Sets up GOPATH (and posibly other GO* env vars) and returns the location of
-# the source code as $src. The output of this function is meant to be eval'd'
-setupGOPATH() {
-    local name="${1}"
-    local t="$(mktemp -d)"
-
-    if test "${GO_SETUP_GOPATH_IN_IMAGE}" = "true"
-    then
-        mv -t ${t} ${build}/*
-        GOPATH="${build}"
-    else
-        cp -R ${build}/* ${t}
-        GOPATH="${t}/.go"
-        echo export GOBIN="${build}/bin"
-    fi
-
-    local src="${GOPATH}/src/${name}"
-    mkdir -p "${src}"
-    mkdir -p "${build}/bin"
-    mv -t "${src}" "${t}"/*
-
-    echo "GOPATH=${GOPATH}"
-    echo "src=${src}"
-}
-
-source "${buildpack}/lib/common.sh"
-loadEnvDir "${env_dir}"
-determineTool
-
-ver=$(expandVer $buildpack $ver)
-file=${GOFILE:-$ver.linux-amd64.tar.gz}
-url=${GOURL:-$(urlFor $ver $file)}
-
-if test -e $build/bin && ! test -d $build/bin
-then
-    err ""
-    err "File bin exists and is not a directory."
-    err ""
-    exit 1
-fi
-
-reportVer $ver
-
-if test -d "${cache}/${ver}/go"
-then
-    step "Using ${ver}"
+if [ -f $GOROOT/bin/go ]; then
+  echo "-----> Running go build compile"
+  output_dir=$(mktemp -d -t compileXXX)
+  $GOROOT/bin/go build -o $output_dir/compile compile
 else
-    rm -rf ${cache}/* # be sure not to build up cruft
-    mkdir -p "${cache}/${ver}"
-    cd "${cache}/${ver}"
-       exit_code=0
-
-      filtered_url=$($BUILDPACK_PATH/compile-extensions/bin/download_dependency $ver $PWD) || exit_code=$?
-      if [ $exit_code -ne 0 ]; then
-        echo -e "`$buildpack/compile-extensions/bin/recommend_dependency $ver`" 1>&2
-        exit 22
-      fi
-      $BUILDPACK_PATH/compile-extensions/bin/warn_if_newer_patch $ver $manifest_file
-
-      start "Installing ${ver}"
-        tar zxf $ver
-        rm $ver
-      finished
-
-      echo "Downloaded [$filtered_url]"
-    cd - >/dev/null
+  echo "       **ERROR** Could not download go"
+  exit 1
 fi
 
-mkdir -p $build/bin
-export GOROOT="${cache}/${ver}/go"
-PATH="${PATH}:${GOROOT}/bin"
+unset GOROOT
+unset GOPATH
 
-# If $GO_LINKER_SYMBOL and GO_LINKER_VALUE are set, tell the linker to DTRT
-FLAGS=(-tags cloudfoundry)
-if [ -n "${GO_LINKER_SYMBOL}" -a -n "${GO_LINKER_VALUE}" ]
-then
-    xval="${GO_LINKER_SYMBOL}=${GO_LINKER_VALUE}"
-    FLAGS+=(-ldflags "-X ${xval}")
-fi
-
-export GOPATH
-
-case ${TOOL} in
-    godep)
-        eval "$(setupGOPATH ${name})"
-        godepsJSON="${src}/Godeps/Godeps.json"
-
-        pkgs=${GO_INSTALL_PACKAGE_SPEC:-$(<${godepsJSON} /usr/bin/ruby -rjson -e 'puts JSON.load(STDIN)["Packages"].join(" ") rescue puts "default"')}
-        warnPackageSpecOverride
-        handleDefaultPkgSpec
-
-        case $ver in
-        go1.6*)
-            if test "$GO15VENDOREXPERIMENT" = "0" || test -d "${src}/Godeps/_workspace/src"
-            then
-                VendorExperiment="false"
-            else
-                VendorExperiment="true"
-            fi
-            FLAGS+=(--buildmode=pie)
-        ;;
-        go1.7*)
-          if test -n "$GO15VENDOREXPERIMENT"
-          then
-            err ""
-            err "GO15VENDOREXPERIMENT is set, but is not supported by go1.7"
-            err "run \`cf unset-env <app> GO15VENDOREXPERIMENT\`"
-            err "before pushing again."
-            err ""
-            exit 1
-          fi
-          VendorExperiment="true"
-        ;;
-        *)
-            VendorExperiment="false"
-        ;;
-        esac
-
-        unset GIT_DIR # unset git dir or it will mess with goinstall
-        cd "${src}"
-        if test "$VendorExperiment" = "true"
-        then
-            if test ! -d "$build/vendor"
-            then
-              warn ""
-              warn "vendor/ directory does not exist."
-              warn ""
-            fi
-            massagePkgSpecForVendor
-            step "Running: go install -v ${FLAGS[@]} ${pkgs}"
-            go install -v "${FLAGS[@]}" ${pkgs} 2>&1
-        else
-            step "Running: godep go install -v ${FLAGS[@]} ${pkgs}"
-            godep go install -v "${FLAGS[@]}" ${pkgs} 2>&1
-        fi
-    ;;
-    go_nativevendoring)
-        eval "$(setupGOPATH ${name})"
-
-        pkgs=${GO_INSTALL_PACKAGE_SPEC-"default"}
-        handleDefaultPkgSpec
-
-        case $ver in
-        go1.6*)
-            if test "$GO15VENDOREXPERIMENT" = "0"
-            then
-                warn ""
-                warn "\$GO15VENDOREXPERIMENT=0. To use vendor your packages in vendor/"
-                warn "for go 1.6 this environment variable must unset or set to 1."
-                warn ""
-                exit 1
-            fi
-        ;;
-        esac
-
-        unset GIT_DIR # unset git dir or it will mess with goinstall
-        cd "${src}"
-
-        massagePkgSpecForVendor
-
-        step "Running: go install -v ${FLAGS[@]} ${pkgs}"
-        go install -v "${FLAGS[@]}" ${pkgs} 2>&1
-    ;;
-    glide)
-        # Do this before setupGOPATH as we need ${name} set first
-        cd "${build}"
-        name=$(glide name 2>/dev/null)
-
-        eval "$(setupGOPATH ${name})"
-
-        pkgs=${GO_INSTALL_PACKAGE_SPEC:-"default"}
-        handleDefaultPkgSpec
-
-        unset GIT_DIR
-        cd "${src}"
-
-        number_of_vendor_subdirectories=0
-        if [ -d "vendor" ]; then
-          number_of_vendor_subdirectories=$(find vendor -mindepth 1 -maxdepth 1 -type d | wc -l)
-        fi
-
-        if [ "$number_of_vendor_subdirectories" -eq 0 ]
-        then
-            step "Fetching any unsaved dependencies (glide install)"
-            glide install 2>&1
-        else
-            step "Note: skipping (glide install) due to non-empty vendor directory."
-        fi
-
-        massagePkgSpecForVendor
-
-        step "Running: go install -v ${FLAGS[@]} ${pkgs}"
-        go install -v "${FLAGS[@]}" ${pkgs} 2>&1
-    ;;
-# GB installation currently unsupported
-    gb)
-        warn ""
-        warn "Error: Cloud Foundry does not support the GB package manager"
-        warn "We currently only support the Godep and Glide package managers for go apps"
-        warn "For support please file an issue: https://github.com/cloudfoundry/go-buildpack/issues"
-        warn ""
-        exit 1
-    ;;
-esac
-
-echo -e "---\ndefault_process_types:\n  web: $(basename $name)" >> /tmp/buildpack-release-step.yml
-
-if test ! -z "${src}" -a "${src}" != "${build}" -a -e "${src}/Procfile"
-then
-  mv -t "${build}" "${src}/Procfile"
-fi
-
-if ! test -e $build/Procfile && test -n "${name}"
-then
-  echo -e "web: $(basename $name)" >> $build/Procfile
-fi
-
-cd $build
-mkdir -p $build/.profile.d
-echo 'PATH=$PATH:$HOME/bin' > $build/.profile.d/go.sh
-
-if test "${GO_INSTALL_TOOLS_IN_IMAGE}" = "true"
-then
-    start "Copying go tool chain to \$GOROOT=\$HOME/.cloudfoundry/go"
-        mkdir -p "${build}/.cloudfoundry/go"
-        cp -a "${GOROOT}/"* "${build}/.cloudfoundry/go"
-        echo 'export GOROOT=$HOME/.cloudfoundry/go' > "${build}/.profile.d/goroot.sh"
-        echo 'PATH=$PATH:$GOROOT/bin' >> "${build}/.profile.d/goroot.sh"
-    finished
-    step "Copying ${TOOL} binary"
-    cp $(which ${TOOL}) "${build}/bin"
-fi
-
-if test "${GO_SETUP_GOPATH_IN_IMAGE}" = "true"
-then
-    start "Cleaning up \$GOPATH/pkg"
-        rm -rf $GOPATH/pkg
-    finished
-    echo 'export GOPATH=$HOME' > "${build}/.profile.d/zzgopath.sh"  #Try to make sure it's down in towards the end
-    echo 'cd $GOPATH/src/'${name} >> "${build}/.profile.d/zzgopath.sh" # because of this
-fi
-
-$BUILDPACK_PATH/compile-extensions/bin/store_buildpack_metadata $BUILDPACK_PATH $cache
+$output_dir/compile "$BUILD_DIR" "$CACHE_DIR" "$ENV_DIR" "$DEPS_DIR"

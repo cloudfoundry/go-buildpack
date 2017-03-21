@@ -4,4 +4,6 @@ go_buildpack*.zip
 log/
 .bundle
 vendor
+!src/compile/vendor
 _workspace
+pkg/

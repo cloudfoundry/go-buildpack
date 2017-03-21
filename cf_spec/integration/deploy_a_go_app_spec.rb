@@ -67,7 +67,6 @@ describe 'CF Go Buildpack' do
 
     context 'app has vendored dependencies and no Godeps folder' do
       let(:app_name) { 'native_vendoring/src/go_app' }
-      let(:deploy_options) { { env: {'BP_DEBUG' => '1'} } }
 
       it 'successfully stages' do
         expect(app).to be_running
@@ -77,10 +76,6 @@ describe 'CF Go Buildpack' do
         expect(browser).to have_body('Read: a.A == 1')
 
         expect(app).not_to have_internet_traffic
-      end
-
-      it 'uses default_versions_for to pick the Go version' do
-        expect(app).to have_logged('DEBUG: default_version_for go is')
       end
     end
 
@@ -140,7 +135,7 @@ describe 'CF Go Buildpack' do
         expect(app).to_not be_running
 
         expect(app).to have_logged(/failed/i)
-        expect(app).to have_logged 'for go 1.6 this environment variable must unset or set to 1'
+        expect(app).to have_logged 'with go 1.6 this environment variable must unset or set to 1.'
       end
     end
 
@@ -152,10 +147,24 @@ describe 'CF Go Buildpack' do
 
         browser.visit_path('/')
         expect(browser).to have_body('go, world')
-        expect(app).to have_logged(/Installing go[\d\.]+\.\.\. done/)
-        expect(app).to have_logged(/Downloaded \[file:\/\/.*\]/)
+        expect(app).to have_logged(/Installing go [\d\.]+/)
+        expect(app).to have_logged(/Copy \[\/tmp\//)
 
         expect(app).not_to have_internet_traffic
+      end
+    end
+
+    context 'app has before/after compile hooks' do
+      let(:app_name) { 'go_app/src/go_app' }
+      let(:deploy_options) { { env: {'BP_DEBUG' => '1'} } }
+
+      it 'runs the hooks' do
+        expect(app).to have_logged('HOOKS 1: BeforeCompile')
+        expect(app).to have_logged('HOOKS 2: AfterCompile')
+
+        expect(app).to be_running
+        browser.visit_path('/')
+        expect(browser).to have_body('go, world')
       end
     end
 
@@ -167,8 +176,8 @@ describe 'CF Go Buildpack' do
 
         browser.visit_path('/')
         expect(browser).to have_body('go, world')
-        expect(app).to have_logged(/Installing go[\d\.]+\.\.\. done/)
-        expect(app).to have_logged(/Downloaded \[file:\/\/.*\]/)
+        expect(app).to have_logged(/Installing go [\d\.]+/)
+        expect(app).to have_logged(/Copy \[\/tmp\//)
 
         expect(app).not_to have_internet_traffic
       end
@@ -182,7 +191,7 @@ describe 'CF Go Buildpack' do
         expect(app).not_to be_running
 
         expect(app).to have_logged(/failed/i)
-        expect(app).to have_logged 'DEPENDENCY MISSING IN MANIFEST: go 99.99.99'
+        expect(app).to have_logged 'Unable to determine Go version to install: no match found for 99.99.99'
         expect(app).to_not have_logged 'Installing go99.99.99'
         expect(app).to_not have_logged('Uploading droplet')
       end
@@ -380,7 +389,7 @@ describe 'CF Go Buildpack' do
       expect(app).to be_running
       browser.visit_path('/')
       expect(browser).to have_body('go, world')
-      expect(app).to have_logged(/Installing go1\.6\.\d+\.\.\. done/)
+      expect(app).to have_logged(/Installing go 1\.6\.\d+/)
     end
   end
 
@@ -407,9 +416,8 @@ describe 'CF Go Buildpack' do
     specify do
       expect(app).to_not be_running
 
-      expect(app).to have_logged 'DEPENDENCY MISSING IN MANIFEST: go 1.3'
+      expect(app).to have_logged 'Unable to determine Go version to install: no match found for 1.3.x'
       expect(app).to_not have_logged 'Installing go1.3'
     end
   end
-
 end

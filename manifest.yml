@@ -3,19 +3,8 @@ language: go
 default_versions:
 - name: go
   version: 1.7.5
-url_to_dependency_map:
-- match: go(\d+\.\d+(.*))
-  name: go
-  version: "$1"
-- match: godep
-  name: godep
-  version: v79
-- match: glide
-  name: glide
-  version: v0.12.3
 dependency_deprecation_dates:
-- match: 1.6.\d+
-  version_line: '1.6'
+- version_line: '1.6.x'
   name: go
   date: 2017-02-16
 dependencies:
@@ -75,3 +64,6 @@ exclude_files:
 - PULL_REQUEST_TEMPLATE
 - ISSUE_TEMPLATE
 - go_buildpack-*v*.zip
+- pkg/
+
+pre_package: scripts/build.sh
