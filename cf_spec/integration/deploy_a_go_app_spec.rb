@@ -314,7 +314,7 @@ describe 'CF Go Buildpack' do
 
         browser.visit_path('/')
         expect(browser).to have_body('go, world')
-        expect(app).to have_logged(/Installing go[\d\.]+\.\.\. done/)
+        expect(app).to have_logged(/Installing go [\d\.]+/)
         expect(app).to have_logged(/Downloaded \[https:\/\/.*\]/)
       end
     end
@@ -326,7 +326,7 @@ describe 'CF Go Buildpack' do
       it "displays useful understandable errors" do
         expect(app).not_to be_running
 
-        expect(app).to have_logged 'DEPENDENCY MISSING IN MANIFEST: go 99.99.99'
+        expect(app).to have_logged 'Unable to determine Go version to install: no match found for 99.99.99'
         expect(app).to_not have_logged 'Installing go99.99.99'
       end
     end
