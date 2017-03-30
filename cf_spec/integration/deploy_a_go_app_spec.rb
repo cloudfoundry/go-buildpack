@@ -315,7 +315,7 @@ describe 'CF Go Buildpack' do
         browser.visit_path('/')
         expect(browser).to have_body('go, world')
         expect(app).to have_logged(/Installing go [\d\.]+/)
-        expect(app).to have_logged(/Downloaded \[https:\/\/.*\]/)
+        expect(app).to have_logged(/Download \[https:\/\/.*\]/)
       end
     end
 
