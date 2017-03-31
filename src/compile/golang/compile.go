@@ -437,7 +437,7 @@ func (gc *Compiler) SetInstallPackages() error {
 
 func (gc *Compiler) CompileApp() error {
 	cmd := "go"
-	args := []string{"install", "-v"}
+	args := []string{"install"}
 	args = append(args, gc.BuildFlags...)
 	args = append(args, gc.PackageList...)
 

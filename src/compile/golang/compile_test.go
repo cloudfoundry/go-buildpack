@@ -112,7 +112,7 @@ var _ = Describe("Compile", func() {
 	"ImportPath": "go-online",
 	"GoVersion": "go1.6",
 	"Deps": []
-}					
+}
 `
 				})
 				It("sets the tool to godep", func() {
@@ -1252,14 +1252,14 @@ var _ = Describe("Compile", func() {
 				It("wraps the install command with godep", func() {
 					gomock.InOrder(
 						mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-						mockCommandRunner.EXPECT().Run("godep", "go", "install", "-v", "-a=1", "-b=2", "first", "second").Return(nil),
+						mockCommandRunner.EXPECT().Run("godep", "go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
 						mockCommandRunner.EXPECT().SetDir(""),
 					)
 
 					err = gc.CompileApp()
 					Expect(err).To(BeNil())
 
-					Expect(buffer.String()).To(ContainSubstring("-----> Running: godep go install -v -a=1 -b=2 first second"))
+					Expect(buffer.String()).To(ContainSubstring("-----> Running: godep go install -a=1 -b=2 first second"))
 				})
 			})
 
@@ -1276,14 +1276,14 @@ var _ = Describe("Compile", func() {
 					It("does not wrap the install command with godep", func() {
 						gomock.InOrder(
 							mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-							mockCommandRunner.EXPECT().Run("go", "install", "-v", "-a=1", "-b=2", "first", "second").Return(nil),
+							mockCommandRunner.EXPECT().Run("go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
 							mockCommandRunner.EXPECT().SetDir(""),
 						)
 
 						err = gc.CompileApp()
 						Expect(err).To(BeNil())
 
-						Expect(buffer.String()).To(ContainSubstring("-----> Running: go install -v -a=1 -b=2 first second"))
+						Expect(buffer.String()).To(ContainSubstring("-----> Running: go install -a=1 -b=2 first second"))
 					})
 
 				})
@@ -1296,14 +1296,14 @@ var _ = Describe("Compile", func() {
 					It("wraps the command with godep", func() {
 						gomock.InOrder(
 							mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-							mockCommandRunner.EXPECT().Run("godep", "go", "install", "-v", "-a=1", "-b=2", "first", "second").Return(nil),
+							mockCommandRunner.EXPECT().Run("godep", "go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
 							mockCommandRunner.EXPECT().SetDir(""),
 						)
 
 						err = gc.CompileApp()
 						Expect(err).To(BeNil())
 
-						Expect(buffer.String()).To(ContainSubstring("-----> Running: godep go install -v -a=1 -b=2 first second"))
+						Expect(buffer.String()).To(ContainSubstring("-----> Running: godep go install -a=1 -b=2 first second"))
 					})
 				})
 			})
@@ -1316,14 +1316,14 @@ var _ = Describe("Compile", func() {
 			It("logs and runs the install command it is going to run", func() {
 				gomock.InOrder(
 					mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-					mockCommandRunner.EXPECT().Run("go", "install", "-v", "-a=1", "-b=2", "first", "second").Return(nil),
+					mockCommandRunner.EXPECT().Run("go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
 					mockCommandRunner.EXPECT().SetDir(""),
 				)
 
 				err = gc.CompileApp()
 				Expect(err).To(BeNil())
 
-				Expect(buffer.String()).To(ContainSubstring("-----> Running: go install -v -a=1 -b=2 first second"))
+				Expect(buffer.String()).To(ContainSubstring("-----> Running: go install -a=1 -b=2 first second"))
 			})
 		})
 
@@ -1335,14 +1335,14 @@ var _ = Describe("Compile", func() {
 			It("logs and runs the install command it is going to run", func() {
 				gomock.InOrder(
 					mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-					mockCommandRunner.EXPECT().Run("go", "install", "-v", "-a=1", "-b=2", "first", "second").Return(nil),
+					mockCommandRunner.EXPECT().Run("go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
 					mockCommandRunner.EXPECT().SetDir(""),
 				)
 
 				err = gc.CompileApp()
 				Expect(err).To(BeNil())
 
-				Expect(buffer.String()).To(ContainSubstring("-----> Running: go install -v -a=1 -b=2 first second"))
+				Expect(buffer.String()).To(ContainSubstring("-----> Running: go install -a=1 -b=2 first second"))
 			})
 		})
 	})
