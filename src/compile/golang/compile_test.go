@@ -84,6 +84,8 @@ var _ = Describe("Compile", func() {
 	})
 
 	AfterEach(func() {
+		mockCtrl.Finish()
+
 		err = os.RemoveAll(buildDir)
 		Expect(err).To(BeNil())
 
@@ -195,9 +197,7 @@ var _ = Describe("Compile", func() {
 		Context("there is a glide.yaml file", func() {
 			BeforeEach(func() {
 				err = ioutil.WriteFile(filepath.Join(buildDir, "glide.yaml"), []byte("xxx"), 0644)
-				dep := libbuildpack.Dependency{Name: "go", Version: "1.14.3"}
-
-				mockManifest.EXPECT().DefaultVersion("go").Return(dep, nil)
+				Expect(err).To(BeNil())
 			})
 
 			It("sets the tool to glide", func() {
@@ -229,11 +229,6 @@ var _ = Describe("Compile", func() {
 		})
 
 		Context("none of the above", func() {
-			BeforeEach(func() {
-				dep := libbuildpack.Dependency{Name: "go", Version: "2.0.1"}
-				mockManifest.EXPECT().DefaultVersion("go").Return(dep, nil)
-			})
-
 			It("sets the tool to go_nativevendoring", func() {
 				err = gc.SelectVendorTool()
 				Expect(err).To(BeNil())
@@ -356,15 +351,11 @@ var _ = Describe("Compile", func() {
 			})
 		})
 		Context("glide or go_nativevendoring", func() {
-			BeforeEach(func() {
-				dep := libbuildpack.Dependency{Name: "go", Version: "1.14.3"}
-
-				mockManifest.EXPECT().DefaultVersion("go").Return(dep, nil)
-			})
-
 			Context("GOVERSION is notset", func() {
 				BeforeEach(func() {
 					vendorTool = "glide"
+					dep := libbuildpack.Dependency{Name: "go", Version: "1.14.3"}
+					mockManifest.EXPECT().DefaultVersion("go").Return(dep, nil)
 				})
 
 				It("sets the go version to the default from the manifest.yml", func() {
