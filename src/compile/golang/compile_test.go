@@ -11,13 +11,15 @@ import (
 	"bytes"
 
 	"github.com/cloudfoundry/libbuildpack"
+	"github.com/cloudfoundry/libbuildpack/ansicleaner"
+
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
-//go:generate mockgen -source=vendor/github.com/cloudfoundry/libbuildpack/manifest.go --destination=mocks_manifest_test.go --package=golang_test --imports=.=github.com/cloudfoundry/libbuildpack
-//go:generate mockgen -source=vendor/github.com/cloudfoundry/libbuildpack/command_runner.go --destination=mocks_command_runner_test.go --package=golang_test
+//go:generate mockgen -source=../vendor/github.com/cloudfoundry/libbuildpack/manifest.go --destination=mocks_manifest_test.go --package=golang_test --imports=.=github.com/cloudfoundry/libbuildpack
+//go:generate mockgen -source=../vendor/github.com/cloudfoundry/libbuildpack/command_runner.go --destination=mocks_command_runner_test.go --package=golang_test
 
 var _ = Describe("Compile", func() {
 	var (
@@ -53,7 +55,7 @@ var _ = Describe("Compile", func() {
 		buffer = new(bytes.Buffer)
 
 		logger = libbuildpack.NewLogger()
-		logger.SetOutput(buffer)
+		logger.SetOutput(ansicleaner.New(buffer))
 
 		mockCtrl = gomock.NewController(GinkgoT())
 		mockManifest = NewMockManifest(mockCtrl)

@@ -118,9 +118,9 @@ func (m *manifest) StoreBuildpackMetadata(cacheDir string) {
 
 	md := BuildpackMetadata{Language: m.Language(), Version: version}
 
-	_ = NewYAML().Write(filepath.Join(cacheDir, "BUILDPACK_METADATA"), &md)
-
-	return
+	if exists, _ := FileExists(cacheDir); exists {
+		_ = NewYAML().Write(filepath.Join(cacheDir, "BUILDPACK_METADATA"), &md)
+	}
 }
 
 func (m *manifest) Language() string {
