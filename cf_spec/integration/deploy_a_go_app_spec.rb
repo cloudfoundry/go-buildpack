@@ -1,5 +1,6 @@
 $: << 'cf_spec'
 require 'spec_helper'
+require 'open3'
 
 describe 'CF Go Buildpack' do
   subject(:app) { Machete.deploy_app(app_name, deploy_options) }
@@ -368,6 +369,32 @@ describe 'CF Go Buildpack' do
 
       it "uses a proxy during staging if present" do
         expect(app).to use_proxy_during_staging
+      end
+    end
+  end
+
+  context 'unpackaged buildpack eg. from github' do
+    let(:buildpack) { "go-unpackaged-buildpack-#{rand(1000)}" }
+    let(:app) { Machete.deploy_app(app_name, buildpack: buildpack, skip_verify_version: true) }
+    before do
+      buildpack_file = "/tmp/#{buildpack}.zip"
+      Open3.capture2e('zip','-r',buildpack_file,'bin/','src/','manifest.yml','VERSION')[1].success? or raise 'Coudl not create unpackaged buildpack zip file'
+      Open3.capture2e('cf', 'create-buildpack', buildpack, buildpack_file, '100', '--enable')[1].success? or raise 'Could not upload buildpack'
+      FileUtils.rm buildpack_file
+    end
+    after do
+      Open3.capture2e('cf', 'delete-buildpack', '-f', buildpack)
+    end
+
+    context 'a go app' do
+      let(:app_name) { 'go_app/src/go_app' }
+
+      it 'runs' do
+        expect(app).to be_running
+        expect(app).to have_logged(/Running go build compile/)
+
+        browser.visit_path('/')
+        expect(browser).to have_body('go, world')
       end
     end
   end
