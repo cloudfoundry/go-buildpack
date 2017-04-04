@@ -1,3 +1,15 @@
+v1.8.0 Apr 04, 2017
+=====================
+
+* Don't pass verbose flag to 'go install'
+  (https://www.pivotaltracker.com/story/show/142723241)
+
+* Implement buildpack in Go
+  (https://www.pivotaltracker.com/story/show/142083735)
+
+* Add support for supply buildpacks
+  (https://www.pivotaltracker.com/story/show/141616657)
+
 v1.7.19 Feb 24, 2017
 =====================
 
