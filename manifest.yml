@@ -65,5 +65,11 @@ exclude_files:
 - ISSUE_TEMPLATE
 - go_buildpack-*v*.zip
 - pkg/
+- src/
+- ".bin/"
+- ".envrc"
+- cf.Gemfile.lock
+- cf.Gemfile
+- scripts/
 
 pre_package: scripts/build.sh
