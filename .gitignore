@@ -4,7 +4,7 @@ go_buildpack*.zip
 log/
 .bundle
 vendor
-!src/compile/vendor
+!src/golang/vendor
 _workspace
 pkg/
 /.bin/
