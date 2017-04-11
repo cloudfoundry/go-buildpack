@@ -166,7 +166,7 @@ func (gc *Compiler) InstallGo() error {
 		gc.Compiler.Log.BeginStep("Using go %s", gc.GoVersion)
 	} else {
 		err = gc.Compiler.ClearCache()
-		if err != nil {
+		if err != nil && !os.IsNotExist(err) {
 			return fmt.Errorf("clearing cache: %s", err.Error())
 		}
 

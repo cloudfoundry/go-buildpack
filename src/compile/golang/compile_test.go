@@ -517,6 +517,19 @@ var _ = Describe("Compile", func() {
 				Expect(filepath.Join(cacheDir, "go4.3.2", "go")).NotTo(BeADirectory())
 			})
 		})
+
+		Context("cache dir does not exist", func() {
+			BeforeEach(func() {
+				cacheDir = "not/a/directory"
+				goInstallDir = filepath.Join(cacheDir, "go1.3.4")
+				mockManifest.EXPECT().InstallDependency(dep, goInstallDir).Return(nil)
+			})
+
+			It("does not error", func() {
+				err = gc.InstallGo()
+				Expect(err).To(BeNil())
+			})
+		})
 	})
 
 	Describe("SetMainPackageName", func() {
