@@ -1,3 +1,17 @@
+v1.8.1 Apr 12, 2017
+====================
+
+* Do not error if cache dir does not exist
+  (https://www.pivotaltracker.com/story/show/143527395)
+
+* Add go 1.8.1
+  (https://www.pivotaltracker.com/story/show/143333553)
+
+* Precompile uncached buildpack
+  Previously only the cached buildpack compiled
+  (https://www.pivotaltracker.com/story/show/143040749)
+
+
 v1.8.0 Apr 04, 2017
 =====================
 
