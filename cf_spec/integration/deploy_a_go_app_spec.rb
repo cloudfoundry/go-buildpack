@@ -262,6 +262,20 @@ describe 'CF Go Buildpack' do
         browser.visit_path('/')
         expect(browser).to have_body('go version go1.7.4 linux/amd64')
       end
+
+      context 'and GO_SETUP_GOPATH_IN_IMAGE' do
+        let(:deploy_options) { { env: {'GO_INSTALL_TOOLS_IN_IMAGE' => 'true', 'GO_SETUP_GOPATH_IN_IMAGE' => 'true'} } }
+
+        it 'displays the go version' do
+          expect(app).to be_running
+
+          browser.visit_path('/')
+          expect(browser).to have_body('go version go1.7.4 linux/amd64')
+
+          browser.visit_path('/gopath')
+          expect(browser).to have_body('GOPATH: /home/vcap/app')
+        end
+      end
     end
   end
 

@@ -108,6 +108,7 @@ func (gf *Finalizer) SetupGoPath() error {
 		"Procfile":      true,
 		".profile":      true,
 		"src":           true,
+		".profile.d":    true,
 	}
 
 	var goPath string
