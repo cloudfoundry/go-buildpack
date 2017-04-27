@@ -983,17 +983,6 @@ default_process_types:
 
 				Expect(buffer.String()).To(ContainSubstring("-----> Leaving go tool chain in $GOROOT=$DEPS_DIR/06/go3.4.5/go"))
 			})
-
-			It("writes the goroot.sh script to <depDir>/profile.d", func() {
-				err = gf.CreateStartupEnvironment(tempDir)
-				Expect(err).To(BeNil())
-
-				contents, err := ioutil.ReadFile(filepath.Join(gf.Stager.DepDir(), "profile.d", "goroot.sh"))
-				Expect(err).To(BeNil())
-
-				Expect(string(contents)).To(ContainSubstring("export GOROOT=$DEPS_DIR/06/go3.4.5/go"))
-				Expect(string(contents)).To(ContainSubstring("PATH=$PATH:$GOROOT/bin"))
-			})
 		})
 
 		Context("GO_SETUP_GOPATH_IN_IMAGE = true", func() {
