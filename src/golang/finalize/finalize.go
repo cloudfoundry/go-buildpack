@@ -343,9 +343,6 @@ func (gf *Finalizer) CreateStartupEnvironment(tempDir string) error {
 
 		gf.Stager.Log.BeginStep("Leaving go tool chain in $GOROOT=%s", goRuntimeLocation)
 
-		if err := gf.Stager.WriteProfileD("goroot.sh", golang.GoRootScript(goRuntimeLocation)); err != nil {
-			return err
-		}
 	} else {
 		if err := gf.Stager.ClearDepDir(); err != nil {
 			return err

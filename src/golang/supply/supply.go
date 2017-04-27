@@ -41,6 +41,11 @@ func Run(gs *Supplier) error {
 		return err
 	}
 
+	if err := gs.WriteGoRootToProfileD(); err != nil {
+		gs.Stager.Log.Error("Error writing GOROOT to profile.d: %s", err.Error())
+		return err
+	}
+
 	if err := gs.ConfigureFinalizeEnv(); err != nil {
 		gs.Stager.Log.Error("Error writing environment vars: %s", err.Error())
 		return nil
@@ -109,6 +114,14 @@ func (gs *Supplier) SelectVendorTool() error {
 	}
 
 	gs.VendorTool = "go_nativevendoring"
+	return nil
+}
+
+func (gs *Supplier) WriteGoRootToProfileD() error {
+	goRuntimeLocation := filepath.Join("$DEPS_DIR", gs.Stager.DepsIdx, "go"+gs.GoVersion, "go")
+	if err := gs.Stager.WriteProfileD("goroot.sh", golang.GoRootScript(goRuntimeLocation)); err != nil {
+		return err
+	}
 	return nil
 }
 

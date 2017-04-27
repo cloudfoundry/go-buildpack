@@ -377,6 +377,25 @@ var _ = Describe("Supply", func() {
 		})
 	})
 
+
+	Describe("WritesGoRootToProfileD", func() {
+		BeforeEach(func() {
+			goVersion = "3.4.5"
+		})
+
+		It("writes the goroot.sh script to <depDir>/profile.d", func() {
+			err = gs.WriteGoRootToProfileD()
+			Expect(err).To(BeNil())
+
+			contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "profile.d", "goroot.sh"))
+			Expect(err).To(BeNil())
+
+			Expect(string(contents)).To(ContainSubstring("export GOROOT=$DEPS_DIR/04/go3.4.5/go"))
+			Expect(string(contents)).To(ContainSubstring("PATH=$PATH:$GOROOT/bin"))
+		})
+
+	})
+
 	Describe("ConfigureFinalizeEnv", func() {
 		BeforeEach(func() {
 			goVersion = "1.3.4"
