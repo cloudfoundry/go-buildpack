@@ -943,7 +943,7 @@ default_process_types:
 			contents, err := ioutil.ReadFile(filepath.Join(gf.Stager.DepDir(), "profile.d", "go.sh"))
 			Expect(err).To(BeNil())
 
-			Expect(string(contents)).To(Equal("PATH=$PATH:$HOME/bin"))
+			Expect(string(contents)).To(Equal("PATH=$PATH:$HOME/bin\n"))
 		})
 
 		Context("GO_INSTALL_TOOLS_IN_IMAGE is not set", func() {
