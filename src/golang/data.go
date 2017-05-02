@@ -14,12 +14,13 @@ default_process_types:
 }
 
 func GoScript() string {
-	return "PATH=$PATH:$HOME/bin"
+	return "PATH=$PATH:$HOME/bin\n"
 }
 
 func GoRootScript(goRoot string) string {
 	contents := `export GOROOT=%s
-PATH=$PATH:$GOROOT/bin`
+PATH=$PATH:$GOROOT/bin
+`
 
 	return fmt.Sprintf(contents, goRoot)
 }
