@@ -11,6 +11,7 @@ import (
 
 	"github.com/Masterminds/semver"
 	"github.com/cloudfoundry/libbuildpack"
+	"encoding/json"
 )
 
 type Finalizer struct {
@@ -23,6 +24,35 @@ type Finalizer struct {
 	PackageList      []string
 	BuildFlags       []string
 	VendorExperiment bool
+}
+
+func NewFinalizer(stager *libbuildpack.Stager) (*Finalizer, error) {
+	config := struct {
+		Config struct {
+			GoVersion  string `yaml:"GoVersion"`
+			VendorTool string `yaml:"VendorTool"`
+			Godep      string `yaml:"Godep"`
+		} `yaml:"config"`
+	}{}
+	if err := libbuildpack.NewYAML().Load(filepath.Join(stager.DepDir(), "config.yml"), &config); err != nil {
+		stager.Log.Error("Unable to read config.yml: %s", err.Error())
+		return nil, err
+	}
+
+	var godep golang.Godep
+	if config.Config.VendorTool == "godep" {
+		if err := json.Unmarshal([]byte(config.Config.Godep), &godep); err != nil {
+			stager.Log.Error("Unable to load supply_Godep json: %s", err.Error())
+			return nil, err
+		}
+	}
+
+	return &Finalizer{
+		Stager:     stager,
+		Godep:      godep,
+		GoVersion:  config.Config.GoVersion,
+		VendorTool: config.Config.VendorTool,
+	}, nil
 }
 
 func Run(gf *Finalizer) error {

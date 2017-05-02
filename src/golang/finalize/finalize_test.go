@@ -75,14 +75,14 @@ var _ = Describe("Finalize", func() {
 		}
 
 		gf = &finalize.Finalizer{Stager: bpc,
-			VendorTool:       vendorTool,
-			GoVersion:        goVersion,
-			MainPackageName:  mainPackageName,
-			GoPath:           goPath,
-			PackageList:      packageList,
-			BuildFlags:       buildFlags,
-			Godep:            godep,
-			VendorExperiment: vendorExperiment,
+			VendorTool:                  vendorTool,
+			GoVersion:                   goVersion,
+			MainPackageName:             mainPackageName,
+			GoPath:                      goPath,
+			PackageList:                 packageList,
+			BuildFlags:                  buildFlags,
+			Godep:                       godep,
+			VendorExperiment:            vendorExperiment,
 		}
 	})
 
@@ -91,6 +91,45 @@ var _ = Describe("Finalize", func() {
 
 		err = os.RemoveAll(buildDir)
 		Expect(err).To(BeNil())
+	})
+
+	Describe("NewFinalizer", func() {
+		Context("the vendor tool is godep", func() {
+			BeforeEach(func() {
+				ioutil.WriteFile(filepath.Join(depsDir, depsIdx, "config.yml"), []byte(`name: "go"
+config:
+  GoVersion: 1.4.2
+  VendorTool: godep
+  Godep: '{"ImportPath":"an-import-path"}'
+`), 0644)
+			})
+
+			It("initializes values from config.yml", func() {
+				finalizer, err := finalize.NewFinalizer(gf.Stager)
+				Expect(err).To(BeNil())
+
+				Expect(finalizer.GoVersion).To(Equal("1.4.2"))
+				Expect(finalizer.VendorTool).To(Equal("godep"))
+				Expect(finalizer.Godep.ImportPath).To(Equal("an-import-path"))
+			})
+		})
+		Context("the vendor tool is glide", func() {
+			BeforeEach(func() {
+				ioutil.WriteFile(filepath.Join(depsDir, depsIdx, "config.yml"), []byte(`name: "go"
+config:
+  GoVersion: 1.2.4
+  VendorTool: glide
+`), 0644)
+			})
+
+			It("initializes values from config.yml", func() {
+				finalizer, err := finalize.NewFinalizer(gf.Stager)
+				Expect(err).To(BeNil())
+
+				Expect(finalizer.GoVersion).To(Equal("1.2.4"))
+				Expect(finalizer.VendorTool).To(Equal("glide"))
+			})
+		})
 	})
 
 	Describe("SetMainPackageName", func() {

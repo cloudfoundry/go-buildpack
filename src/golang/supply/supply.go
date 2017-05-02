@@ -46,12 +46,7 @@ func Run(gs *Supplier) error {
 		return err
 	}
 
-	if err := gs.ConfigureFinalizeEnv(); err != nil {
-		gs.Stager.Log.Error("Error writing environment vars: %s", err.Error())
-		return nil
-	}
-
-	if err := gs.Stager.WriteConfigYml(); err != nil {
+	if err := gs.WriteConfigYml(); err != nil {
 		gs.Stager.Log.Error("Error writing config.yml: %s", err.Error())
 		return err
 	}
@@ -185,13 +180,10 @@ func (gs *Supplier) InstallGo() error {
 	return gs.Stager.WriteEnvFile("GOROOT", filepath.Join(goInstallDir, "go"))
 }
 
-func (gs *Supplier) ConfigureFinalizeEnv() error {
-	if err := gs.Stager.WriteEnvFile("supply_GoVersion", gs.GoVersion); err != nil {
-		return err
-	}
-
-	if err := gs.Stager.WriteEnvFile("supply_VendorTool", gs.VendorTool); err != nil {
-		return err
+func (gs *Supplier) WriteConfigYml() error {
+	config := map[string]string{
+		"GoVersion": gs.GoVersion,
+		"VendorTool": gs.VendorTool,
 	}
 
 	if gs.VendorTool == "godep" {
@@ -200,10 +192,10 @@ func (gs *Supplier) ConfigureFinalizeEnv() error {
 			return err
 		}
 
-		if err := gs.Stager.WriteEnvFile("supply_Godep", string(data)); err != nil {
-			return err
-		}
+		config["Godep"] = string(data)
 	}
+
+	gs.Stager.WriteConfigYml(config)
 
 	return nil
 }

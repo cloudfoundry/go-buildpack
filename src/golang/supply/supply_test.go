@@ -377,7 +377,6 @@ var _ = Describe("Supply", func() {
 		})
 	})
 
-
 	Describe("WritesGoRootToProfileD", func() {
 		BeforeEach(func() {
 			goVersion = "3.4.5"
@@ -396,10 +395,25 @@ var _ = Describe("Supply", func() {
 
 	})
 
-	Describe("ConfigureFinalizeEnv", func() {
+	Describe("WriteConfigYml", func() {
 		BeforeEach(func() {
+			mockManifest.EXPECT().Language().Return("go")
 			goVersion = "1.3.4"
 		})
+		type config struct {
+			Name string `yaml:"name"`
+			Config struct {
+				GoVersion  string `yaml:"GoVersion"`
+				VendorTool string `yaml:"VendorTool"`
+				Godep      string `yaml:"Godep"`
+			} `yaml:"config"`
+		}
+		getConfig := func() config {
+			cfg := config{}
+			err = libbuildpack.NewYAML().Load(filepath.Join(depsDir, depsIdx, "config.yml"), &cfg)
+			Expect(err).To(BeNil())
+			return cfg
+		}
 
 		Context("The vendor tool is Godep", func() {
 			BeforeEach(func() {
@@ -412,32 +426,29 @@ var _ = Describe("Supply", func() {
 				}
 			})
 
-			It("Writes the go version to supply_GoVersion envfile", func() {
-				err = gs.ConfigureFinalizeEnv()
+			It("Writes the go version to config.yml", func() {
+				err = gs.WriteConfigYml()
 				Expect(err).To(BeNil())
 
-				contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "supply_GoVersion"))
-				Expect(err).To(BeNil())
-				Expect(string(contents)).To(Equal("1.3.4"))
+				cfg := getConfig()
+				Expect(cfg.Config.GoVersion).To(Equal("1.3.4"))
 			})
 
-			It("Writes the vendor tool to supply_VendorTool envfile", func() {
-				err = gs.ConfigureFinalizeEnv()
+			It("Writes the vendor tool to config.yml", func() {
+				err = gs.WriteConfigYml()
 				Expect(err).To(BeNil())
 
-				contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "supply_VendorTool"))
-				Expect(err).To(BeNil())
-				Expect(string(contents)).To(Equal("godep"))
+				cfg := getConfig()
+				Expect(cfg.Config.VendorTool).To(Equal("godep"))
 			})
 
-			It("Writes the godep info to supply_Godep envfile", func() {
+			It("Writes the godep info to config.yml", func() {
 				godepsJsonContents := `{"ImportPath":"an-import-path","GoVersion":"go1.3","Packages":["package1","package2"],"WorkspaceExists":true}`
-				err = gs.ConfigureFinalizeEnv()
+				err = gs.WriteConfigYml()
 				Expect(err).To(BeNil())
 
-				contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "supply_Godep"))
-				Expect(err).To(BeNil())
-				Expect(string(contents)).To(Equal(godepsJsonContents))
+				cfg := getConfig()
+				Expect(cfg.Config.Godep).To(Equal(godepsJsonContents))
 			})
 		})
 
@@ -446,22 +457,28 @@ var _ = Describe("Supply", func() {
 				vendorTool = "glide"
 			})
 
-			It("Writes the go version to supply_GoVersion envfile", func() {
-				err = gs.ConfigureFinalizeEnv()
+			It("Writes the go version to config.yml", func() {
+				err = gs.WriteConfigYml()
 				Expect(err).To(BeNil())
 
-				contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "supply_GoVersion"))
-				Expect(err).To(BeNil())
-				Expect(string(contents)).To(Equal("1.3.4"))
+				cfg := getConfig()
+				Expect(cfg.Config.GoVersion).To(Equal("1.3.4"))
 			})
 
-			It("Writes the vendor tool to supply_VendorTool envfile", func() {
-				err = gs.ConfigureFinalizeEnv()
+			It("Writes the vendor tool to config.yml", func() {
+				err = gs.WriteConfigYml()
 				Expect(err).To(BeNil())
 
-				contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "supply_VendorTool"))
+				cfg := getConfig()
+				Expect(cfg.Config.VendorTool).To(Equal("glide"))
+			})
+
+			It("Does not write the godep info to config.yml", func() {
+				err = gs.WriteConfigYml()
 				Expect(err).To(BeNil())
-				Expect(string(contents)).To(Equal("glide"))
+
+				cfg := getConfig()
+				Expect(cfg.Config.Godep).To(Equal(""))
 			})
 		})
 	})

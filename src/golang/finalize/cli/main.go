@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"golang"
 	"golang/finalize"
 	_ "golang/hooks"
 	"os"
@@ -10,44 +8,37 @@ import (
 	"github.com/cloudfoundry/libbuildpack"
 )
 
+type config struct {
+  Config struct {
+    GoVersion  string `yaml:"GoVersion"`
+    VendorTool string `yaml:"VendorTool"`
+    Godep      string `yaml:"Godep"`
+  } `yaml:"config"`
+}
+
 func main() {
 	stager, err := libbuildpack.NewStager(os.Args[1:], libbuildpack.NewLogger())
 
-	err = libbuildpack.SetStagingEnvironment(stager.DepsDir)
-	if err != nil {
+	if err := libbuildpack.SetStagingEnvironment(stager.DepsDir); err != nil {
 		stager.Log.Error("Unable to setup environment variables: %s", err.Error())
 		os.Exit(10)
 	}
 
-	var godep golang.Godep
-
-	if os.Getenv("supply_VendorTool") == "godep" {
-		if err := json.Unmarshal([]byte(os.Getenv("supply_Godep")), &godep); err != nil {
-			stager.Log.Error("Unable to load supply_Godep json: %s", err.Error())
-			os.Exit(11)
-		}
-	}
-
-	gf := finalize.Finalizer{
-		Stager:     stager,
-		Godep:      godep,
-		GoVersion:  os.Getenv("supply_GoVersion"),
-		VendorTool: os.Getenv("supply_VendorTool"),
-	}
-
-	err = finalize.Run(&gf)
+	gf, err := finalize.NewFinalizer(stager)
 	if err != nil {
+		os.Exit(11)
+	}
+
+	if err := finalize.Run(gf); err != nil {
 		os.Exit(12)
 	}
 
-	err = libbuildpack.SetLaunchEnvironment(stager.DepsDir, stager.BuildDir)
-	if err != nil {
+	if err := libbuildpack.SetLaunchEnvironment(stager.DepsDir, stager.BuildDir); err != nil {
 		stager.Log.Error("Unable to setup launch environment: %s", err.Error())
 		os.Exit(13)
 	}
 
-	err = libbuildpack.RunAfterCompile(stager)
-	if err != nil {
+	if err := libbuildpack.RunAfterCompile(stager); err != nil {
 		stager.Log.Error("After Compile: %s", err.Error())
 		os.Exit(14)
 	}
