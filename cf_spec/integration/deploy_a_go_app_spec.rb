@@ -263,6 +263,17 @@ describe 'CF Go Buildpack' do
         expect(browser).to have_body('go version go1.7.4 linux/amd64')
       end
 
+      context 'running a task' do
+        before { skip_if_no_run_task_support_on_targeted_cf }
+
+        it 'can find the specifed go in the container' do
+          expect(app).to be_running
+
+          Open3.capture2e('cf','run-task', 'go_app', 'echo "RUNNING A TASK: $(go version)"')[1].success? or raise 'Could not create run task'
+          expect(app).to have_logged(/RUNNING A TASK: go version go1\.7\.4 linux\/amd64/)
+        end
+      end
+
       context 'and GO_SETUP_GOPATH_IN_IMAGE' do
         let(:deploy_options) { { env: {'GO_INSTALL_TOOLS_IN_IMAGE' => 'true', 'GO_SETUP_GOPATH_IN_IMAGE' => 'true'} } }
 
