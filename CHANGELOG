@@ -1,3 +1,12 @@
+v1.8.2 May 08, 2017
+====================
+
+* Fix bug when GO_INSTALL_TOOLS_IN_IMAGE and GO_SETUP_GOPATH_IN_IMAGE are both set
+  (https://www.pivotaltracker.com/story/show/143659615)
+
+* Add Multi buildpack support
+  (https://www.pivotaltracker.com/story/show/142852047)
+
 v1.8.1 Apr 12, 2017
 ====================
 
