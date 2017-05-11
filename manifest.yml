@@ -7,6 +7,7 @@ dependency_deprecation_dates:
 - version_line: '1.6.x'
   name: go
   date: 2017-02-16
+  link: https://golang.org/doc/devel/release.html
 dependencies:
 - name: go
   version: 1.6.3
