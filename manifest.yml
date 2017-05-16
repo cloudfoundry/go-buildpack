@@ -2,7 +2,7 @@
 language: go
 default_versions:
 - name: go
-  version: 1.7.5
+  version: 1.8.1
 dependency_deprecation_dates:
 - version_line: '1.6.x'
   name: go
