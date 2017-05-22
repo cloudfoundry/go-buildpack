@@ -3,6 +3,7 @@ package finalize_test
 import (
 	"golang"
 	"golang/finalize"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -18,29 +19,28 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-//go:generate mockgen -source=../vendor/github.com/cloudfoundry/libbuildpack/manifest.go --destination=mocks_manifest_test.go --package=finalize_test --imports=.=github.com/cloudfoundry/libbuildpack
-//go:generate mockgen -source=../vendor/github.com/cloudfoundry/libbuildpack/command_runner.go --destination=mocks_command_runner_test.go --package=finalize_test
+//go:generate mockgen -source=finalize.go --destination=mocks_test.go --package=finalize_test
 
 var _ = Describe("Finalize", func() {
 	var (
-		vendorTool        string
-		buildDir          string
-		depsDir           string
-		depsIdx           string
-		gf                *finalize.Finalizer
-		logger            libbuildpack.Logger
-		buffer            *bytes.Buffer
-		err               error
-		mockCtrl          *gomock.Controller
-		mockManifest      *MockManifest
-		mockCommandRunner *MockCommandRunner
-		goVersion         string
-		mainPackageName   string
-		goPath            string
-		packageList       []string
-		buildFlags        []string
-		godep             golang.Godep
-		vendorExperiment  bool
+		vendorTool       string
+		buildDir         string
+		depsDir          string
+		depsIdx          string
+		gf               *finalize.Finalizer
+		logger           *libbuildpack.Logger
+		stager           *libbuildpack.Stager
+		buffer           *bytes.Buffer
+		err              error
+		mockCtrl         *gomock.Controller
+		mockCommand      *MockCommand
+		goVersion        string
+		mainPackageName  string
+		goPath           string
+		packageList      []string
+		buildFlags       []string
+		godep            golang.Godep
+		vendorExperiment bool
 	)
 
 	BeforeEach(func() {
@@ -56,33 +56,28 @@ var _ = Describe("Finalize", func() {
 
 		buffer = new(bytes.Buffer)
 
-		logger = libbuildpack.NewLogger()
-		logger.SetOutput(ansicleaner.New(buffer))
+		logger = libbuildpack.NewLogger(ansicleaner.New(buffer))
 
 		mockCtrl = gomock.NewController(GinkgoT())
-		mockManifest = NewMockManifest(mockCtrl)
-		mockCommandRunner = NewMockCommandRunner(mockCtrl)
+		mockCommand = NewMockCommand(mockCtrl)
 	})
 
 	JustBeforeEach(func() {
-		bpc := &libbuildpack.Stager{
-			BuildDir: buildDir,
-			DepsDir:  depsDir,
-			DepsIdx:  depsIdx,
-			Manifest: mockManifest,
-			Log:      logger,
-			Command:  mockCommandRunner,
-		}
+		args := []string{buildDir, "", depsDir, depsIdx}
+		stager = libbuildpack.NewStager(args, logger, &libbuildpack.Manifest{})
 
-		gf = &finalize.Finalizer{Stager: bpc,
-			VendorTool:                  vendorTool,
-			GoVersion:                   goVersion,
-			MainPackageName:             mainPackageName,
-			GoPath:                      goPath,
-			PackageList:                 packageList,
-			BuildFlags:                  buildFlags,
-			Godep:                       godep,
-			VendorExperiment:            vendorExperiment,
+		gf = &finalize.Finalizer{
+			Stager:           stager,
+			Command:          mockCommand,
+			Log:              logger,
+			VendorTool:       vendorTool,
+			GoVersion:        goVersion,
+			MainPackageName:  mainPackageName,
+			GoPath:           goPath,
+			PackageList:      packageList,
+			BuildFlags:       buildFlags,
+			Godep:            godep,
+			VendorExperiment: vendorExperiment,
 		}
 	})
 
@@ -105,7 +100,7 @@ config:
 			})
 
 			It("initializes values from config.yml", func() {
-				finalizer, err := finalize.NewFinalizer(gf.Stager)
+				finalizer, err := finalize.NewFinalizer(stager, mockCommand, logger)
 				Expect(err).To(BeNil())
 
 				Expect(finalizer.GoVersion).To(Equal("1.4.2"))
@@ -123,7 +118,7 @@ config:
 			})
 
 			It("initializes values from config.yml", func() {
-				finalizer, err := finalize.NewFinalizer(gf.Stager)
+				finalizer, err := finalize.NewFinalizer(stager, mockCommand, logger)
 				Expect(err).To(BeNil())
 
 				Expect(finalizer.GoVersion).To(Equal("1.2.4"))
@@ -153,11 +148,10 @@ config:
 			})
 			It("sets the main package name to the value of 'glide name'", func() {
 
-				gomock.InOrder(
-					mockCommandRunner.EXPECT().SetDir(buildDir),
-					mockCommandRunner.EXPECT().CaptureStdout("glide", "name").Return("go-package-name\n", nil),
-					mockCommandRunner.EXPECT().SetDir(""),
-				)
+				mockCommand.EXPECT().Execute(buildDir, gomock.Any(), gomock.Any(), "glide", "name").Do(func(_ string, buffer, _ io.Writer, _, _ string) {
+					_, err := buffer.Write([]byte("go-package-name\n"))
+					Expect(err).To(BeNil())
+				}).Return(nil)
 
 				err = gf.SetMainPackageName()
 				Expect(err).To(BeNil())
@@ -425,11 +419,7 @@ config:
 
 		Context("packages are not already vendored", func() {
 			It("uses glide to install the packages", func() {
-				gomock.InOrder(
-					mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-					mockCommandRunner.EXPECT().Run("glide", "install").Return(nil),
-					mockCommandRunner.EXPECT().SetDir(""),
-				)
+				mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "glide", "install").Return(nil)
 
 				err = gf.RunGlideInstall()
 				Expect(err).To(BeNil())
@@ -848,11 +838,7 @@ config:
 				})
 
 				It("wraps the install command with godep", func() {
-					gomock.InOrder(
-						mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-						mockCommandRunner.EXPECT().Run("godep", "go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
-						mockCommandRunner.EXPECT().SetDir(""),
-					)
+					mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "godep", "go", "install", "-a=1", "-b=2", "first", "second").Return(nil)
 
 					err = gf.CompileApp()
 					Expect(err).To(BeNil())
@@ -872,11 +858,7 @@ config:
 					})
 
 					It("does not wrap the install command with godep", func() {
-						gomock.InOrder(
-							mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-							mockCommandRunner.EXPECT().Run("go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
-							mockCommandRunner.EXPECT().SetDir(""),
-						)
+						mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "go", "install", "-a=1", "-b=2", "first", "second").Return(nil)
 
 						err = gf.CompileApp()
 						Expect(err).To(BeNil())
@@ -892,11 +874,7 @@ config:
 					})
 
 					It("wraps the command with godep", func() {
-						gomock.InOrder(
-							mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-							mockCommandRunner.EXPECT().Run("godep", "go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
-							mockCommandRunner.EXPECT().SetDir(""),
-						)
+						mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "godep", "go", "install", "-a=1", "-b=2", "first", "second").Return(nil)
 
 						err = gf.CompileApp()
 						Expect(err).To(BeNil())
@@ -912,11 +890,7 @@ config:
 				vendorTool = "glide"
 			})
 			It("logs and runs the install command it is going to run", func() {
-				gomock.InOrder(
-					mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-					mockCommandRunner.EXPECT().Run("go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
-					mockCommandRunner.EXPECT().SetDir(""),
-				)
+				mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "go", "install", "-a=1", "-b=2", "first", "second").Return(nil)
 
 				err = gf.CompileApp()
 				Expect(err).To(BeNil())
@@ -931,11 +905,7 @@ config:
 			})
 
 			It("logs and runs the install command it is going to run", func() {
-				gomock.InOrder(
-					mockCommandRunner.EXPECT().SetDir(mainPackagePath),
-					mockCommandRunner.EXPECT().Run("go", "install", "-a=1", "-b=2", "first", "second").Return(nil),
-					mockCommandRunner.EXPECT().SetDir(""),
-				)
+				mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "go", "install", "-a=1", "-b=2", "first", "second").Return(nil)
 
 				err = gf.CompileApp()
 				Expect(err).To(BeNil())

@@ -13,8 +13,27 @@ import (
 	"github.com/cloudfoundry/libbuildpack"
 )
 
+type Manifest interface {
+	AllDependencyVersions(string) []string
+	DefaultVersion(string) (libbuildpack.Dependency, error)
+	InstallDependency(libbuildpack.Dependency, string) error
+	InstallOnlyVersion(string, string) error
+}
+
+type Stager interface {
+	AddBinDependencyLink(string, string) error
+	BuildDir() string
+	DepDir() string
+	DepsIdx() string
+	WriteConfigYml(interface{}) error
+	WriteEnvFile(string, string) error
+	WriteProfileD(string, string) error
+}
+
 type Supplier struct {
-	Stager     *libbuildpack.Stager
+	Stager     Stager
+	Manifest   Manifest
+	Log        *libbuildpack.Logger
 	VendorTool string
 	GoVersion  string
 	Godep      golang.Godep
@@ -22,32 +41,32 @@ type Supplier struct {
 
 func Run(gs *Supplier) error {
 	if err := gs.SelectVendorTool(); err != nil {
-		gs.Stager.Log.Error("Unable to select Go vendor tool: %s", err.Error())
+		gs.Log.Error("Unable to select Go vendor tool: %s", err.Error())
 		return err
 	}
 
 	if err := gs.InstallVendorTools(); err != nil {
-		gs.Stager.Log.Error("Unable to install vendor tools", err.Error())
+		gs.Log.Error("Unable to install vendor tools", err.Error())
 		return err
 	}
 
 	if err := gs.SelectGoVersion(); err != nil {
-		gs.Stager.Log.Error("Unable to determine Go version to install: %s", err.Error())
+		gs.Log.Error("Unable to determine Go version to install: %s", err.Error())
 		return err
 	}
 
 	if err := gs.InstallGo(); err != nil {
-		gs.Stager.Log.Error("Error installing Go: %s", err.Error())
+		gs.Log.Error("Error installing Go: %s", err.Error())
 		return err
 	}
 
 	if err := gs.WriteGoRootToProfileD(); err != nil {
-		gs.Stager.Log.Error("Error writing GOROOT to profile.d: %s", err.Error())
+		gs.Log.Error("Error writing GOROOT to profile.d: %s", err.Error())
 		return err
 	}
 
 	if err := gs.WriteConfigYml(); err != nil {
-		gs.Stager.Log.Error("Error writing config.yml: %s", err.Error())
+		gs.Log.Error("Error writing config.yml: %s", err.Error())
 		return err
 	}
 
@@ -55,15 +74,15 @@ func Run(gs *Supplier) error {
 }
 
 func (gs *Supplier) SelectVendorTool() error {
-	godepsJSONFile := filepath.Join(gs.Stager.BuildDir, "Godeps", "Godeps.json")
+	godepsJSONFile := filepath.Join(gs.Stager.BuildDir(), "Godeps", "Godeps.json")
 
-	godirFile := filepath.Join(gs.Stager.BuildDir, ".godir")
+	godirFile := filepath.Join(gs.Stager.BuildDir(), ".godir")
 	isGodir, err := libbuildpack.FileExists(godirFile)
 	if err != nil {
 		return err
 	}
 	if isGodir {
-		gs.Stager.Log.Error(golang.GodirError())
+		gs.Log.Error(golang.GodirError())
 		return errors.New(".godir deprecated")
 	}
 
@@ -72,7 +91,7 @@ func (gs *Supplier) SelectVendorTool() error {
 		return err
 	}
 	if isGoPath {
-		gs.Stager.Log.Error(golang.GBError())
+		gs.Log.Error(golang.GBError())
 		return errors.New("gb unsupported")
 	}
 
@@ -81,15 +100,15 @@ func (gs *Supplier) SelectVendorTool() error {
 		return err
 	}
 	if isGodep {
-		gs.Stager.Log.BeginStep("Checking Godeps/Godeps.json file")
+		gs.Log.BeginStep("Checking Godeps/Godeps.json file")
 
-		err = libbuildpack.NewJSON().Load(filepath.Join(gs.Stager.BuildDir, "Godeps", "Godeps.json"), &gs.Godep)
+		err = libbuildpack.NewJSON().Load(filepath.Join(gs.Stager.BuildDir(), "Godeps", "Godeps.json"), &gs.Godep)
 		if err != nil {
-			gs.Stager.Log.Error("Bad Godeps/Godeps.json file")
+			gs.Log.Error("Bad Godeps/Godeps.json file")
 			return err
 		}
 
-		gs.Godep.WorkspaceExists, err = libbuildpack.FileExists(filepath.Join(gs.Stager.BuildDir, "Godeps", "_workspace", "src"))
+		gs.Godep.WorkspaceExists, err = libbuildpack.FileExists(filepath.Join(gs.Stager.BuildDir(), "Godeps", "_workspace", "src"))
 		if err != nil {
 			return err
 		}
@@ -98,7 +117,7 @@ func (gs *Supplier) SelectVendorTool() error {
 		return nil
 	}
 
-	glideFile := filepath.Join(gs.Stager.BuildDir, "glide.yaml")
+	glideFile := filepath.Join(gs.Stager.BuildDir(), "glide.yaml")
 	isGlide, err := libbuildpack.FileExists(glideFile)
 	if err != nil {
 		return err
@@ -113,7 +132,7 @@ func (gs *Supplier) SelectVendorTool() error {
 }
 
 func (gs *Supplier) WriteGoRootToProfileD() error {
-	goRuntimeLocation := filepath.Join("$DEPS_DIR", gs.Stager.DepsIdx, "go"+gs.GoVersion, "go")
+	goRuntimeLocation := filepath.Join("$DEPS_DIR", gs.Stager.DepsIdx(), "go"+gs.GoVersion, "go")
 	if err := gs.Stager.WriteProfileD("goroot.sh", golang.GoRootScript(goRuntimeLocation)); err != nil {
 		return err
 	}
@@ -125,7 +144,7 @@ func (gs *Supplier) InstallVendorTools() error {
 
 	for _, tool := range tools {
 		installDir := filepath.Join(gs.Stager.DepDir(), tool)
-		if err := gs.Stager.Manifest.InstallOnlyVersion(tool, installDir); err != nil {
+		if err := gs.Manifest.InstallOnlyVersion(tool, installDir); err != nil {
 			return err
 		}
 
@@ -142,13 +161,13 @@ func (gs *Supplier) SelectGoVersion() error {
 
 	if gs.VendorTool == "godep" {
 		if goVersion != "" {
-			gs.Stager.Log.Warning(golang.GoVersionOverride(goVersion))
+			gs.Log.Warning(golang.GoVersionOverride(goVersion))
 		} else {
 			goVersion = gs.Godep.GoVersion
 		}
 	} else {
 		if goVersion == "" {
-			defaultGo, err := gs.Stager.Manifest.DefaultVersion("go")
+			defaultGo, err := gs.Manifest.DefaultVersion("go")
 			if err != nil {
 				return err
 			}
@@ -169,7 +188,7 @@ func (gs *Supplier) InstallGo() error {
 	goInstallDir := filepath.Join(gs.Stager.DepDir(), "go"+gs.GoVersion)
 
 	dep := libbuildpack.Dependency{Name: "go", Version: gs.GoVersion}
-	if err := gs.Stager.Manifest.InstallDependency(dep, goInstallDir); err != nil {
+	if err := gs.Manifest.InstallDependency(dep, goInstallDir); err != nil {
 		return err
 	}
 
@@ -182,7 +201,7 @@ func (gs *Supplier) InstallGo() error {
 
 func (gs *Supplier) WriteConfigYml() error {
 	config := map[string]string{
-		"GoVersion": gs.GoVersion,
+		"GoVersion":  gs.GoVersion,
 		"VendorTool": gs.VendorTool,
 	}
 
@@ -195,13 +214,11 @@ func (gs *Supplier) WriteConfigYml() error {
 		config["Godep"] = string(data)
 	}
 
-	gs.Stager.WriteConfigYml(config)
-
-	return nil
+	return gs.Stager.WriteConfigYml(config)
 }
 
 func (gs *Supplier) parseGoVersion(partialGoVersion string) (string, error) {
-	existingVersions := gs.Stager.Manifest.AllDependencyVersions("go")
+	existingVersions := gs.Manifest.AllDependencyVersions("go")
 
 	if len(strings.Split(partialGoVersion, ".")) < 3 {
 		partialGoVersion += ".x"
@@ -218,7 +235,7 @@ func (gs *Supplier) parseGoVersion(partialGoVersion string) (string, error) {
 }
 
 func (gs *Supplier) isGoPath() (bool, error) {
-	srcDir := filepath.Join(gs.Stager.BuildDir, "src")
+	srcDir := filepath.Join(gs.Stager.BuildDir(), "src")
 	srcDirAtAppRoot, err := libbuildpack.FileExists(srcDir)
 	if err != nil {
 		return false, err
@@ -228,7 +245,7 @@ func (gs *Supplier) isGoPath() (bool, error) {
 		return false, nil
 	}
 
-	files, err := ioutil.ReadDir(filepath.Join(gs.Stager.BuildDir, "src"))
+	files, err := ioutil.ReadDir(filepath.Join(gs.Stager.BuildDir(), "src"))
 	if err != nil {
 		return false, err
 	}

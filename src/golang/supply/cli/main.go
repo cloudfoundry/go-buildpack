@@ -4,35 +4,48 @@ import (
 	_ "golang/hooks"
 	"golang/supply"
 	"os"
+	"time"
 
 	"github.com/cloudfoundry/libbuildpack"
 )
 
 func main() {
-	stager, err := libbuildpack.NewStager(os.Args[1:], libbuildpack.NewLogger())
-	err = stager.CheckBuildpackValid()
+	logger := libbuildpack.NewLogger(os.Stdout)
+
+	buildpackDir, err := libbuildpack.GetBuildpackDir()
 	if err != nil {
+		logger.Error("Unable to determine buildpack directory: %s", err.Error())
+		os.Exit(8)
+	}
+
+	manifest, err := libbuildpack.NewManifest(buildpackDir, logger, time.Now())
+	if err != nil {
+		logger.Error("Unable to load buildpack manifest: %s", err.Error())
+		os.Exit(9)
+	}
+
+	stager := libbuildpack.NewStager(os.Args[1:], logger, manifest)
+	if err = stager.CheckBuildpackValid(); err != nil {
 		os.Exit(10)
 	}
 
-	err = libbuildpack.RunBeforeCompile(stager)
-	if err != nil {
-		stager.Log.Error("Before Compile: %s", err.Error())
+	if err := libbuildpack.RunBeforeCompile(stager); err != nil {
+		logger.Error("Before Compile: %s", err.Error())
 		os.Exit(12)
 	}
 
-	err = libbuildpack.SetStagingEnvironment(stager.DepsDir)
-	if err != nil {
-		stager.Log.Error("Unable to setup environment variables: %s", err.Error())
+	if err := stager.SetStagingEnvironment(); err != nil {
+		logger.Error("Unable to setup environment variables: %s", err.Error())
 		os.Exit(13)
 	}
 
 	gs := supply.Supplier{
-		Stager: stager,
+		Stager:   stager,
+		Log:      logger,
+		Manifest: manifest,
 	}
 
-	err = supply.Run(&gs)
-	if err != nil {
+	if err := supply.Run(&gs); err != nil {
 		os.Exit(16)
 	}
 }

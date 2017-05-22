@@ -4,27 +4,34 @@ import (
 	"golang/finalize"
 	_ "golang/hooks"
 	"os"
+	"time"
 
 	"github.com/cloudfoundry/libbuildpack"
 )
 
-type config struct {
-	Config struct {
-		GoVersion  string `yaml:"GoVersion"`
-		VendorTool string `yaml:"VendorTool"`
-		Godep      string `yaml:"Godep"`
-	} `yaml:"config"`
-}
-
 func main() {
-	stager, err := libbuildpack.NewStager(os.Args[1:], libbuildpack.NewLogger())
+	logger := libbuildpack.NewLogger(os.Stdout)
 
-	if err := libbuildpack.SetStagingEnvironment(stager.DepsDir); err != nil {
-		stager.Log.Error("Unable to setup environment variables: %s", err.Error())
+	buildpackDir, err := libbuildpack.GetBuildpackDir()
+	if err != nil {
+		logger.Error("Unable to determine buildpack directory: %s", err.Error())
+		os.Exit(8)
+	}
+
+	manifest, err := libbuildpack.NewManifest(buildpackDir, logger, time.Now())
+	if err != nil {
+		logger.Error("Unable to load buildpack manifest: %s", err.Error())
+		os.Exit(9)
+	}
+
+	stager := libbuildpack.NewStager(os.Args[1:], logger, manifest)
+
+	if err := stager.SetStagingEnvironment(); err != nil {
+		logger.Error("Unable to setup environment variables: %s", err.Error())
 		os.Exit(10)
 	}
 
-	gf, err := finalize.NewFinalizer(stager)
+	gf, err := finalize.NewFinalizer(stager, &libbuildpack.Command{}, logger)
 	if err != nil {
 		os.Exit(11)
 	}
@@ -34,12 +41,12 @@ func main() {
 	}
 
 	if err := libbuildpack.RunAfterCompile(stager); err != nil {
-		stager.Log.Error("After Compile: %s", err.Error())
+		logger.Error("After Compile: %s", err.Error())
 		os.Exit(13)
 	}
 
-	if err := libbuildpack.SetLaunchEnvironment(stager.DepsDir, stager.BuildDir); err != nil {
-		stager.Log.Error("Unable to setup launch environment: %s", err.Error())
+	if err := stager.SetLaunchEnvironment(); err != nil {
+		logger.Error("Unable to setup launch environment: %s", err.Error())
 		os.Exit(14)
 	}
 

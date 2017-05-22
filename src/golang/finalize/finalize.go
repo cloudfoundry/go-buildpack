@@ -1,21 +1,38 @@
 package finalize
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"golang"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"encoding/json"
+
 	"github.com/Masterminds/semver"
 	"github.com/cloudfoundry/libbuildpack"
-	"encoding/json"
 )
 
+type Command interface {
+	Execute(string, io.Writer, io.Writer, string, ...string) error
+}
+
+type Stager interface {
+	BuildDir() string
+	ClearDepDir() error
+	DepDir() string
+	DepsIdx() string
+	WriteProfileD(string, string) error
+}
+
 type Finalizer struct {
-	Stager           *libbuildpack.Stager
+	Stager           Stager
+	Command          Command
+	Log              *libbuildpack.Logger
 	VendorTool       string
 	GoVersion        string
 	Godep            golang.Godep
@@ -26,7 +43,7 @@ type Finalizer struct {
 	VendorExperiment bool
 }
 
-func NewFinalizer(stager *libbuildpack.Stager) (*Finalizer, error) {
+func NewFinalizer(stager Stager, command Command, logger *libbuildpack.Logger) (*Finalizer, error) {
 	config := struct {
 		Config struct {
 			GoVersion  string `yaml:"GoVersion"`
@@ -35,20 +52,22 @@ func NewFinalizer(stager *libbuildpack.Stager) (*Finalizer, error) {
 		} `yaml:"config"`
 	}{}
 	if err := libbuildpack.NewYAML().Load(filepath.Join(stager.DepDir(), "config.yml"), &config); err != nil {
-		stager.Log.Error("Unable to read config.yml: %s", err.Error())
+		logger.Error("Unable to read config.yml: %s", err.Error())
 		return nil, err
 	}
 
 	var godep golang.Godep
 	if config.Config.VendorTool == "godep" {
 		if err := json.Unmarshal([]byte(config.Config.Godep), &godep); err != nil {
-			stager.Log.Error("Unable to load supply_Godep json: %s", err.Error())
+			logger.Error("Unable to load supply_Godep json: %s", err.Error())
 			return nil, err
 		}
 	}
 
 	return &Finalizer{
 		Stager:     stager,
+		Command:    command,
+		Log:        logger,
 		Godep:      godep,
 		GoVersion:  config.Config.GoVersion,
 		VendorTool: config.Config.VendorTool,
@@ -59,45 +78,45 @@ func Run(gf *Finalizer) error {
 	var err error
 
 	if err := gf.SetMainPackageName(); err != nil {
-		gf.Stager.Log.Error("Unable to determine import path: %s", err.Error())
+		gf.Log.Error("Unable to determine import path: %s", err.Error())
 		return err
 	}
 
-	if err := os.MkdirAll(filepath.Join(gf.Stager.BuildDir, "bin"), 0755); err != nil {
-		gf.Stager.Log.Error("Unable to create <build-dir>/bin: %s", err.Error())
+	if err := os.MkdirAll(filepath.Join(gf.Stager.BuildDir(), "bin"), 0755); err != nil {
+		gf.Log.Error("Unable to create <build-dir>/bin: %s", err.Error())
 		return err
 	}
 
 	if err := gf.SetupGoPath(); err != nil {
-		gf.Stager.Log.Error("Unable to setup Go path: %s", err.Error())
+		gf.Log.Error("Unable to setup Go path: %s", err.Error())
 		return err
 	}
 
 	if err := gf.HandleVendorExperiment(); err != nil {
-		gf.Stager.Log.Error("Invalid vendor config: %s", err.Error())
+		gf.Log.Error("Invalid vendor config: %s", err.Error())
 		return err
 	}
 
 	if gf.VendorTool == "glide" {
 		if err := gf.RunGlideInstall(); err != nil {
-			gf.Stager.Log.Error("Error running 'glide install': %s", err.Error())
+			gf.Log.Error("Error running 'glide install': %s", err.Error())
 			return err
 		}
 	}
 
 	gf.SetBuildFlags()
 	if err = gf.SetInstallPackages(); err != nil {
-		gf.Stager.Log.Error("Unable to determine packages to install: %s", err.Error())
+		gf.Log.Error("Unable to determine packages to install: %s", err.Error())
 		return err
 	}
 
 	if err := gf.CompileApp(); err != nil {
-		gf.Stager.Log.Error("Unable to compile application: %s", err.Error())
+		gf.Log.Error("Unable to compile application: %s", err.Error())
 		return err
 	}
 
 	if err := gf.CreateStartupEnvironment("/tmp"); err != nil {
-		gf.Stager.Log.Error("Unable to create startup scripts: %s", err.Error())
+		gf.Log.Error("Unable to create startup scripts: %s", err.Error())
 		return err
 	}
 
@@ -110,19 +129,17 @@ func (gf *Finalizer) SetMainPackageName() error {
 		gf.MainPackageName = gf.Godep.ImportPath
 
 	case "glide":
-		gf.Stager.Command.SetDir(gf.Stager.BuildDir)
-		defer gf.Stager.Command.SetDir("")
+		buffer := new(bytes.Buffer)
 
-		stdout, err := gf.Stager.Command.CaptureStdout("glide", "name")
-		if err != nil {
+		if err := gf.Command.Execute(gf.Stager.BuildDir(), buffer, ioutil.Discard, "glide", "name"); err != nil {
 			return err
 		}
-		gf.MainPackageName = strings.TrimSpace(stdout)
+		gf.MainPackageName = strings.TrimSpace(buffer.String())
 
 	case "go_nativevendoring":
 		gf.MainPackageName = os.Getenv("GOPACKAGENAME")
 		if gf.MainPackageName == "" {
-			gf.Stager.Log.Error(golang.NoGOPACKAGENAMEerror())
+			gf.Log.Error(golang.NoGOPACKAGENAMEerror())
 			return errors.New("GOPACKAGENAME unset")
 		}
 
@@ -145,7 +162,7 @@ func (gf *Finalizer) SetupGoPath() error {
 	goPathInImage := os.Getenv("GO_SETUP_GOPATH_IN_IMAGE") == "true"
 
 	if goPathInImage {
-		goPath = gf.Stager.BuildDir
+		goPath = gf.Stager.BuildDir()
 	} else {
 		tmpDir, err := ioutil.TempDir("", "gobuildpack.gopath")
 		if err != nil {
@@ -160,7 +177,7 @@ func (gf *Finalizer) SetupGoPath() error {
 	}
 	gf.GoPath = goPath
 
-	binDir := filepath.Join(gf.Stager.BuildDir, "bin")
+	binDir := filepath.Join(gf.Stager.BuildDir(), "bin")
 	err = os.MkdirAll(binDir, 0755)
 	if err != nil {
 		return err
@@ -173,13 +190,13 @@ func (gf *Finalizer) SetupGoPath() error {
 	}
 
 	if goPathInImage {
-		files, err := ioutil.ReadDir(gf.Stager.BuildDir)
+		files, err := ioutil.ReadDir(gf.Stager.BuildDir())
 		if err != nil {
 			return err
 		}
 		for _, f := range files {
 			if !skipMoveFile[f.Name()] {
-				src := filepath.Join(gf.Stager.BuildDir, f.Name())
+				src := filepath.Join(gf.Stager.BuildDir(), f.Name())
 				dest := filepath.Join(packageDir, f.Name())
 
 				err = os.Rename(src, dest)
@@ -194,7 +211,7 @@ func (gf *Finalizer) SetupGoPath() error {
 			return err
 		}
 
-		err = libbuildpack.CopyDirectory(gf.Stager.BuildDir, packageDir)
+		err = libbuildpack.CopyDirectory(gf.Stager.BuildDir(), packageDir)
 		if err != nil {
 			return err
 		}
@@ -246,16 +263,13 @@ func (gf *Finalizer) RunGlideInstall() error {
 	}
 
 	if runGlideInstall {
-		gf.Stager.Log.BeginStep("Fetching any unsaved dependencies (glide install)")
-		gf.Stager.Command.SetDir(gf.mainPackagePath())
-		defer gf.Stager.Command.SetDir("")
+		gf.Log.BeginStep("Fetching any unsaved dependencies (glide install)")
 
-		err := gf.Stager.Command.Run("glide", "install")
-		if err != nil {
+		if err := gf.Command.Execute(gf.mainPackagePath(), os.Stdout, os.Stderr, "glide", "install"); err != nil {
 			return err
 		}
 	} else {
-		gf.Stager.Log.Info("Note: skipping (glide install) due to non-empty vendor directory.")
+		gf.Log.Info("Note: skipping (glide install) due to non-empty vendor directory.")
 	}
 
 	return nil
@@ -275,7 +289,7 @@ func (gf *Finalizer) HandleVendorExperiment() error {
 
 	go16 := ver.Major() == 1 && ver.Minor() == 6
 	if !go16 {
-		gf.Stager.Log.Error(golang.UnsupportedGO15VENDOREXPERIMENTerror())
+		gf.Log.Error(golang.UnsupportedGO15VENDOREXPERIMENTerror())
 		return errors.New("unsupported GO15VENDOREXPERIMENT")
 	}
 
@@ -301,19 +315,19 @@ func (gf *Finalizer) SetInstallPackages() error {
 		useVendorDir := gf.VendorExperiment && !gf.Godep.WorkspaceExists
 
 		if gf.Godep.WorkspaceExists && vendorDirExists {
-			gf.Stager.Log.Warning(golang.GodepsWorkspaceWarning())
+			gf.Log.Warning(golang.GodepsWorkspaceWarning())
 		}
 
 		if useVendorDir && !vendorDirExists {
-			gf.Stager.Log.Warning("vendor/ directory does not exist.")
+			gf.Log.Warning("vendor/ directory does not exist.")
 		}
 
 		if len(packages) != 0 {
-			gf.Stager.Log.Warning(golang.PackageSpecOverride(packages))
+			gf.Log.Warning(golang.PackageSpecOverride(packages))
 		} else if len(gf.Godep.Packages) != 0 {
 			packages = gf.Godep.Packages
 		} else {
-			gf.Stager.Log.Warning("Installing package '.' (default)")
+			gf.Log.Warning("Installing package '.' (default)")
 			packages = append(packages, ".")
 		}
 
@@ -322,13 +336,13 @@ func (gf *Finalizer) SetInstallPackages() error {
 		}
 	} else {
 		if !gf.VendorExperiment && gf.VendorTool == "go_nativevendoring" {
-			gf.Stager.Log.Error(golang.MustUseVendorError())
+			gf.Log.Error(golang.MustUseVendorError())
 			return errors.New("must use vendor/ for go native vendoring")
 		}
 
 		if len(packages) == 0 {
 			packages = append(packages, ".")
-			gf.Stager.Log.Warning("Installing package '.' (default)")
+			gf.Log.Warning("Installing package '.' (default)")
 		}
 
 		packages = gf.updatePackagesForVendor(packages)
@@ -349,12 +363,9 @@ func (gf *Finalizer) CompileApp() error {
 		cmd = "godep"
 	}
 
-	gf.Stager.Log.BeginStep(fmt.Sprintf("Running: %s %s", cmd, strings.Join(args, " ")))
+	gf.Log.BeginStep(fmt.Sprintf("Running: %s %s", cmd, strings.Join(args, " ")))
 
-	gf.Stager.Command.SetDir(gf.mainPackagePath())
-	defer gf.Stager.Command.SetDir("")
-
-	err := gf.Stager.Command.Run(cmd, args...)
+	err := gf.Command.Execute(gf.mainPackagePath(), os.Stdout, os.Stderr, cmd, args...)
 	if err != nil {
 		return err
 	}
@@ -364,14 +375,14 @@ func (gf *Finalizer) CompileApp() error {
 func (gf *Finalizer) CreateStartupEnvironment(tempDir string) error {
 	err := ioutil.WriteFile(filepath.Join(tempDir, "buildpack-release-step.yml"), []byte(golang.ReleaseYAML(gf.MainPackageName)), 0644)
 	if err != nil {
-		gf.Stager.Log.Error("Unable to write relase yml: %s", err.Error())
+		gf.Log.Error("Unable to write relase yml: %s", err.Error())
 		return err
 	}
 
 	if os.Getenv("GO_INSTALL_TOOLS_IN_IMAGE") == "true" {
-		goRuntimeLocation := filepath.Join("$DEPS_DIR", gf.Stager.DepsIdx, "go"+gf.GoVersion, "go")
+		goRuntimeLocation := filepath.Join("$DEPS_DIR", gf.Stager.DepsIdx(), "go"+gf.GoVersion, "go")
 
-		gf.Stager.Log.BeginStep("Leaving go tool chain in $GOROOT=%s", goRuntimeLocation)
+		gf.Log.BeginStep("Leaving go tool chain in $GOROOT=%s", goRuntimeLocation)
 
 	} else {
 		if err := gf.Stager.ClearDepDir(); err != nil {
@@ -380,7 +391,7 @@ func (gf *Finalizer) CreateStartupEnvironment(tempDir string) error {
 	}
 
 	if os.Getenv("GO_SETUP_GOPATH_IN_IMAGE") == "true" {
-		gf.Stager.Log.BeginStep("Cleaning up $GOPATH/pkg")
+		gf.Log.BeginStep("Cleaning up $GOPATH/pkg")
 		if err := os.RemoveAll(filepath.Join(gf.GoPath, "pkg")); err != nil {
 			return err
 		}

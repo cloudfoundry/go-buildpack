@@ -18,7 +18,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-//go:generate mockgen -source=../vendor/github.com/cloudfoundry/libbuildpack/manifest.go --destination=mocks_manifest_test.go --package=supply_test --imports=.=github.com/cloudfoundry/libbuildpack
+//go:generate mockgen -source=supply.go --destination=mocks_test.go --package=supply_test
 
 var _ = Describe("Supply", func() {
 	var (
@@ -26,7 +26,7 @@ var _ = Describe("Supply", func() {
 		depsDir      string
 		depsIdx      string
 		gs           *supply.Supplier
-		logger       libbuildpack.Logger
+		logger       *libbuildpack.Logger
 		buffer       *bytes.Buffer
 		err          error
 		mockCtrl     *gomock.Controller
@@ -50,24 +50,20 @@ var _ = Describe("Supply", func() {
 
 		buffer = new(bytes.Buffer)
 
-		logger = libbuildpack.NewLogger()
-		logger.SetOutput(ansicleaner.New(buffer))
+		logger = libbuildpack.NewLogger(ansicleaner.New(buffer))
 
 		mockCtrl = gomock.NewController(GinkgoT())
 		mockManifest = NewMockManifest(mockCtrl)
 	})
 
 	JustBeforeEach(func() {
-		bps := &libbuildpack.Stager{
-			BuildDir: buildDir,
-			DepsDir:  depsDir,
-			DepsIdx:  depsIdx,
-			Manifest: mockManifest,
-			Log:      logger,
-		}
+		args := []string{buildDir, "", depsDir, depsIdx}
+		stager := libbuildpack.NewStager(args, logger, &libbuildpack.Manifest{})
 
 		gs = &supply.Supplier{
-			Stager:     bps,
+			Stager:     stager,
+			Manifest:   mockManifest,
+			Log:        logger,
 			GoVersion:  goVersion,
 			VendorTool: vendorTool,
 			Godep:      godep,
@@ -397,11 +393,10 @@ var _ = Describe("Supply", func() {
 
 	Describe("WriteConfigYml", func() {
 		BeforeEach(func() {
-			mockManifest.EXPECT().Language().Return("go")
 			goVersion = "1.3.4"
 		})
 		type config struct {
-			Name string `yaml:"name"`
+			Name   string `yaml:"name"`
 			Config struct {
 				GoVersion  string `yaml:"GoVersion"`
 				VendorTool string `yaml:"VendorTool"`
