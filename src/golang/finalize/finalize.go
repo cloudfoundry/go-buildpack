@@ -59,7 +59,7 @@ func NewFinalizer(stager Stager, command Command, logger *libbuildpack.Logger) (
 	var godep golang.Godep
 	if config.Config.VendorTool == "godep" {
 		if err := json.Unmarshal([]byte(config.Config.Godep), &godep); err != nil {
-			logger.Error("Unable to load supply_Godep json: %s", err.Error())
+			logger.Error("Unable to load config Godep json: %s", err.Error())
 			return nil, err
 		}
 	}
