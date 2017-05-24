@@ -260,7 +260,7 @@ describe 'CF Go Buildpack' do
         expect(app).to be_running
 
         browser.visit_path('/')
-        expect(browser).to have_body('go version go1.7.4 linux/amd64')
+        expect(browser).to have_body('go version go1.7.6 linux/amd64')
       end
 
       context 'running a task' do
@@ -270,7 +270,7 @@ describe 'CF Go Buildpack' do
           expect(app).to be_running
 
           Open3.capture2e('cf','run-task', 'go_app', 'echo "RUNNING A TASK: $(go version)"')[1].success? or raise 'Could not create run task'
-          expect(app).to have_logged(/RUNNING A TASK: go version go1\.7\.4 linux\/amd64/)
+          expect(app).to have_logged(/RUNNING A TASK: go version go1\.7\.6 linux\/amd64/)
         end
       end
 
@@ -281,7 +281,7 @@ describe 'CF Go Buildpack' do
           expect(app).to be_running
 
           browser.visit_path('/')
-          expect(browser).to have_body('go version go1.7.4 linux/amd64')
+          expect(browser).to have_body('go version go1.7.6 linux/amd64')
 
           browser.visit_path('/gopath')
           expect(browser).to have_body('GOPATH: /home/vcap/app')
