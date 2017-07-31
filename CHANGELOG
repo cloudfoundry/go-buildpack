@@ -1,3 +1,15 @@
+v1.8.6 Jul 31, 2017
+====================
+
+* Amend license
+  (https://www.pivotaltracker.com/story/show/147439591)
+
+* Fix readme links
+  (https://www.pivotaltracker.com/story/show/147615323)
+
+* Change go default version to floating wildcard (e.g. 1.x)
+  (https://www.pivotaltracker.com/story/show/146106141)
+
 v1.8.5 Jun 06, 2017
 ====================
 
