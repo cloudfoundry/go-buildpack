@@ -4,15 +4,14 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"net/http/httptest"
 	"net/url"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"time"
 
 	"github.com/blang/semver"
 	"github.com/cloudfoundry/libbuildpack/cutlass"
-	"github.com/cloudfoundry/libbuildpack/packager"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -32,55 +31,8 @@ func init() {
 	flag.Parse()
 }
 
-func TestIntegration(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "Integration Suite")
-}
-
-func PushAppAndConfirm(app *cutlass.App) {
-	Expect(app.Push()).To(Succeed())
-	Eventually(func() ([]string, error) { return app.InstanceStates() }, 20*time.Second).Should(Equal([]string{"RUNNING"}))
-	Expect(app.ConfirmBuildpack(buildpackVersion)).To(Succeed())
-}
-
-func Restart(app *cutlass.App) {
-	Expect(app.Restart()).To(Succeed())
-	Eventually(func() ([]string, error) { return app.InstanceStates() }, 20*time.Second).Should(Equal([]string{"RUNNING"}))
-}
-
-func AssertNoInternetTraffic(fixtureName string) {
-	It("has no traffic", func() {
-		if !cutlass.Cached {
-			Skip("Running uncached tests")
-		}
-
-		localVersion := fmt.Sprintf("%s.%s", buildpackVersion, cutlass.RandStringRunes(10))
-		bpFile, err := packager.Package(bpDir, packager.CacheDir, localVersion, cutlass.Cached)
-		Expect(err).To(BeNil())
-		defer os.Remove(bpFile)
-
-		traffic, err := cutlass.InternetTraffic(
-			bpDir,
-			filepath.Join("fixtures", fixtureName),
-			bpFile,
-			[]string{},
-		)
-		Expect(err).To(BeNil())
-		Expect(traffic).To(BeEmpty())
-	})
-}
-
-func ApiHasTask() bool {
-	apiVersionString, err := cutlass.ApiVersion()
-	Expect(err).To(BeNil())
-	apiVersion, err := semver.Make(apiVersionString)
-	Expect(err).To(BeNil())
-	apiHasTask, err := semver.ParseRange(">= 2.75.0")
-	Expect(err).To(BeNil())
-	return apiHasTask(apiVersion)
-}
-
 var _ = SynchronizedBeforeSuite(func() []byte {
+	// Run once
 	if buildpackVersion == "" {
 		packagedBuildpack, err := cutlass.PackageUniquelyVersionedBuildpack()
 		Expect(err).NotTo(HaveOccurred())
@@ -92,6 +44,7 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 
 	return []byte{}
 }, func(data []byte) {
+	// Run on all nodes
 	var err error
 	if len(data) > 0 {
 		err = json.Unmarshal(data, &packagedBuildpack)
@@ -109,49 +62,93 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 var _ = SynchronizedAfterSuite(func() {
 	// Run on all nodes
 }, func() {
+	// Run once
 	Expect(cutlass.RemovePackagedBuildpack(packagedBuildpack)).To(Succeed())
 	Expect(cutlass.DeleteOrphanedRoutes()).To(Succeed())
 })
 
-func AssertUsesProxyDuringStagingIfPresent(fixtureName string) func() {
-	return func() {
-		Context("with an uncached buildpack", func() {
-			var bpFile string
-			var proxy *httptest.Server
-			BeforeEach(func() {
-				var err error
-				if cutlass.Cached {
-					Skip("Running cached tests")
-				}
+func TestIntegration(t *testing.T) {
+	RegisterFailHandler(Fail)
+	RunSpecs(t, "Integration Suite")
+}
 
-				localVersion := fmt.Sprintf("%s.%s", buildpackVersion, time.Now().Format("20060102150405"))
-				bpFile, err = packager.Package(bpDir, packager.CacheDir, localVersion, cutlass.Cached)
-				Expect(err).To(BeNil())
+func PushAppAndConfirm(app *cutlass.App) {
+	Expect(app.Push()).To(Succeed())
+	Eventually(func() ([]string, error) { return app.InstanceStates() }, 20*time.Second).Should(Equal([]string{"RUNNING"}))
+	Expect(app.ConfirmBuildpack(buildpackVersion)).To(Succeed())
+}
 
-				proxy, err = cutlass.NewProxy()
-				Expect(err).To(BeNil())
-			})
-			AfterEach(func() {
-				os.Remove(bpFile)
-				proxy.Close()
-			})
+func Restart(app *cutlass.App) {
+	Expect(app.Restart()).To(Succeed())
+	Eventually(func() ([]string, error) { return app.InstanceStates() }, 20*time.Second).Should(Equal([]string{"RUNNING"}))
+}
 
-			It("uses a proxy during staging if present", func() {
-				traffic, err := cutlass.InternetTraffic(
-					bpDir,
-					filepath.Join("fixtures", fixtureName),
-					bpFile,
-					[]string{"HTTP_PROXY=" + proxy.URL, "HTTPS_PROXY=" + proxy.URL},
-				)
-				Expect(err).To(BeNil())
+func ApiHasTask() bool {
+	apiVersionString, err := cutlass.ApiVersion()
+	Expect(err).To(BeNil())
+	apiVersion, err := semver.Make(apiVersionString)
+	Expect(err).To(BeNil())
+	apiHasTask, err := semver.ParseRange(">= 2.75.0")
+	Expect(err).To(BeNil())
+	return apiHasTask(apiVersion)
+}
 
-				destUrl, err := url.Parse(proxy.URL)
-				Expect(err).To(BeNil())
-
-				Expect(cutlass.UniqueDestination(
-					traffic, fmt.Sprintf("%s.%s", destUrl.Hostname(), destUrl.Port()),
-				)).To(BeNil())
-			})
+func AssertUsesProxyDuringStagingIfPresent(fixtureName string) {
+	Context("with an uncached buildpack", func() {
+		BeforeEach(func() {
+			if cutlass.Cached {
+				Skip("Running cached tests")
+			}
 		})
-	}
+
+		It("uses a proxy during staging if present", func() {
+			proxy, err := cutlass.NewProxy()
+			Expect(err).To(BeNil())
+			defer proxy.Close()
+
+			bpFile := filepath.Join(bpDir, buildpackVersion+"tmp")
+			cmd := exec.Command("cp", packagedBuildpack.File, bpFile)
+			err = cmd.Run()
+			Expect(err).To(BeNil())
+			defer os.Remove(bpFile)
+
+			traffic, err := cutlass.InternetTraffic(
+				bpDir,
+				filepath.Join("fixtures", fixtureName),
+				bpFile,
+				[]string{"HTTP_PROXY=" + proxy.URL, "HTTPS_PROXY=" + proxy.URL},
+			)
+			Expect(err).To(BeNil())
+
+			destUrl, err := url.Parse(proxy.URL)
+			Expect(err).To(BeNil())
+
+			Expect(cutlass.UniqueDestination(
+				traffic, fmt.Sprintf("%s.%s", destUrl.Hostname(), destUrl.Port()),
+			)).To(BeNil())
+		})
+	})
+}
+
+func AssertNoInternetTraffic(fixtureName string) {
+	It("has no traffic", func() {
+		if !cutlass.Cached {
+			Skip("Running uncached tests")
+		}
+
+		bpFile := filepath.Join(bpDir, buildpackVersion+"tmp")
+		cmd := exec.Command("cp", packagedBuildpack.File, bpFile)
+		err := cmd.Run()
+		Expect(err).To(BeNil())
+		defer os.Remove(bpFile)
+
+		traffic, err := cutlass.InternetTraffic(
+			bpDir,
+			filepath.Join("fixtures", fixtureName),
+			bpFile,
+			[]string{},
+		)
+		Expect(err).To(BeNil())
+		Expect(traffic).To(BeEmpty())
+	})
 }
