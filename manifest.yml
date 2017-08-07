@@ -57,26 +57,19 @@ dependencies:
   md5: aa2563632fee49a276c117e814bef851
   cf_stacks:
   - cflinuxfs2
-exclude_files:
-- ".git/"
-- ".gitignore"
-- ".gitmodules"
-- cf_spec/
-- log/
-- bin/package
-- buildpack-packager/
-- test-godir/
-- test/
-- Makefile
-- PULL_REQUEST_TEMPLATE
-- ISSUE_TEMPLATE
-- go_buildpack-*v*.zip
-- pkg/
-- src/
-- ".bin/"
-- ".envrc"
-- cf.Gemfile.lock
-- cf.Gemfile
-- scripts/
-
+include_files:
+- CHANGELOG
+- CONTRIBUTING.md
+- LICENSE
+- LICENSE-DEPENDENCIES
+- LICENSE.godep
+- NOTICE
+- README.md
+- VERSION
+- bin/compile
+- bin/detect
+- bin/finalize
+- bin/release
+- bin/supply
+- manifest.yml
 pre_package: scripts/build.sh
