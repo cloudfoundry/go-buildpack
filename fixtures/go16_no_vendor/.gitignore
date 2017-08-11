@@ -1,6 +1,5 @@
 bin/
 pkg/
 src/code.google.com/
-src/github.com/
+src/github.com/tools/
 src/golang.org/
-src/go_app_with_dependencies/Godeps/_workspace

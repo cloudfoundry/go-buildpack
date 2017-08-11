@@ -1,3 +1,6 @@
-[submodule "fixtures/with_dependencies/fixtures/with_dependencies/src/with_dependencies/vendor/github.com/ZiCog/shiny-thing"]
-	path = fixtures/with_dependencies/fixtures/with_dependencies/src/with_dependencies/vendor/github.com/ZiCog/shiny-thing
+[submodule "fixtures/with_dependencies/src/with_dependencies/vendor/github.com/ZiCog/shiny-thing"]
+	path = fixtures/with_dependencies/src/with_dependencies/vendor/github.com/ZiCog/shiny-thing
+	url = https://github.com/ZiCog/shiny-thing
+[submodule "fixtures/go16_dependencies/Godeps/_workspace/src/github.com/ZiCog/shiny-thing"]
+	path = fixtures/go16_dependencies/Godeps/_workspace/src/github.com/ZiCog/shiny-thing
 	url = https://github.com/ZiCog/shiny-thing
