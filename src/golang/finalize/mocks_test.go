@@ -6,6 +6,7 @@ package finalize_test
 import (
 	gomock "github.com/golang/mock/gomock"
 	io "io"
+	reflect "reflect"
 )
 
 // MockCommand is a mock of Command interface
@@ -45,7 +46,7 @@ func (_m *MockCommand) Execute(_param0 string, _param1 io.Writer, _param2 io.Wri
 // Execute indicates an expected call of Execute
 func (_mr *MockCommandMockRecorder) Execute(arg0, arg1, arg2, arg3 interface{}, arg4 ...interface{}) *gomock.Call {
 	_s := append([]interface{}{arg0, arg1, arg2, arg3}, arg4...)
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "Execute", _s...)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Execute", reflect.TypeOf((*MockCommand)(nil).Execute), _s...)
 }
 
 // MockStager is a mock of Stager interface
@@ -80,7 +81,7 @@ func (_m *MockStager) BuildDir() string {
 
 // BuildDir indicates an expected call of BuildDir
 func (_mr *MockStagerMockRecorder) BuildDir() *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "BuildDir")
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "BuildDir", reflect.TypeOf((*MockStager)(nil).BuildDir))
 }
 
 // ClearDepDir mocks base method
@@ -92,7 +93,7 @@ func (_m *MockStager) ClearDepDir() error {
 
 // ClearDepDir indicates an expected call of ClearDepDir
 func (_mr *MockStagerMockRecorder) ClearDepDir() *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "ClearDepDir")
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "ClearDepDir", reflect.TypeOf((*MockStager)(nil).ClearDepDir))
 }
 
 // DepDir mocks base method
@@ -104,7 +105,7 @@ func (_m *MockStager) DepDir() string {
 
 // DepDir indicates an expected call of DepDir
 func (_mr *MockStagerMockRecorder) DepDir() *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "DepDir")
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "DepDir", reflect.TypeOf((*MockStager)(nil).DepDir))
 }
 
 // DepsIdx mocks base method
@@ -116,7 +117,7 @@ func (_m *MockStager) DepsIdx() string {
 
 // DepsIdx indicates an expected call of DepsIdx
 func (_mr *MockStagerMockRecorder) DepsIdx() *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "DepsIdx")
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "DepsIdx", reflect.TypeOf((*MockStager)(nil).DepsIdx))
 }
 
 // WriteProfileD mocks base method
@@ -128,5 +129,5 @@ func (_m *MockStager) WriteProfileD(_param0 string, _param1 string) error {
 
 // WriteProfileD indicates an expected call of WriteProfileD
 func (_mr *MockStagerMockRecorder) WriteProfileD(arg0, arg1 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "WriteProfileD", arg0, arg1)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "WriteProfileD", reflect.TypeOf((*MockStager)(nil).WriteProfileD), arg0, arg1)
 }

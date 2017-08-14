@@ -6,6 +6,7 @@ package supply_test
 import (
 	libbuildpack "github.com/cloudfoundry/libbuildpack"
 	gomock "github.com/golang/mock/gomock"
+	reflect "reflect"
 )
 
 // MockManifest is a mock of Manifest interface
@@ -40,7 +41,7 @@ func (_m *MockManifest) AllDependencyVersions(_param0 string) []string {
 
 // AllDependencyVersions indicates an expected call of AllDependencyVersions
 func (_mr *MockManifestMockRecorder) AllDependencyVersions(arg0 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "AllDependencyVersions", arg0)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "AllDependencyVersions", reflect.TypeOf((*MockManifest)(nil).AllDependencyVersions), arg0)
 }
 
 // DefaultVersion mocks base method
@@ -53,7 +54,7 @@ func (_m *MockManifest) DefaultVersion(_param0 string) (libbuildpack.Dependency,
 
 // DefaultVersion indicates an expected call of DefaultVersion
 func (_mr *MockManifestMockRecorder) DefaultVersion(arg0 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "DefaultVersion", arg0)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "DefaultVersion", reflect.TypeOf((*MockManifest)(nil).DefaultVersion), arg0)
 }
 
 // InstallDependency mocks base method
@@ -65,7 +66,7 @@ func (_m *MockManifest) InstallDependency(_param0 libbuildpack.Dependency, _para
 
 // InstallDependency indicates an expected call of InstallDependency
 func (_mr *MockManifestMockRecorder) InstallDependency(arg0, arg1 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "InstallDependency", arg0, arg1)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "InstallDependency", reflect.TypeOf((*MockManifest)(nil).InstallDependency), arg0, arg1)
 }
 
 // InstallOnlyVersion mocks base method
@@ -77,7 +78,7 @@ func (_m *MockManifest) InstallOnlyVersion(_param0 string, _param1 string) error
 
 // InstallOnlyVersion indicates an expected call of InstallOnlyVersion
 func (_mr *MockManifestMockRecorder) InstallOnlyVersion(arg0, arg1 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "InstallOnlyVersion", arg0, arg1)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "InstallOnlyVersion", reflect.TypeOf((*MockManifest)(nil).InstallOnlyVersion), arg0, arg1)
 }
 
 // MockStager is a mock of Stager interface
@@ -112,7 +113,7 @@ func (_m *MockStager) AddBinDependencyLink(_param0 string, _param1 string) error
 
 // AddBinDependencyLink indicates an expected call of AddBinDependencyLink
 func (_mr *MockStagerMockRecorder) AddBinDependencyLink(arg0, arg1 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "AddBinDependencyLink", arg0, arg1)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "AddBinDependencyLink", reflect.TypeOf((*MockStager)(nil).AddBinDependencyLink), arg0, arg1)
 }
 
 // BuildDir mocks base method
@@ -124,7 +125,7 @@ func (_m *MockStager) BuildDir() string {
 
 // BuildDir indicates an expected call of BuildDir
 func (_mr *MockStagerMockRecorder) BuildDir() *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "BuildDir")
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "BuildDir", reflect.TypeOf((*MockStager)(nil).BuildDir))
 }
 
 // DepDir mocks base method
@@ -136,7 +137,7 @@ func (_m *MockStager) DepDir() string {
 
 // DepDir indicates an expected call of DepDir
 func (_mr *MockStagerMockRecorder) DepDir() *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "DepDir")
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "DepDir", reflect.TypeOf((*MockStager)(nil).DepDir))
 }
 
 // DepsIdx mocks base method
@@ -148,7 +149,7 @@ func (_m *MockStager) DepsIdx() string {
 
 // DepsIdx indicates an expected call of DepsIdx
 func (_mr *MockStagerMockRecorder) DepsIdx() *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "DepsIdx")
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "DepsIdx", reflect.TypeOf((*MockStager)(nil).DepsIdx))
 }
 
 // WriteConfigYml mocks base method
@@ -160,7 +161,7 @@ func (_m *MockStager) WriteConfigYml(_param0 interface{}) error {
 
 // WriteConfigYml indicates an expected call of WriteConfigYml
 func (_mr *MockStagerMockRecorder) WriteConfigYml(arg0 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "WriteConfigYml", arg0)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "WriteConfigYml", reflect.TypeOf((*MockStager)(nil).WriteConfigYml), arg0)
 }
 
 // WriteEnvFile mocks base method
@@ -172,7 +173,7 @@ func (_m *MockStager) WriteEnvFile(_param0 string, _param1 string) error {
 
 // WriteEnvFile indicates an expected call of WriteEnvFile
 func (_mr *MockStagerMockRecorder) WriteEnvFile(arg0, arg1 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "WriteEnvFile", arg0, arg1)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "WriteEnvFile", reflect.TypeOf((*MockStager)(nil).WriteEnvFile), arg0, arg1)
 }
 
 // WriteProfileD mocks base method
@@ -184,5 +185,5 @@ func (_m *MockStager) WriteProfileD(_param0 string, _param1 string) error {
 
 // WriteProfileD indicates an expected call of WriteProfileD
 func (_mr *MockStagerMockRecorder) WriteProfileD(arg0, arg1 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCall(_mr.mock, "WriteProfileD", arg0, arg1)
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "WriteProfileD", reflect.TypeOf((*MockStager)(nil).WriteProfileD), arg0, arg1)
 }
