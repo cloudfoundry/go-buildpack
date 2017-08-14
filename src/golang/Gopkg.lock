@@ -17,7 +17,7 @@
   branch = "master"
   name = "github.com/cloudfoundry/libbuildpack"
   packages = [".","ansicleaner","cutlass","packager"]
-  revision = "880b868dec4fc9c6910062d455ba226722a65e14"
+  revision = "c535d005dc648d3d8537e929a80191df4143a6c1"
 
 [[projects]]
   name = "github.com/elazarl/goproxy"
@@ -64,23 +64,23 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "e42485b6e20ae7d2304ec72e535b103ed350cc02"
+  revision = "c84c1ab9fd18cdd4c23dd021c10f5f46dea95e46"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
   packages = ["encoding","encoding/charmap","encoding/htmlindex","encoding/internal","encoding/internal/identifier","encoding/japanese","encoding/korean","encoding/simplifiedchinese","encoding/traditionalchinese","encoding/unicode","internal/gen","internal/tag","internal/utf8internal","language","runes","transform","unicode/cldr"]
-  revision = "3bd178b88a8180be2df394a1fbb81313916f0e7b"
+  revision = "b19bf474d317b857955b12035d2c5acb57ce8b01"
 
 [[projects]]
   branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "25c4ec802a7d637f88d584ab26798e94ad14c13b"
+  revision = "eb3733d160e74a9c7e442f435eb3bea458e1d19f"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ca04ad7585f11debab1038de00152a102e2c5ff00ec7dee6b02caf65f994aaa8"
+  inputs-digest = "bf8fd01c2b34d38061a697e4f07759163af07cf2f5a4483279dba71baf746f01"
   solver-name = "gps-cdcl"
   solver-version = 1
