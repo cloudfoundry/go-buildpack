@@ -8,7 +8,7 @@ import (
 
 	"bytes"
 
-	"golang/supply"
+	"go/supply"
 
 	"github.com/cloudfoundry/libbuildpack"
 	"github.com/cloudfoundry/libbuildpack/ansicleaner"

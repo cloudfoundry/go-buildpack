@@ -3,8 +3,8 @@ set -euo pipefail
 
 export ROOT=`dirname $(readlink -f ${BASH_SOURCE%/*})`
 if [ ! -f $ROOT/.bin/ginkgo ]; then
-  (cd $ROOT/src/golang/vendor/github.com/onsi/ginkgo/ginkgo/ && go install)
+  (cd $ROOT/src/go/vendor/github.com/onsi/ginkgo/ginkgo/ && go install)
 fi
 
-cd $ROOT/src/golang/
+cd $ROOT/src/go/
 ginkgo -r -skipPackage=integration

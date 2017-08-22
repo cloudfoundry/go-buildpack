@@ -1,8 +1,8 @@
 package finalize_test
 
 import (
+	"go/finalize"
 	"golang"
-	"golang/finalize"
 	"io"
 	"io/ioutil"
 	"os"

@@ -1,8 +1,8 @@
 package main
 
 import (
-	_ "golang/hooks"
-	"golang/supply"
+	_ "go/hooks"
+	"go/supply"
 	"os"
 	"time"
 

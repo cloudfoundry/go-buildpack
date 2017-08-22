@@ -1,8 +1,8 @@
 package main
 
 import (
-	"golang/finalize"
-	_ "golang/hooks"
+	"go/finalize"
+	_ "go/hooks"
 	"os"
 	"time"
 
