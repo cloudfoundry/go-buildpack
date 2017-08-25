@@ -45,6 +45,12 @@ dependencies:
   md5: 32ec5ac6020a0dbae5fadd1ff6dfdaf7
   cf_stacks:
   - cflinuxfs2
+- name: go
+  version: 1.9.0
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.linux-amd64-4577d9ba.tar.gz
+  md5: 4577d9ba083ac86de78012c04a2981be
+  cf_stacks:
+  - cflinuxfs2
 - name: godep
   version: v79
   uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v79-linux-x64-9e37ce0f.tgz
