@@ -2,9 +2,9 @@
 language: go
 default_versions:
 - name: go
-  version: '1.8.x'
+  version: 1.8.x
 dependency_deprecation_dates:
-- version_line: '1.6.x'
+- version_line: 1.6.x
   name: go
   date: 2017-02-16
   link: https://golang.org/doc/devel/release.html
@@ -61,6 +61,12 @@ dependencies:
   version: v0.12.3
   uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.12.3-linux-x64-aa256363.tgz
   md5: aa2563632fee49a276c117e814bef851
+  cf_stacks:
+  - cflinuxfs2
+- name: dep
+  version: v0.2.0
+  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.2.0-linux-x64-39d354a8.tgz
+  md5: 39d354a8f6c7968f1213d3f18029faa5
   cf_stacks:
   - cflinuxfs2
 include_files:
