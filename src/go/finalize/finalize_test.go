@@ -125,6 +125,23 @@ config:
 				Expect(finalizer.VendorTool).To(Equal("glide"))
 			})
 		})
+		Context("the vendor tool is dep", func() {
+			BeforeEach(func() {
+				ioutil.WriteFile(filepath.Join(depsDir, depsIdx, "config.yml"), []byte(`name: "go"
+config:
+  GoVersion: 1.9.0
+  VendorTool: dep
+`), 0644)
+			})
+
+			It("initializes values from config.yml", func() {
+				finalizer, err := finalize.NewFinalizer(stager, mockCommand, logger)
+				Expect(err).To(BeNil())
+
+				Expect(finalizer.GoVersion).To(Equal("1.9.0"))
+				Expect(finalizer.VendorTool).To(Equal("dep"))
+			})
+		})
 	})
 
 	Describe("SetMainPackageName", func() {
@@ -159,11 +176,7 @@ config:
 			})
 		})
 
-		Context("the vendor tool is go_nativevendoring", func() {
-			BeforeEach(func() {
-				vendorTool = "go_nativevendoring"
-			})
-
+		AssertRequiresAndUsesGOPACKAGENAME := func() {
 			Context("GOPACKAGENAME is not set", func() {
 				It("logs an error", func() {
 					err = gf.SetMainPackageName()
@@ -194,6 +207,22 @@ config:
 					Expect(gf.MainPackageName).To(Equal("my-go-app"))
 				})
 			})
+		}
+
+		Context("the vendor tool is dep", func() {
+			BeforeEach(func() {
+				vendorTool = "dep"
+			})
+
+			AssertRequiresAndUsesGOPACKAGENAME()
+		})
+
+		Context("the vendor tool is go_nativevendoring", func() {
+			BeforeEach(func() {
+				vendorTool = "go_nativevendoring"
+			})
+
+			AssertRequiresAndUsesGOPACKAGENAME()
 		})
 	})
 
@@ -434,6 +463,48 @@ config:
 
 			It("does not use glide to install the packages", func() {
 				err = gf.RunGlideInstall()
+				Expect(err).To(BeNil())
+			})
+		})
+	})
+
+	Describe("RunDepEnsure", func() {
+		var mainPackagePath string
+
+		BeforeEach(func() {
+			mainPackageName = "a/package/name"
+			goPath, err = ioutil.TempDir("", "go-buildpack.package")
+			Expect(err).To(BeNil())
+
+			mainPackagePath = filepath.Join(goPath, "src", mainPackageName)
+			err = os.MkdirAll(mainPackagePath, 0755)
+			Expect(err).To(BeNil())
+
+			vendorTool = "dep"
+		})
+
+		AfterEach(func() {
+			err = os.RemoveAll(goPath)
+			Expect(err).To(BeNil())
+		})
+
+		Context("packages are not already vendored", func() {
+			It("uses dep to ensure the vendor tree is correct", func() {
+				mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "dep", "ensure").Return(nil)
+
+				err = gf.RunDepEnsure()
+				Expect(err).To(BeNil())
+			})
+		})
+
+		Context("packages are already vendored", func() {
+			BeforeEach(func() {
+				err = os.MkdirAll(filepath.Join(mainPackagePath, "vendor", "another-package"), 0755)
+				Expect(err).To(BeNil())
+			})
+
+			It("does not use dep to ensure the vendor tree is correct", func() {
+				err = gf.RunDepEnsure()
 				Expect(err).To(BeNil())
 			})
 		})
@@ -748,6 +819,62 @@ config:
 				})
 			})
 		})
+		Context("the vendor tool is dep", func() {
+			BeforeEach(func() {
+				vendorTool = "dep"
+				vendorExperiment = true
+			})
+
+			Context("GO_INSTALL_PACKAGE_SPEC is set", func() {
+				var oldGoInstallPackageSpec string
+
+				BeforeEach(func() {
+					oldGoInstallPackageSpec = os.Getenv("GO_INSTALL_PACKAGE_SPEC")
+					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", "a-package-name another-package")
+					Expect(err).To(BeNil())
+				})
+
+				AfterEach(func() {
+					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", oldGoInstallPackageSpec)
+					Expect(err).To(BeNil())
+				})
+
+				Context("packages are vendored", func() {
+					BeforeEach(func() {
+						err = os.MkdirAll(filepath.Join(mainPackagePath, "vendor", "another-package"), 0755)
+						Expect(err).To(BeNil())
+					})
+					It("handles the vendoring correctly", func() {
+						err = gf.SetInstallPackages()
+						Expect(err).To(BeNil())
+
+						Expect(gf.PackageList).To(Equal([]string{"a-package-name", filepath.Join(mainPackageName, "vendor", "another-package")}))
+					})
+				})
+				Context("packages are not vendored", func() {
+					It("sets the packages", func() {
+						err = gf.SetInstallPackages()
+						Expect(err).To(BeNil())
+
+						Expect(gf.PackageList).To(Equal([]string{"a-package-name", "another-package"}))
+					})
+				})
+			})
+
+			Context("GO_INSTALL_PACKAGE_SPEC is not set", func() {
+				It("sets packages to  default", func() {
+					err = gf.SetInstallPackages()
+					Expect(err).To(BeNil())
+					Expect(gf.PackageList).To(Equal([]string{"."}))
+				})
+
+				It("logs a warning that it is using the default", func() {
+					err = gf.SetInstallPackages()
+					Expect(err).To(BeNil())
+					Expect(buffer.String()).To(ContainSubstring("**WARNING** Installing package '.' (default)"))
+				})
+			})
+		})
 
 		Context("the vendor tool is glide", func() {
 			BeforeEach(func() {
@@ -873,7 +1000,7 @@ config:
 						vendorExperiment = false
 					})
 
-					It("wraps the command with godep", func() {
+					It("logs and runs the install command wrapped with godep", func() {
 						mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "godep", "go", "install", "-a=1", "-b=2", "first", "second").Return(nil)
 
 						err = gf.CompileApp()
@@ -885,10 +1012,7 @@ config:
 			})
 		})
 
-		Context("the tool is glide", func() {
-			BeforeEach(func() {
-				vendorTool = "glide"
-			})
+		AssertLogsAndRunsGenericInstallCommand := func() {
 			It("logs and runs the install command it is going to run", func() {
 				mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "go", "install", "-a=1", "-b=2", "first", "second").Return(nil)
 
@@ -897,21 +1021,27 @@ config:
 
 				Expect(buffer.String()).To(ContainSubstring("-----> Running: go install -a=1 -b=2 first second"))
 			})
+		}
+
+		Context("the tool is glide", func() {
+			BeforeEach(func() {
+				vendorTool = "glide"
+			})
+			AssertLogsAndRunsGenericInstallCommand()
+		})
+
+		Context("the tool is dep", func() {
+			BeforeEach(func() {
+				vendorTool = "dep"
+			})
+			AssertLogsAndRunsGenericInstallCommand()
 		})
 
 		Context("the tool is go_nativevendoring", func() {
 			BeforeEach(func() {
 				vendorTool = "go_nativevendoring"
 			})
-
-			It("logs and runs the install command it is going to run", func() {
-				mockCommand.EXPECT().Execute(mainPackagePath, gomock.Any(), gomock.Any(), "go", "install", "-a=1", "-b=2", "first", "second").Return(nil)
-
-				err = gf.CompileApp()
-				Expect(err).To(BeNil())
-
-				Expect(buffer.String()).To(ContainSubstring("-----> Running: go install -a=1 -b=2 first second"))
-			})
+			AssertLogsAndRunsGenericInstallCommand()
 		})
 	})
 

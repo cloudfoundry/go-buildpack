@@ -34,7 +34,7 @@ See https://github.com/tools/godep or https://github.com/Masterminds/glide for u
 
 func GBError() string {
 	errorMessage := `Cloud Foundry does not support the GB package manager.
-We currently only support the Godep and Glide package managers for go apps.
+We currently only support the Godep, Glide and dep package managers for go apps.
 For support please file an issue: https://github.com/cloudfoundry/go-buildpack/issues`
 
 	return errorMessage

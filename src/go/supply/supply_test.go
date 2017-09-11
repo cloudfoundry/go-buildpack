@@ -209,12 +209,24 @@ var _ = Describe("Supply", func() {
 				Expect(err).NotTo(BeNil())
 
 				Expect(buffer.String()).To(ContainSubstring("**ERROR** Cloud Foundry does not support the GB package manager."))
-				Expect(buffer.String()).To(ContainSubstring("We currently only support the Godep and Glide package managers for go apps"))
+				Expect(buffer.String()).To(ContainSubstring("We currently only support the Godep, Glide and dep package managers for go apps"))
 				Expect(buffer.String()).To(ContainSubstring("For support please file an issue: https://github.com/cloudfoundry/go-buildpack/issues"))
 
 			})
 		})
+		Context("there is a Gopkg.toml", func() {
+			BeforeEach(func() {
+				err = ioutil.WriteFile(filepath.Join(buildDir, "Gopkg.toml"), []byte("xxx"), 0644)
+				Expect(err).To(BeNil())
+			})
 
+			It("sets the tool to golang dep", func() {
+				err = gs.SelectVendorTool()
+				Expect(err).To(BeNil())
+
+				Expect(gs.VendorTool).To(Equal("dep"))
+			})
+		})
 		Context("none of the above", func() {
 			It("sets the tool to go_nativevendoring", func() {
 				err = gs.SelectVendorTool()
@@ -226,12 +238,14 @@ var _ = Describe("Supply", func() {
 	})
 
 	Describe("InstallVendorTools", func() {
-		It("installs godep + glide to the depDir, creating a symlink in <depDir>/bin", func() {
+		It("installs godep, glide and dep to the depDir, creating a symlink in <depDir>/bin", func() {
 			godepInstallDir := filepath.Join(depsDir, depsIdx, "godep")
 			glideInstallDir := filepath.Join(depsDir, depsIdx, "glide")
+			depInstallDir := filepath.Join(depsDir, depsIdx, "dep")
 
 			mockManifest.EXPECT().InstallOnlyVersion("godep", godepInstallDir).Return(nil)
 			mockManifest.EXPECT().InstallOnlyVersion("glide", glideInstallDir).Return(nil)
+			mockManifest.EXPECT().InstallOnlyVersion("dep", depInstallDir).Return(nil)
 
 			err = gs.InstallVendorTools()
 			Expect(err).To(BeNil())
@@ -245,6 +259,11 @@ var _ = Describe("Supply", func() {
 			Expect(err).To(BeNil())
 
 			Expect(link).To(Equal("../glide/bin/glide"))
+
+			link, err = os.Readlink(filepath.Join(depsDir, depsIdx, "bin", "dep"))
+			Expect(err).To(BeNil())
+
+			Expect(link).To(Equal("../dep/bin/dep"))
 		})
 	})
 

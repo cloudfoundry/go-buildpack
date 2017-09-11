@@ -7,6 +7,7 @@ build=$(cd "$1/" && pwd)
 if test -f "$build/Godeps/Godeps.json" ||
    test -f "$build/vendor/vendor.json"  || # govendor vendor.json file ||
    test -f "${build}/glide.yaml" || # glide
+   test -f "${build}/Gopkg.toml" || # golang dep
    (test -d "$build/src" && test -n "$(find "$build/src" -mindepth 2 -type f -name '*.go' | sed 1q)") || # gb
    test -f "$build/Godeps" -o -f "$build/.godir" || # success on .godir so that bin/compile can give error
    (test -d "$build/vendor" && test -n "$(find "$build" -type f -name '*.go' | sed 1q)") || # native go vendoring (option 1)

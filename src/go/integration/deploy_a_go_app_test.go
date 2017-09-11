@@ -59,6 +59,28 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 		})
 
+		Context("app uses go1.8 and dep", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go18_dep", "src", "go18_dep"))
+			})
+
+			It("successfully stages", func() {
+				PushAppAndConfirm(app)
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+		})
+
+		Context("app uses go1.8 and dep but no lockfile", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go18_dep_nolockfile", "src", "go18_dep_nolockfile"))
+			})
+
+			It("successfully stages", func() {
+				PushAppAndConfirm(app)
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+		})
+
 		Context("app uses go1.6 and godep with Godeps/_workspace dir", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go16_dependencies"))

@@ -102,6 +102,11 @@ func Run(gf *Finalizer) error {
 			gf.Log.Error("Error running 'glide install': %s", err.Error())
 			return err
 		}
+	} else if gf.VendorTool == "dep" {
+		if err := gf.RunDepEnsure(); err != nil {
+			gf.Log.Error("Error running 'dep ensure': %s", err.Error())
+			return err
+		}
 	}
 
 	gf.SetBuildFlags()
@@ -136,6 +141,8 @@ func (gf *Finalizer) SetMainPackageName() error {
 		}
 		gf.MainPackageName = strings.TrimSpace(buffer.String())
 
+	case "dep":
+		fallthrough
 	case "go_nativevendoring":
 		gf.MainPackageName = os.Getenv("GOPACKAGENAME")
 		if gf.MainPackageName == "" {
@@ -232,6 +239,43 @@ func (gf *Finalizer) SetBuildFlags() {
 
 	gf.BuildFlags = flags
 	return
+}
+
+func (gf *Finalizer) RunDepEnsure() error {
+	vendorDirExists, err := libbuildpack.FileExists(filepath.Join(gf.mainPackagePath(), "vendor"))
+	if err != nil {
+		return err
+	}
+	runEnsure := true
+
+	if vendorDirExists {
+		numSubDirs := 0
+		files, err := ioutil.ReadDir(filepath.Join(gf.mainPackagePath(), "vendor"))
+		if err != nil {
+			return err
+		}
+		for _, file := range files {
+			if file.IsDir() {
+				numSubDirs++
+			}
+		}
+
+		if numSubDirs > 0 {
+			runEnsure = false
+		}
+	}
+
+	if runEnsure {
+		gf.Log.BeginStep("Fetching any unsaved dependencies (dep ensure)")
+
+		if err := gf.Command.Execute(gf.mainPackagePath(), os.Stdout, os.Stderr, "dep", "ensure"); err != nil {
+			return err
+		}
+	} else {
+		gf.Log.Info("Note: skipping (dep ensure) due to non-empty vendor directory.")
+	}
+
+	return nil
 }
 
 func (gf *Finalizer) RunGlideInstall() error {

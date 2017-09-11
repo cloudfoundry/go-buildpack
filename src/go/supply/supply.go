@@ -127,6 +127,15 @@ func (gs *Supplier) SelectVendorTool() error {
 		return nil
 	}
 
+	depFile := filepath.Join(gs.Stager.BuildDir(), "Gopkg.toml")
+	isDep, err := libbuildpack.FileExists(depFile)
+	if err != nil {
+		return err
+	}
+	if isDep {
+		gs.VendorTool = "dep"
+		return nil
+	}
 	gs.VendorTool = "go_nativevendoring"
 	return nil
 }
@@ -140,7 +149,7 @@ func (gs *Supplier) WriteGoRootToProfileD() error {
 }
 
 func (gs *Supplier) InstallVendorTools() error {
-	tools := []string{"godep", "glide"}
+	tools := []string{"godep", "glide", "dep"}
 
 	for _, tool := range tools {
 		installDir := filepath.Join(gs.Stager.DepDir(), tool)
