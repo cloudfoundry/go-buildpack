@@ -64,9 +64,9 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: dep
-  version: v0.3.0
-  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.3.0-linux-x64-6d9a9ccb.tgz
-  md5: 6d9a9ccbe4b2ec9bee3bd46443495415
+  version: v0.3.1
+  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.3.1-linux-x64-70ebe672.tgz
+  md5: 70ebe672f5da03a4e3b27dedd25357a8
   cf_stacks:
   - cflinuxfs2
 include_files:
