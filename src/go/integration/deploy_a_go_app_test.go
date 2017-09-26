@@ -81,6 +81,17 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 		})
 
+		Context("app uses go1.8 and dep with vendored dependencies", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go18_dep_vendored", "src", "go18_dep"))
+			})
+
+			It("successfully stages", func() {
+				PushAppAndConfirm(app)
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+		})
+
 		Context("app uses go1.6 and godep with Godeps/_workspace dir", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go16_dependencies"))
