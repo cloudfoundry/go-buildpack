@@ -110,7 +110,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			It("", func() {
-				Expect(app.Push()).ToNot(BeNil())
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
 				Expect(app.Stdout.String()).To(MatchRegexp("vendor/ directory does not exist."))
 			})
 		})
@@ -121,7 +123,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			It("", func() {
-				Expect(app.Push()).ToNot(BeNil())
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
 				Expect(app.Stdout.String()).To(MatchRegexp("GO15VENDOREXPERIMENT is set, but is not supported by go1.7"))
 			})
 		})
@@ -184,8 +188,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			It("fails with helpful error", func() {
-				Expect(app.Push()).ToNot(BeNil())
-				Expect(app.Stdout.String()).To(MatchRegexp("failed"))
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
 				Expect(app.Stdout.String()).To(MatchRegexp(`To use go native vendoring set the \$GOPACKAGENAME`))
 			})
 		})
@@ -196,8 +201,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			It("fails with helpful error", func() {
-				Expect(app.Push()).ToNot(BeNil())
-				Expect(app.Stdout.String()).To(MatchRegexp("failed"))
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
 				Expect(app.Stdout.String()).To(MatchRegexp("with go 1.6 this environment variable must unset or set to 1."))
 			})
 		})
@@ -251,9 +257,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			It("displays useful understandable errors", func() {
-				Expect(app.Push()).ToNot(BeNil())
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
 
-				Expect(app.Stdout.String()).To(MatchRegexp("failed"))
 				Expect(app.Stdout.String()).To(MatchRegexp("Unable to determine Go version to install: no match found for 99.99.99"))
 
 				Expect(app.Stdout.String()).ToNot(MatchRegexp("Installing go99.99.99"))
@@ -399,7 +405,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			It("", func() {
-				Expect(app.Push()).ToNot(BeNil())
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
 				Expect(app.Stdout.String()).To(ContainSubstring("GO15VENDOREXPERIMENT is set, but is not supported by go1.7"))
 			})
 		})
@@ -424,9 +432,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			It("displays useful understandable errors", func() {
-				Expect(app.Push()).ToNot(BeNil())
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
 
-				Expect(app.Stdout.String()).To(MatchRegexp("failed"))
 				Expect(app.Stdout.String()).To(MatchRegexp("Unable to determine Go version to install: no match found for 99.99.99"))
 
 				Expect(app.Stdout.String()).ToNot(MatchRegexp("Installing go99.99.99"))
@@ -517,7 +525,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			It("fails with a deprecation message", func() {
-				Expect(app.Push()).ToNot(BeNil())
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
 				Expect(app.Stdout.String()).To(ContainSubstring("Deprecated, .godir file found! Please update to supported Godep or Glide dependency managers."))
 				Expect(app.Stdout.String()).To(ContainSubstring("See https://github.com/tools/godep or https://github.com/Masterminds/glide for usage information."))
 			})
@@ -541,7 +551,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			It("fails with a helpful warning message", func() {
-				Expect(app.Push()).ToNot(BeNil())
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
 				Expect(app.Stdout.String()).To(MatchRegexp(`Unable to determine Go version to install: no match found for 1.3.x`))
 				Expect(app.Stdout.String()).ToNot(MatchRegexp(`Installing go1.3`))
 			})
