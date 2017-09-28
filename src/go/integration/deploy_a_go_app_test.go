@@ -498,7 +498,7 @@ var _ = Describe("CF Go Buildpack", func() {
 				Expect(err).ToNot(HaveOccurred())
 
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_app"))
-				app.Buildpack = fmt.Sprintf("%s_buildpack", buildpack_language)
+				app.Buildpacks = []string{fmt.Sprintf("%s_buildpack", buildpack_language)}
 			})
 
 			AfterEach(func() {
