@@ -1,13 +1,13 @@
 package supply_test
 
 import (
-	"golang"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 
 	"bytes"
 
+	"go/godep"
 	"go/supply"
 
 	"github.com/cloudfoundry/libbuildpack"
@@ -33,7 +33,7 @@ var _ = Describe("Supply", func() {
 		mockManifest *MockManifest
 		goVersion    string
 		vendorTool   string
-		godep        golang.Godep
+		godepConfig  godep.Godep
 	)
 
 	BeforeEach(func() {
@@ -66,7 +66,7 @@ var _ = Describe("Supply", func() {
 			Log:        logger,
 			GoVersion:  goVersion,
 			VendorTool: vendorTool,
-			Godep:      godep,
+			Godep:      godepConfig,
 		}
 	})
 
@@ -148,7 +148,7 @@ var _ = Describe("Supply", func() {
 						err = gs.SelectVendorTool()
 						Expect(err).To(BeNil())
 
-						Expect(godep.WorkspaceExists).To(BeFalse())
+						Expect(godepConfig.WorkspaceExists).To(BeFalse())
 					})
 				})
 			})
@@ -276,7 +276,7 @@ var _ = Describe("Supply", func() {
 		Context("godep", func() {
 			BeforeEach(func() {
 				vendorTool = "godep"
-				godep = golang.Godep{ImportPath: "go-online", GoVersion: "go1.6"}
+				godepConfig = godep.Godep{ImportPath: "go-online", GoVersion: "go1.6"}
 			})
 
 			Context("GOVERSION not set", func() {
@@ -432,7 +432,7 @@ var _ = Describe("Supply", func() {
 		Context("The vendor tool is Godep", func() {
 			BeforeEach(func() {
 				vendorTool = "godep"
-				godep = golang.Godep{
+				godepConfig = godep.Godep{
 					ImportPath:      "an-import-path",
 					GoVersion:       "go1.3",
 					Packages:        []string{"package1", "package2"},

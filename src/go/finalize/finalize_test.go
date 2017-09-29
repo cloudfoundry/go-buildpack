@@ -2,7 +2,7 @@ package finalize_test
 
 import (
 	"go/finalize"
-	"golang"
+	"go/godep"
 	"io"
 	"io/ioutil"
 	"os"
@@ -39,7 +39,7 @@ var _ = Describe("Finalize", func() {
 		goPath           string
 		packageList      []string
 		buildFlags       []string
-		godep            golang.Godep
+		godepConfig      godep.Godep
 		vendorExperiment bool
 	)
 
@@ -76,7 +76,7 @@ var _ = Describe("Finalize", func() {
 			GoPath:           goPath,
 			PackageList:      packageList,
 			BuildFlags:       buildFlags,
-			Godep:            godep,
+			Godep:            godepConfig,
 			VendorExperiment: vendorExperiment,
 		}
 	})
@@ -148,7 +148,7 @@ config:
 		Context("the vendor tool is godep", func() {
 			BeforeEach(func() {
 				vendorTool = "godep"
-				godep = golang.Godep{ImportPath: "go-online", GoVersion: "go1.6"}
+				godepConfig = godep.Godep{ImportPath: "go-online", GoVersion: "go1.6"}
 			})
 
 			It("sets the main package name from Godeps.json", func() {
@@ -650,12 +650,12 @@ config:
 
 			Context("GO_INSTALL_PACKAGE_SPEC is not set", func() {
 				BeforeEach(func() {
-					godep = golang.Godep{ImportPath: "go-online", GoVersion: "go1.6", Packages: []string{"foo", "bar"}}
+					godepConfig = godep.Godep{ImportPath: "go-online", GoVersion: "go1.6", Packages: []string{"foo", "bar"}}
 				})
 
 				Context("No packages in Godeps.json", func() {
 					BeforeEach(func() {
-						godep = golang.Godep{ImportPath: "go-online", GoVersion: "go1.6"}
+						godepConfig = godep.Godep{ImportPath: "go-online", GoVersion: "go1.6"}
 					})
 
 					It("sets packages to the default", func() {
@@ -695,7 +695,7 @@ config:
 
 					Context("packages are also in the Godeps/_workspace", func() {
 						BeforeEach(func() {
-							godep = golang.Godep{ImportPath: "go-online", GoVersion: "go1.6", Packages: []string{"foo", "bar"}, WorkspaceExists: true}
+							godepConfig = godep.Godep{ImportPath: "go-online", GoVersion: "go1.6", Packages: []string{"foo", "bar"}, WorkspaceExists: true}
 						})
 
 						It("uses the packages from Godeps.json", func() {
@@ -730,7 +730,7 @@ config:
 
 				Context("packages are in the Godeps/_workspace", func() {
 					BeforeEach(func() {
-						godep = golang.Godep{ImportPath: "go-online", GoVersion: "go1.6", Packages: []string{"foo", "bar"}, WorkspaceExists: true}
+						godepConfig = godep.Godep{ImportPath: "go-online", GoVersion: "go1.6", Packages: []string{"foo", "bar"}, WorkspaceExists: true}
 					})
 
 					It("uses the packages from Godeps.json", func() {
@@ -961,7 +961,7 @@ config:
 			})
 			Context("godeps workspace dir exists", func() {
 				BeforeEach(func() {
-					godep = golang.Godep{WorkspaceExists: true}
+					godepConfig = godep.Godep{WorkspaceExists: true}
 				})
 
 				It("wraps the install command with godep", func() {
@@ -976,7 +976,7 @@ config:
 
 			Context("godeps workspace dir does not exist", func() {
 				BeforeEach(func() {
-					godep = golang.Godep{WorkspaceExists: false}
+					godepConfig = godep.Godep{WorkspaceExists: false}
 				})
 
 				Context("vendor experiment is true", func() {

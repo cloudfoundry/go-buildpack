@@ -1,4 +1,4 @@
-package golang
+package godep
 
 type Godep struct {
 	ImportPath      string   `json:"ImportPath"`

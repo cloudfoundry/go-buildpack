@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"golang"
+	"go/data"
+	"go/godep"
+	"go/warnings"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -36,7 +38,7 @@ type Supplier struct {
 	Log        *libbuildpack.Logger
 	VendorTool string
 	GoVersion  string
-	Godep      golang.Godep
+	Godep      godep.Godep
 }
 
 func Run(gs *Supplier) error {
@@ -82,7 +84,7 @@ func (gs *Supplier) SelectVendorTool() error {
 		return err
 	}
 	if isGodir {
-		gs.Log.Error(golang.GodirError())
+		gs.Log.Error(warnings.GodirError())
 		return errors.New(".godir deprecated")
 	}
 
@@ -91,7 +93,7 @@ func (gs *Supplier) SelectVendorTool() error {
 		return err
 	}
 	if isGoPath {
-		gs.Log.Error(golang.GBError())
+		gs.Log.Error(warnings.GBError())
 		return errors.New("gb unsupported")
 	}
 
@@ -142,7 +144,7 @@ func (gs *Supplier) SelectVendorTool() error {
 
 func (gs *Supplier) WriteGoRootToProfileD() error {
 	goRuntimeLocation := filepath.Join("$DEPS_DIR", gs.Stager.DepsIdx(), "go"+gs.GoVersion, "go")
-	if err := gs.Stager.WriteProfileD("goroot.sh", golang.GoRootScript(goRuntimeLocation)); err != nil {
+	if err := gs.Stager.WriteProfileD("goroot.sh", data.GoRootScript(goRuntimeLocation)); err != nil {
 		return err
 	}
 	return nil
@@ -170,7 +172,7 @@ func (gs *Supplier) SelectGoVersion() error {
 
 	if gs.VendorTool == "godep" {
 		if goVersion != "" {
-			gs.Log.Warning(golang.GoVersionOverride(goVersion))
+			gs.Log.Warning(warnings.GoVersionOverride(goVersion))
 		} else {
 			goVersion = gs.Godep.GoVersion
 		}
