@@ -34,9 +34,9 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
 - name: go
-  version: 1.8.1
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.1.linux-amd64-b05c0cbb.tar.gz
-  md5: b05c0cbb28503d038a47d87a6b3b8e86
+  version: 1.8.4
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.4.linux-amd64-d04fa884.tar.gz
+  md5: d04fa884a0f4fc1e79dad9018b0d28b3
   cf_stacks:
   - cflinuxfs2
 - name: go
@@ -49,6 +49,12 @@ dependencies:
   version: 1.9.0
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.linux-amd64-4577d9ba.tar.gz
   md5: 4577d9ba083ac86de78012c04a2981be
+  cf_stacks:
+  - cflinuxfs2
+- name: go
+  version: 1.9.1
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.1.linux-amd64-0571886e.tar.gz
+  md5: 0571886e9b9ba07773b542a11e9859a4
   cf_stacks:
   - cflinuxfs2
 - name: godep
