@@ -63,16 +63,16 @@ dependencies:
   md5: 9e37ce0f6a258baf4848ded20ef49ba4
   cf_stacks:
   - cflinuxfs2
-- name: dep
-  version: v0.3.1
-  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.3.1-linux-x64-70ebe672.tgz
-  md5: 70ebe672f5da03a4e3b27dedd25357a8
-  cf_stacks:
-  - cflinuxfs2
 - name: glide
   version: v0.13.0
   uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.0-linux-x64-f13fe16b.tgz
   md5: f13fe16bfb07f0506bfe73e9d27ba367
+  cf_stacks:
+  - cflinuxfs2
+- name: dep
+  version: v0.3.2
+  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.3.2-linux-x64-8910d5c1.tgz
+  md5: 8910d5c18d4c971a38e3681ed0f4f234
   cf_stacks:
   - cflinuxfs2
 include_files:
