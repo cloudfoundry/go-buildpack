@@ -12,69 +12,69 @@ dependencies:
 - name: go
   version: 1.6.3
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.3.linux-amd64-684cb84f.tar.gz
-  md5: 684cb84f270974a61cc3ecdf7fe9511b
   cf_stacks:
   - cflinuxfs2
+  sha256: d2f465e9206196cc496465483315097c34436c1724e45f43576b075e09dae51b
 - name: go
   version: 1.6.4
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.4.linux-amd64-342b0164.tar.gz
-  md5: 342b016400511ec1f6d97f49e72d2386
   cf_stacks:
   - cflinuxfs2
+  sha256: 65fb7eb4a6ddb84878157467c22324cbeb07a905df8e01547077b338ee44ff05
 - name: go
   version: 1.7.5
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.5.linux-amd64-c9de5bb9.tar.gz
-  md5: c9de5bb95790044de676301898e92a1b
   cf_stacks:
   - cflinuxfs2
+  sha256: '09c352046a8d7e3f565116e9821242cb1119117d49a6e1312f19ff255fefb3fd'
 - name: go
   version: 1.7.6
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.6.linux-amd64-a98caa07.tar.gz
-  md5: a98caa07ad65b548ce19122dbcc61573
   cf_stacks:
   - cflinuxfs2
+  sha256: 4ac434f1b31710a7813a77295ad634c62b20588336131bb1850eab24c10f98be
 - name: go
   version: 1.8.4
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.4.linux-amd64-d04fa884.tar.gz
-  md5: d04fa884a0f4fc1e79dad9018b0d28b3
   cf_stacks:
   - cflinuxfs2
+  sha256: 2f2dd61a89f75a02fa8676b0819d4ee218899fcc5695c98f303440cfe2f09988
 - name: go
   version: 1.8.3
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.3.linux-amd64-32ec5ac6.tar.gz
-  md5: 32ec5ac6020a0dbae5fadd1ff6dfdaf7
   cf_stacks:
   - cflinuxfs2
+  sha256: f95e02c7c2768933d5a313640b446aeaf51d0611f358283d194faf95644656f1
 - name: go
   version: 1.9.0
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.linux-amd64-4577d9ba.tar.gz
-  md5: 4577d9ba083ac86de78012c04a2981be
   cf_stacks:
   - cflinuxfs2
+  sha256: d3a0193410b9b62251aa12b49780dcea3ccfd10402b05685e54051c9c0b89e72
 - name: go
   version: 1.9.1
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.1.linux-amd64-0571886e.tar.gz
-  md5: 0571886e9b9ba07773b542a11e9859a4
   cf_stacks:
   - cflinuxfs2
+  sha256: 4e5bbb5e92ef7d8afe15c8121b7989753e94bd2ddb047f6b4e0069bd4a187e56
 - name: godep
   version: v79
   uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v79-linux-x64-9e37ce0f.tgz
-  md5: 9e37ce0f6a258baf4848ded20ef49ba4
   cf_stacks:
   - cflinuxfs2
+  sha256: 3b86a885b70b56728009f38d8983cb7b8e02d7b44d957a424142ebc0b6e70dd6
 - name: glide
   version: v0.13.0
   uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.0-linux-x64-f13fe16b.tgz
-  md5: f13fe16bfb07f0506bfe73e9d27ba367
   cf_stacks:
   - cflinuxfs2
+  sha256: 7d2d017c159dbc622996f1ad26849a82778377f8de6c0f55d8335c69d75d0acd
 - name: dep
   version: v0.3.2
   uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.3.2-linux-x64-8910d5c1.tgz
-  md5: 8910d5c18d4c971a38e3681ed0f4f234
   cf_stacks:
   - cflinuxfs2
+  sha256: 0d76c473779044db66fbb5a4e2153912ad343d649a5a09e504563bc55dd58941
 include_files:
 - CHANGELOG
 - CONTRIBUTING.md
