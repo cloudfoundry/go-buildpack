@@ -40,17 +40,17 @@ dependencies:
   - cflinuxfs2
   sha256: 2f2dd61a89f75a02fa8676b0819d4ee218899fcc5695c98f303440cfe2f09988
 - name: go
-  version: 1.8.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.3.linux-amd64-32ec5ac6.tar.gz
+  version: 1.8.5
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.5.linux-amd64-fe5c03fb.tar.gz
   cf_stacks:
   - cflinuxfs2
-  sha256: f95e02c7c2768933d5a313640b446aeaf51d0611f358283d194faf95644656f1
+  sha256: bf04c15b74a207683433437f11934aaa8fa64147d34160c400f5b0ba80aeeaa9
 - name: go
-  version: 1.9.0
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.linux-amd64-4577d9ba.tar.gz
+  version: 1.9.2
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.2.linux-amd64-f60fe671.tar.gz
   cf_stacks:
   - cflinuxfs2
-  sha256: d3a0193410b9b62251aa12b49780dcea3ccfd10402b05685e54051c9c0b89e72
+  sha256: 6af27e6a59b4538fbf196c8019ef67c5cfeb6d21298bf9bb6bab1390a4da3448
 - name: go
   version: 1.9.1
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.1.linux-amd64-0571886e.tar.gz
