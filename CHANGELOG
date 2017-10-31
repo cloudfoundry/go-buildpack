@@ -1,3 +1,17 @@
+v1.8.13 Oct 31, 2017
+=====================
+
+* Add go 1.9.2, 1.8.5, Remove 1.9.0, 1.8.3
+  (https://www.pivotaltracker.com/story/show/152293707)
+  (https://www.pivotaltracker.com/story/show/152296342)
+
+* Verify dependency downloads using sha256 instead of md5
+  (https://www.pivotaltracker.com/story/show/151913767)
+  (https://github.com/cloudfoundry/buildpack-packager/issues/17)
+
+* Store profile.d dir outside app directory on recent BAL
+  (https://www.pivotaltracker.com/story/show/151381713)
+
 v1.8.12 Oct 23, 2017
 =====================
 
