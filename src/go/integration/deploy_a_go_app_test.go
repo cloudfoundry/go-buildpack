@@ -364,6 +364,16 @@ var _ = Describe("CF Go Buildpack", func() {
 				})
 			})
 		})
+
+		Context("packagename is the same as a bash builtin or on path", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "bashbuiltin"))
+			})
+			It("sets the start command to run this app", func() {
+				PushAppAndConfirm(app)
+				Expect(app.GetBody("/")).To(ContainSubstring("foo:"))
+			})
+		})
 	})
 	Context("without cached buildpack dependencies", func() {
 		BeforeEach(func() {

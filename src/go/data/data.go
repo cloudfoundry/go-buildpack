@@ -8,7 +8,7 @@ import (
 func ReleaseYAML(mainPackageName string) string {
 	release := `---
 default_process_types:
-    web: %s
+    web: ./bin/%s
 `
 	return fmt.Sprintf(release, path.Base(mainPackageName))
 }
