@@ -1070,7 +1070,7 @@ config:
 
 			yaml := `---
 default_process_types:
-    web: a-go-app
+    web: ./bin/a-go-app
 `
 			Expect(string(contents)).To(Equal(yaml))
 		})
