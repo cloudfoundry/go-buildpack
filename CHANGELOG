@@ -1,3 +1,9 @@
+v1.8.15 Dec 07, 2017
+=====================
+
+* Start Command uses relative path
+  (https://www.pivotaltracker.com/story/show/153348742)
+
 v1.8.14 Nov 21, 2017
 =====================
 
