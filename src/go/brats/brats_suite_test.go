@@ -31,6 +31,7 @@ var _ = SynchronizedBeforeSuite(func() []byte {
 	// Run on all nodes
 	bratshelper.Data.Unmarshal(data)
 
+	Expect(cutlass.CopyCfHome()).To(Succeed())
 	cutlass.SeedRandom()
 	cutlass.DefaultStdoutStderr = GinkgoWriter
 })
