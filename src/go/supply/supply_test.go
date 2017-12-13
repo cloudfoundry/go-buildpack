@@ -10,8 +10,8 @@ import (
 	"go/godep"
 	"go/supply"
 
-	"github.com/cloudfoundry/libbuildpack"
-	"github.com/cloudfoundry/libbuildpack/ansicleaner"
+	"github.com/SUSE/cf-libbuildpack"
+	"github.com/SUSE/cf-libbuildpack/ansicleaner"
 
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"

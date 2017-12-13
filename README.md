@@ -22,7 +22,7 @@ To build this buildpack, run the following command from the buildpack's director
 1. Install buildpack-packager
 
     ```bash
-    (cd src/go/vendor/github.com/cloudfoundry/libbuildpack/packager/buildpack-packager && go install)
+    (cd src/go/vendor/github.com/SUSE/cf-libbuildpack/packager/buildpack-packager && go install)
     ```
 
 1. Build the buildpack
@@ -42,7 +42,7 @@ To build this buildpack, run the following command from the buildpack's director
 
 ### Testing
 
-Buildpacks use the [Cutlass](https://github.com/cloudfoundry/libbuildpack/cutlass) framework for running integration tests.
+Buildpacks use the [Cutlass](https://github.com/SUSE/cf-libbuildpack/cutlass) framework for running integration tests.
 
 To test this buildpack, run the following command from the buildpack's directory:
 
@@ -65,7 +65,7 @@ To test this buildpack, run the following command from the buildpack's directory
     ./scripts/integration.sh
     ```
 
-More information can be found on Github [cutlass](https://github.com/cloudfoundry/libbuildpack/cutlass).
+More information can be found on Github [cutlass](https://github.com/SUSE/cf-libbuildpack/cutlass).
 
 ### Contributing
 
