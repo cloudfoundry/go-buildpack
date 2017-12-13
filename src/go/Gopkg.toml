@@ -2,7 +2,7 @@
 # for detailed Gopkg.toml documentation.
 
 [[constraint]]
-  name = "github.com/cloudfoundry/libbuildpack"
+  name = "github.com/SUSE/cf-libbuildpack"
   branch = "master"
 
 [[constraint]]

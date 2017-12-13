@@ -8,6 +8,12 @@
   version = "v1.4.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/SUSE/cf-libbuildpack"
+  packages = [".","ansicleaner","bratshelper","cutlass"]
+  revision = "e4d44a80ae8647db88d3a94619c97d99b0b1d454"
+
+[[projects]]
   name = "github.com/blang/semver"
   packages = ["."]
   revision = "2ee87856327ba09384cabd113bc6b5d174e9ec0f"
@@ -16,7 +22,7 @@
 [[projects]]
   branch = "master"
   name = "github.com/cloudfoundry/libbuildpack"
-  packages = [".","ansicleaner","bratshelper","cutlass","packager"]
+  packages = [".","cutlass","packager"]
   revision = "ae83d424c6fb889f055b0936fbdb212c07131aa8"
 
 [[projects]]
@@ -81,6 +87,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "42f28f78a9c796cad0cdec50b9b8bc044611e54d67f0eefe751ae0fa544af170"
+  inputs-digest = "884741497a462015e4765f7593593489b374977f611bc901dbd87d6d25eba202"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -16,7 +16,7 @@ import (
 	"encoding/json"
 
 	"github.com/Masterminds/semver"
-	"github.com/cloudfoundry/libbuildpack"
+	"github.com/SUSE/cf-libbuildpack"
 )
 
 type Command interface {
