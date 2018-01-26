@@ -57,12 +57,6 @@ dependencies:
   cf_stacks:
   - cflinuxfs2
   sha256: f22f5bf7d81762b6ae8831686bddb71b0121fd6697cbb5de08bbadb2a20d0a8f
-- name: godep
-  version: v79
-  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v79-linux-x64-9e37ce0f.tgz
-  cf_stacks:
-  - cflinuxfs2
-  sha256: 3b86a885b70b56728009f38d8983cb7b8e02d7b44d957a424142ebc0b6e70dd6
 - name: glide
   version: v0.13.1
   uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.1-linux-x64-4959fbf0.tgz
@@ -73,6 +67,12 @@ dependencies:
   version: v0.4.1
   uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.4.1-linux-x64-c678d9fc.tgz
   sha256: c678d9fcba8a41c7cd1d22f26fcb824677e80486397233cb28bc32284109bfeb
+  cf_stacks:
+  - cflinuxfs2
+- name: godep
+  version: v80
+  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-3b019ddc.tgz
+  sha256: 3b019ddcd6919f748a6612a09b63b385fc2ef7f0dae08d064d6d64d274cfda04
   cf_stacks:
   - cflinuxfs2
 include_files:
