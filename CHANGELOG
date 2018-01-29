@@ -1,3 +1,12 @@
+v1.8.17 Jan 29, 2018
+=====================
+
+* Add godep v80, remove godep v79
+  (https://www.pivotaltracker.com/story/show/154691830)
+
+* Add dep v0.4.1, remove dep v0.3.2
+  (https://www.pivotaltracker.com/story/show/154619283)
+
 v1.8.16 Jan 23, 2018
 =====================
 
