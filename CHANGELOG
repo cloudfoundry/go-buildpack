@@ -1,3 +1,12 @@
+v1.8.18 Feb 08, 2018
+=====================
+
+* Add go 1.8.7, 1.9.4. Remove 1.8.5, 1.9.2
+  (https://www.pivotaltracker.com/story/show/155013831)
+
+* Enable manifest override yml
+  (https://www.pivotaltracker.com/story/show/153614649)
+
 v1.8.17 Jan 29, 2018
 =====================
 
