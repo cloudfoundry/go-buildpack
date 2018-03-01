@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 
 	"bytes"
 
@@ -22,6 +23,7 @@ import (
 
 var _ = Describe("Supply", func() {
 	var (
+		bpDir        string
 		buildDir     string
 		depsDir      string
 		depsIdx      string
@@ -37,6 +39,11 @@ var _ = Describe("Supply", func() {
 	)
 
 	BeforeEach(func() {
+		bpDir, err = ioutil.TempDir("", "go-buildpack.bpDir.")
+		Expect(err).To(BeNil())
+		Expect(ioutil.WriteFile(filepath.Join(bpDir, "manifest.yml"), []byte("{}"), 0644)).To(Succeed())
+		Expect(ioutil.WriteFile(filepath.Join(bpDir, "VERSION"), []byte("1.2.3"), 0644)).To(Succeed())
+
 		buildDir, err = ioutil.TempDir("", "go-buildpack.build.")
 		Expect(err).To(BeNil())
 
@@ -58,7 +65,9 @@ var _ = Describe("Supply", func() {
 
 	JustBeforeEach(func() {
 		args := []string{buildDir, "", depsDir, depsIdx}
-		stager := libbuildpack.NewStager(args, logger, &libbuildpack.Manifest{})
+		manifest, err := libbuildpack.NewManifest(bpDir, logger, time.Now())
+		Expect(err).To(BeNil())
+		stager := libbuildpack.NewStager(args, logger, manifest)
 
 		gs = &supply.Supplier{
 			Stager:     stager,
@@ -73,11 +82,9 @@ var _ = Describe("Supply", func() {
 	AfterEach(func() {
 		mockCtrl.Finish()
 
-		err = os.RemoveAll(buildDir)
-		Expect(err).To(BeNil())
-
-		err = os.RemoveAll(depsDir)
-		Expect(err).To(BeNil())
+		Expect(os.RemoveAll(bpDir)).To(Succeed())
+		Expect(os.RemoveAll(buildDir)).To(Succeed())
+		Expect(os.RemoveAll(depsDir)).To(Succeed())
 	})
 
 	Describe("SelectVendorTool", func() {
