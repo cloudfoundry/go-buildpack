@@ -29,6 +29,10 @@ func main() {
 		os.Exit(10)
 	}
 
+	if err = manifest.SetAppCacheDir(stager.CacheDir()); err != nil {
+		logger.Error("Unable to setup appcache: %s", err)
+		os.Exit(18)
+	}
 	if err = manifest.ApplyOverride(stager.DepsDir()); err != nil {
 		logger.Error("Unable to apply override.yml files: %s", err)
 		os.Exit(17)
@@ -52,5 +56,10 @@ func main() {
 
 	if err := supply.Run(&gs); err != nil {
 		os.Exit(16)
+	}
+
+	if err = manifest.CleanupAppCache(); err != nil {
+		logger.Error("Unable to apply override.yml files: %s", err)
+		os.Exit(19)
 	}
 }
