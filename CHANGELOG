@@ -1,3 +1,12 @@
+v1.8.20 Mar 09, 2018
+=====================
+
+* Use manifest cache downloads
+  (https://www.pivotaltracker.com/story/show/155405429)
+
+* Document new buildpack-packager build command
+  (https://www.pivotaltracker.com/story/show/155223266)
+
 v1.8.19 Feb 20, 2018
 =====================
 
