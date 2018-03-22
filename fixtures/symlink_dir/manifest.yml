@@ -1,0 +1,5 @@
+---
+applications:
+  - name: symlink_dir
+    env:
+      GOPACKAGENAME: "symlink_dir"
