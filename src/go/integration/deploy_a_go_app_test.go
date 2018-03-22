@@ -374,6 +374,17 @@ var _ = Describe("CF Go Buildpack", func() {
 				Expect(app.GetBody("/")).To(ContainSubstring("foo:"))
 			})
 		})
+
+		Context("app contains a symlink to a directory", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "symlink_dir"))
+			})
+			It("sets the start command to run this app", func() {
+				PushAppAndConfirm(app)
+				Expect(app.GetBody("/")).To(ContainSubstring("simple apps are good"))
+			})
+		})
+
 	})
 	Context("without cached buildpack dependencies", func() {
 		BeforeEach(func() {
