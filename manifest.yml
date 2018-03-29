@@ -75,6 +75,12 @@ dependencies:
   sha256: 244200952f414e9ae6269d32569722a7cd88435f5c52d488cd9599b8bfa1498b
   cf_stacks:
   - cflinuxfs2
+- name: go
+  version: 1.10.1
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.10.1.linux-amd64-9c6e8caf.tar.gz
+  sha256: 9c6e8caff9ae4a2522ce993fbc7a617acbf5177e9183722a37648797dff1b15a
+  cf_stacks:
+  - cflinuxfs2
 - name: godep
   version: v80
   uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-3b019ddc.tgz
