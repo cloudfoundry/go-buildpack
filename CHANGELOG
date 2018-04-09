@@ -1,3 +1,15 @@
+v1.8.21 Apr 09, 2018
+=====================
+
+* Add go 1.9.5, remove go 1.9.3
+  (https://www.pivotaltracker.com/story/show/156622355)
+
+* Add go 1.10.1
+  (https://www.pivotaltracker.com/story/show/156377959)
+
+* Verify Buildpacks should be compatible with cf CLI versions that push symlinks
+  (https://www.pivotaltracker.com/story/show/155955184)
+
 v1.8.20 Mar 09, 2018
 =====================
 
