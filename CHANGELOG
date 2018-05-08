@@ -1,3 +1,12 @@
+v1.8.22 May 08, 2018
+=====================
+
+* Add go 1.9.6, remove go 1.9.4
+  (https://www.pivotaltracker.com/story/show/157260760)
+
+* Add go 1.10.2, remove go 1.10
+  (https://www.pivotaltracker.com/story/show/157256879)
+
 v1.8.21 Apr 09, 2018
 =====================
 
