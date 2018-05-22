@@ -23,19 +23,20 @@ import (
 
 var _ = Describe("Supply", func() {
 	var (
-		bpDir        string
-		buildDir     string
-		depsDir      string
-		depsIdx      string
-		gs           *supply.Supplier
-		logger       *libbuildpack.Logger
-		buffer       *bytes.Buffer
-		err          error
-		mockCtrl     *gomock.Controller
-		mockManifest *MockManifest
-		goVersion    string
-		vendorTool   string
-		godepConfig  godep.Godep
+		bpDir         string
+		buildDir      string
+		depsDir       string
+		depsIdx       string
+		gs            *supply.Supplier
+		logger        *libbuildpack.Logger
+		buffer        *bytes.Buffer
+		err           error
+		mockCtrl      *gomock.Controller
+		mockManifest  *MockManifest
+		mockInstaller *MockInstaller
+		goVersion     string
+		vendorTool    string
+		godepConfig   godep.Godep
 	)
 
 	BeforeEach(func() {
@@ -61,6 +62,7 @@ var _ = Describe("Supply", func() {
 
 		mockCtrl = gomock.NewController(GinkgoT())
 		mockManifest = NewMockManifest(mockCtrl)
+		mockInstaller = NewMockInstaller(mockCtrl)
 	})
 
 	JustBeforeEach(func() {
@@ -72,6 +74,7 @@ var _ = Describe("Supply", func() {
 		gs = &supply.Supplier{
 			Stager:     stager,
 			Manifest:   mockManifest,
+			Installer:  mockInstaller,
 			Log:        logger,
 			GoVersion:  goVersion,
 			VendorTool: vendorTool,
@@ -250,9 +253,9 @@ var _ = Describe("Supply", func() {
 			glideInstallDir := filepath.Join(depsDir, depsIdx, "glide")
 			depInstallDir := filepath.Join(depsDir, depsIdx, "dep")
 
-			mockManifest.EXPECT().InstallOnlyVersion("godep", godepInstallDir).Return(nil)
-			mockManifest.EXPECT().InstallOnlyVersion("glide", glideInstallDir).Return(nil)
-			mockManifest.EXPECT().InstallOnlyVersion("dep", depInstallDir).Return(nil)
+			mockInstaller.EXPECT().InstallOnlyVersion("godep", godepInstallDir).Return(nil)
+			mockInstaller.EXPECT().InstallOnlyVersion("glide", glideInstallDir).Return(nil)
+			mockInstaller.EXPECT().InstallOnlyVersion("dep", depInstallDir).Return(nil)
 
 			err = gs.InstallVendorTools()
 			Expect(err).To(BeNil())
@@ -375,7 +378,7 @@ var _ = Describe("Supply", func() {
 			dep = libbuildpack.Dependency{Name: "go", Version: "1.3.4"}
 			err = os.MkdirAll(filepath.Join(goInstallDir, "go"), 0755)
 			Expect(err).To(BeNil())
-			mockManifest.EXPECT().InstallDependency(dep, goInstallDir).Return(nil)
+			mockInstaller.EXPECT().InstallDependency(dep, goInstallDir).Return(nil)
 		})
 
 		It("Write GOROOT to envfile", func() {

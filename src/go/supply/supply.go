@@ -18,6 +18,9 @@ import (
 type Manifest interface {
 	AllDependencyVersions(string) []string
 	DefaultVersion(string) (libbuildpack.Dependency, error)
+}
+
+type Installer interface {
 	InstallDependency(libbuildpack.Dependency, string) error
 	InstallOnlyVersion(string, string) error
 }
@@ -35,6 +38,7 @@ type Stager interface {
 type Supplier struct {
 	Stager     Stager
 	Manifest   Manifest
+	Installer  Installer
 	Log        *libbuildpack.Logger
 	VendorTool string
 	GoVersion  string
@@ -155,7 +159,7 @@ func (gs *Supplier) InstallVendorTools() error {
 
 	for _, tool := range tools {
 		installDir := filepath.Join(gs.Stager.DepDir(), tool)
-		if err := gs.Manifest.InstallOnlyVersion(tool, installDir); err != nil {
+		if err := gs.Installer.InstallOnlyVersion(tool, installDir); err != nil {
 			return err
 		}
 
@@ -199,7 +203,7 @@ func (gs *Supplier) InstallGo() error {
 	goInstallDir := filepath.Join(gs.Stager.DepDir(), "go"+gs.GoVersion)
 
 	dep := libbuildpack.Dependency{Name: "go", Version: gs.GoVersion}
-	if err := gs.Manifest.InstallDependency(dep, goInstallDir); err != nil {
+	if err := gs.Installer.InstallDependency(dep, goInstallDir); err != nil {
 		return err
 	}
 
