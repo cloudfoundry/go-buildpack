@@ -62,7 +62,7 @@ func main() {
 	}
 
 	if err = installer.CleanupAppCache(); err != nil {
-		logger.Error("Unable to apply override.yml files: %s", err)
+		logger.Error("Unable to clean up app cache: %s", err)
 		os.Exit(19)
 	}
 }
