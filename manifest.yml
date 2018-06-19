@@ -96,7 +96,7 @@ dependencies:
 - name: godep
   version: '80'
   uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64.tgz
-  sha256: 78664dedc7b37eca1f386e208f6fa77deaeb2365e2d32863a21e5809433abb1e
+  sha256: 71fec0a89907717dc5d5a87613273f40d8ac650cf485714a35ca499785aa8717
   cf_stacks:
   - cflinuxfs2
 include_files:
