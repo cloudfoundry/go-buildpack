@@ -93,6 +93,12 @@ dependencies:
   sha256: 3b019ddcd6919f748a6612a09b63b385fc2ef7f0dae08d064d6d64d274cfda04
   cf_stacks:
   - cflinuxfs2
+- name: godep
+  version: '80'
+  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64.tgz
+  sha256: 78664dedc7b37eca1f386e208f6fa77deaeb2365e2d32863a21e5809433abb1e
+  cf_stacks:
+  - cflinuxfs2
 include_files:
 - CHANGELOG
 - CONTRIBUTING.md
