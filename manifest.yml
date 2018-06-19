@@ -15,6 +15,12 @@ dependencies:
   sha256: c678d9fcba8a41c7cd1d22f26fcb824677e80486397233cb28bc32284109bfeb
   cf_stacks:
   - cflinuxfs2
+- name: dep
+  version: 0.4.1
+  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.4.1-linux-x64.tgz
+  sha256: 45599c5066bff0fa5e09aa9d79a653984c0a80c8d9bc6acfdba04b2819c70e7d
+  cf_stacks:
+  - cflinuxfs2
 - name: glide
   version: v0.13.1
   uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.1-linux-x64-4959fbf0.tgz
