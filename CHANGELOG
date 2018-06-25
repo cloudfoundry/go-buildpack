@@ -1,3 +1,18 @@
+v1.8.25 Jun 25, 2018
+=====================
+
+* Merge pull request #63 from Appdynamics/master
+  (https://www.pivotaltracker.com/story/show/157826834)
+
+* Add glide 0.13.1
+  (https://www.pivotaltracker.com/story/show/158474707)
+
+* Add godep 80
+  (https://www.pivotaltracker.com/story/show/158428171)
+
+* Add dep 0.4.1
+  (https://www.pivotaltracker.com/story/show/158469869)
+
 v1.8.24 Jun 19, 2018
 =====================
 
