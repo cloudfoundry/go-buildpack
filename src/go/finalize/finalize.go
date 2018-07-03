@@ -232,6 +232,10 @@ func (gf *Finalizer) SetupGoPath() error {
 
 func (gf *Finalizer) SetBuildFlags() {
 	flags := []string{"-tags", "cloudfoundry", "-buildmode", "pie"}
+	
+	if f := os.Getenv("GO_LINKER_ARGS"); f != "" {
+		flags = append(flags, f)
+	}
 
 	if os.Getenv("GO_LINKER_SYMBOL") != "" && os.Getenv("GO_LINKER_VALUE") != "" {
 		ld_flags := []string{"-ldflags", fmt.Sprintf("-X %s=%s", os.Getenv("GO_LINKER_SYMBOL"), os.Getenv("GO_LINKER_VALUE"))}
