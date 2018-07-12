@@ -41,10 +41,10 @@ dependencies:
   sha256: '09c352046a8d7e3f565116e9821242cb1119117d49a6e1312f19ff255fefb3fd'
 - name: go
   version: 1.7.6
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.6.linux-amd64-9c6eeed3.tar.gz
-  sha256: 9c6eeed36eb9a2f630af966acaf333888dd314573463910ea2baf6e34f6746c1
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.6.linux-amd64-097792d0.tar.gz
+  sha256: '097792d05d47667f7ed94ffb2ea46db110fdf70104bc9facb74da213bdb2a886'
   cf_stacks:
-  - cflinuxfs2
+  - cflinuxfs3
 - name: go
   version: 1.8.6
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.6.linux-amd64-25e50f0b.tar.gz
