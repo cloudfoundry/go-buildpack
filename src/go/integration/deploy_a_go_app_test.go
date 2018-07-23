@@ -514,7 +514,7 @@ var _ = Describe("CF Go Buildpack", func() {
 				cmd.Dir = bpDir
 				_, err := cmd.Output()
 				Expect(err).ToNot(HaveOccurred())
-				err = cutlass.CreateOrUpdateBuildpack(buildpack_language, buildpack_file)
+				err = cutlass.CreateOrUpdateBuildpack(buildpack_language, buildpack_file, "")
 				os.Remove(buildpack_file)
 				Expect(err).ToNot(HaveOccurred())
 

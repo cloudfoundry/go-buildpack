@@ -27,8 +27,9 @@ var _ = Describe("pushing an app a second time", func() {
 		app.SetEnv("BP_DEBUG", "true")
 	})
 
-	DownloadRegexp := `Download \[.*/go[\d\.]+\.linux-amd64-[0-9a-f]+\.tar\.gz\]`
-	CopyRegexp := `Copy \[.*/go[\d\.]+\.linux-amd64-[0-9a-f]+\.tar\.gz\]`
+	Regexp := `\[.*\/go[\d\.]+\.linux-amd64-(cflinuxfs.*-)?[\da-f]+\.tar\.gz\]`
+	DownloadRegexp := "Download " + Regexp
+	CopyRegexp := "Copy " + Regexp
 
 	It("uses the cache for manifest dependencies", func() {
 		PushAppAndConfirm(app)
