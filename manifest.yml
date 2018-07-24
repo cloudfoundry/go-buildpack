@@ -125,14 +125,14 @@ dependencies:
   - cflinuxfs3
 - name: godep
   version: '80'
-  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-cflinuxfs2-475caf4b.tgz
-  sha256: 475caf4bdc74346526c4334341bad1ac5d3ea797ee03c62282d48b6744eeca81
+  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-cflinuxfs2-980d8683.tgz
+  sha256: 980d8683bd9c10ec67cafaa2a5b4e9a4ebe5596644d57f47ad9cf2402c211f14
   cf_stacks:
   - cflinuxfs2
 - name: godep
   version: '80'
-  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-cflinuxfs3-495c83d1.tgz
-  sha256: 495c83d1e568cbf8875c898e04342bb039ebb99df87e107820ebefb3da616cb1
+  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-cflinuxfs3-0c0937ba.tgz
+  sha256: 0c0937badc66f24301aec7b316546be60a791518bae4ed8e486328dcb2456009
   cf_stacks:
   - cflinuxfs3
 include_files:
