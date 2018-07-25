@@ -101,14 +101,14 @@ dependencies:
   - cflinuxfs2
 - name: go
   version: 1.9.7
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.7.linux-amd64-cflinuxfs2-79e55504.tar.gz
-  sha256: 79e55504efd60c6b9918c59974b3dea596784e0c5493d0f9acce2ca5df373f81
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.7.linux-amd64-cflinuxfs2-acaa6373.tar.gz
+  sha256: acaa6373ec4c586282f6c8c3eb48b193acb500dcaa116cd45a04da99b4a1add9
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.9.7
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.7.linux-amd64-cflinuxfs3-6b2ea6f3.tar.gz
-  sha256: 6b2ea6f34767b4ae7c5275dc7e88c683569a4d08ca69ee24f47db1faf9325ce3
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.7.linux-amd64-cflinuxfs3-c7431802.tar.gz
+  sha256: c74318028d4c64a6b2b652ff7726f5af676e9f617ce8c2bcce5e76fecb1c25ea
   cf_stacks:
   - cflinuxfs3
 - name: go
