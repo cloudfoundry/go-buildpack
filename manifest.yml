@@ -119,14 +119,14 @@ dependencies:
   - cflinuxfs2
 - name: go
   version: 1.10.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.10.3.linux-amd64-cflinuxfs2-c478e6d1.tar.gz
-  sha256: c478e6d1b5c373d7bddd0aa6b4c37bdaa6403cc6078b3683bc2254d33f7e9495
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.10.3.linux-amd64-cflinuxfs2-a747a90a.tar.gz
+  sha256: a747a90ae83c203a3e9226123d7e0238f1d0396d5d95520b46990c5791a445e2
   cf_stacks:
   - cflinuxfs2
 - name: go
   version: 1.10.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.10.3.linux-amd64-cflinuxfs3-fbd2e91a.tar.gz
-  sha256: fbd2e91a0315d052adef644b7af62119fa78f7f3bdec7fd8a1a2725dfa1d768f
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.10.3.linux-amd64-cflinuxfs3-a911b82f.tar.gz
+  sha256: a911b82fc1d986e6cd93c48c1aaa8f75ff54c995808a6d53bea47510e5b66b0b
   cf_stacks:
   - cflinuxfs3
 - name: godep
