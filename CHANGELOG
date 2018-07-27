@@ -1,3 +1,18 @@
+v1.8.26 Jul 27, 2018
+=====================
+
+* Rebuild go 1.6.3, 1.6.4, 1.7.6, 1.8.7, 1.9.7
+  for stacks cflinuxfs2, cflinuxfs3
+
+* Rebuild glide 0.13.1
+  for stacks cflinuxfs2, cflinuxfs3
+
+* Add dep 0.5.0, remove dep 0.4.1
+  for stacks cflinuxfs2, cflinuxfs3
+
+* Rebuild godep 80
+  for stacks cflinuxfs2, cflinuxfs3
+
 v1.8.25 Jun 25, 2018
 =====================
 
