@@ -23,14 +23,14 @@ dependencies:
   - cflinuxfs3
 - name: glide
   version: 0.13.1
-  uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.1-linux-x64-cflinuxfs2-dc3fb9ff.tgz
-  sha256: dc3fb9ffca3bb6e27ac1610f38b85148e86f70fdd9399e62a4ded590e8c9af94
+  uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.1-linux-x64-cflinuxfs2-aab48c6b.tgz
+  sha256: aab48c6b7c362ccfe94eeb09fc3b1fe2204810a7820285ef6cf421653bfd800f
   cf_stacks:
   - cflinuxfs2
 - name: glide
   version: 0.13.1
-  uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.1-linux-x64-cflinuxfs3-67ab3140.tgz
-  sha256: 67ab3140bca6ab4f870d0fa1748cf0d36304ad260d09b50cf670dbf27333d0a3
+  uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.1-linux-x64-cflinuxfs3-6f19a57c.tgz
+  sha256: 6f19a57c4902ab3c157671610d6c1f9021afd59a34c6aef97ab84a94ce1d13fa
   cf_stacks:
   - cflinuxfs3
 - name: go
