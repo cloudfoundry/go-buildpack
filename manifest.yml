@@ -11,14 +11,14 @@ dependency_deprecation_dates:
 dependencies:
 - name: dep
   version: 0.5.0
-  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.5.0-linux-x64-cflinuxfs2-e7367a66.tgz
-  sha256: e7367a66a4640e10329785446613c1577ab9a9c0fb836c2eb8bc0b83700094ef
+  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.5.0-linux-x64-cflinuxfs2-52c14116.tgz
+  sha256: 52c141169c7750de4059043f9b44a803a695d2da5d8d15d11e1a2260bdddac04
   cf_stacks:
   - cflinuxfs2
 - name: dep
   version: 0.5.0
-  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.5.0-linux-x64-cflinuxfs3-b6dcbae8.tgz
-  sha256: b6dcbae82b489efc403b7684611bf48f5435794aed3abfee00cd7f553a4f7b60
+  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.5.0-linux-x64-cflinuxfs3-f9b0e8ec.tgz
+  sha256: f9b0e8eca44b3fbd324a34f1529fc2545a25f777da52a99c667906e0d9c4031a
   cf_stacks:
   - cflinuxfs3
 - name: glide
