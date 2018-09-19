@@ -35,7 +35,7 @@ var _ = Describe("override yml", func() {
 	})
 
 	It("Forces go from override buildpack", func() {
-		Expect(app.Push()).ToNot(Succeed())
+		Expect(app.V3Push()).ToNot(Succeed())
 		Expect(app.Stdout.String()).To(ContainSubstring("-----> OverrideYML Buildpack"))
 		Expect(app.ConfirmBuildpack(buildpackVersion)).To(Succeed())
 
