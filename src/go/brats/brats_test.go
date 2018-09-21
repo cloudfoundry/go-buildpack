@@ -14,7 +14,7 @@ var _ = Describe("Go buildpack", func() {
 		return CopyBrats("1.6.x")
 	})
 	bratshelper.StagingWithADepThatIsNotTheLatest("go", CopyBrats)
-	bratshelper.StagingWithCustomBuildpackWithCredentialsInDependencies(`go[\d\.]+\.linux-amd64-(cflinuxfs.*-)?[\da-f]+\.tar\.gz`, CopyBrats)
+	bratshelper.StagingWithCustomBuildpackWithCredentialsInDependencies(CopyBrats)
 	bratshelper.DeployAppWithExecutableProfileScript("go", CopyBrats)
 	bratshelper.DeployAnAppWithSensitiveEnvironmentVariables(CopyBrats)
 
