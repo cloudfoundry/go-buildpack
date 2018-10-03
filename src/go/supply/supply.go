@@ -52,7 +52,7 @@ func Run(gs *Supplier) error {
 	}
 
 	if err := gs.InstallVendorTools(); err != nil {
-		gs.Log.Error("Unable to install vendor tools", err.Error())
+		gs.Log.Error("Unable to install vendor tools: %s", err.Error())
 		return err
 	}
 
