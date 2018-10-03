@@ -16,7 +16,6 @@ import (
 
 var _ = Describe("CF Go Buildpack", func() {
 	var app *cutlass.App
-	var resource_url string
 
 	AfterEach(func() {
 		if app != nil {
@@ -253,7 +252,6 @@ var _ = Describe("CF Go Buildpack", func() {
 		Context("expects a non-packaged version of go", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go99"))
-				resource_url = "https://storage.googleapis.com/golang/go99.99.99.linux-amd64.tar.gz"
 			})
 
 			It("displays useful understandable errors", func() {
@@ -449,7 +447,6 @@ var _ = Describe("CF Go Buildpack", func() {
 		Context("expects a non-packaged version of go", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go99"))
-				resource_url = "https://storage.googleapis.com/golang/go99.99.99.linux-amd64.tar.gz"
 			})
 
 			It("displays useful understandable errors", func() {
