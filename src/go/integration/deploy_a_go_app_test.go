@@ -45,19 +45,6 @@ var _ = Describe("CF Go Buildpack", func() {
 			AssertNoInternetTraffic("with_dependencies/src/with_dependencies")
 		})
 
-		Context("app uses go1.6 and godep with GO15VENDOREXPERIMENT=0", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go16_dependencies"))
-				app.SetEnv("GO15VENDOREXPERIMENT", "0")
-			})
-
-			It("", func() {
-				PushAppAndConfirm(app)
-				Expect(app.Stdout.String()).To(MatchRegexp("Hello from foo!"))
-				Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
-			})
-		})
-
 		Context("app uses go1.8 and dep", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go18_dep", "src", "go18_dep"))
@@ -91,9 +78,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 		})
 
-		Context("app uses go1.6 and godep with Godeps/_workspace dir", func() {
+		Context("app uses godep with Godeps/_workspace dir", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go16_dependencies"))
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_dependencies"))
 			})
 
 			It("", func() {
@@ -103,9 +90,9 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 		})
 
-		Context("app uses go1.6 with godep and no vendor dir or Godeps/_workspace dir", func() {
+		Context("app uses godep and no vendor dir or Godeps/_workspace dir", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go16_no_vendor", "src", "go16_no_vendor"))
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_no_vendor", "src", "go_no_vendor"))
 			})
 
 			It("", func() {
@@ -113,19 +100,6 @@ var _ = Describe("CF Go Buildpack", func() {
 				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
 
 				Expect(app.Stdout.String()).To(MatchRegexp("vendor/ directory does not exist."))
-			})
-		})
-
-		Context("that are vendored", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go17_vendor_experiment_flag"))
-			})
-
-			It("", func() {
-				Expect(app.Push()).To(HaveOccurred())
-				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
-
-				Expect(app.Stdout.String()).To(MatchRegexp("GO15VENDOREXPERIMENT is set, but is not supported by go1.7"))
 			})
 		})
 
@@ -191,19 +165,6 @@ var _ = Describe("CF Go Buildpack", func() {
 				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
 
 				Expect(app.Stdout.String()).To(MatchRegexp(`To use go native vendoring set the \$GOPACKAGENAME`))
-			})
-		})
-
-		Context("app has vendored dependencies with go1.6, but GO15VENDOREXPERIMENT=0", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go16_vendor_bad_env"))
-			})
-
-			It("fails with helpful error", func() {
-				Expect(app.Push()).To(HaveOccurred())
-				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
-
-				Expect(app.Stdout.String()).To(MatchRegexp("with go 1.6 this environment variable must unset or set to 1."))
 			})
 		})
 
@@ -277,19 +238,19 @@ var _ = Describe("CF Go Buildpack", func() {
 			AssertNoInternetTraffic("heroku_example")
 		})
 
-		Context("a go app using ldflags with version 1.6~", func() {
+		Context("a go app using ldflags", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go16_ldflags", "src", "go_app"))
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_ldflags", "src", "go_app"))
 			})
 
-			It("", func() {
+			It("links correctly", func() {
 				PushAppAndConfirm(app)
 
 				Expect(app.GetBody("/")).To(ContainSubstring("flag_linked"))
 				Expect(app.Stdout.String()).To(ContainSubstring("main.linker_flag=flag_linked"))
 			})
 
-			AssertNoInternetTraffic("go16_ldflags/src/go_app")
+			AssertNoInternetTraffic("go_ldflags/src/go_app")
 		})
 
 		Context("app uses glide and has vendored dependencies", func() {
@@ -418,19 +379,6 @@ var _ = Describe("CF Go Buildpack", func() {
 			AssertUsesProxyDuringStagingIfPresent("with_dependencies/src/with_dependencies")
 		})
 
-		Context("app has vendored dependencies", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go17_vendor_experiment_flag"))
-			})
-
-			It("", func() {
-				Expect(app.Push()).To(HaveOccurred())
-				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
-
-				Expect(app.Stdout.String()).To(ContainSubstring("GO15VENDOREXPERIMENT is set, but is not supported by go1.7"))
-			})
-		})
-
 		Context("app has no dependencies", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_app"))
@@ -470,19 +418,6 @@ var _ = Describe("CF Go Buildpack", func() {
 				Expect(app.GetBody("/")).To(ContainSubstring("hello, heroku"))
 			})
 			AssertUsesProxyDuringStagingIfPresent("heroku_example")
-		})
-
-		Context("a go app using ldflags with version 1.6~", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go16_ldflags", "src", "go_app"))
-			})
-
-			It("", func() {
-				PushAppAndConfirm(app)
-
-				Expect(app.GetBody("/")).To(ContainSubstring("flag_linked"))
-				Expect(app.Stdout.String()).To(ContainSubstring("main.linker_flag=flag_linked"))
-			})
 		})
 
 		Context("app uses glide and has vendored dependencies", func() {
@@ -559,7 +494,7 @@ var _ = Describe("CF Go Buildpack", func() {
 			It("fails with a deprecation message", func() {
 				PushAppAndConfirm(app)
 				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-				Expect(app.Stdout.String()).To(MatchRegexp(`Installing go 1\.6\.\d+`))
+				Expect(app.Stdout.String()).To(MatchRegexp(`Installing go 1\.\d+\.\d+`))
 			})
 		})
 
@@ -574,21 +509,6 @@ var _ = Describe("CF Go Buildpack", func() {
 
 				Expect(app.Stdout.String()).To(MatchRegexp(`Unable to determine Go version to install: no match found for 1.3.x`))
 				Expect(app.Stdout.String()).ToNot(MatchRegexp(`Installing go1.3`))
-			})
-		})
-
-		Context("a go 1.6 app", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go16", "src", "go_app"))
-			})
-
-			It("should be compiled with buildmode=pie", func() {
-				PushAppAndConfirm(app)
-				Expect(app.GetBody("/")).To(MatchRegexp(`foo: .*`))
-				app_body, _ := app.GetBody("/")
-				Restart(app)
-				Expect(app.GetBody("/")).To(MatchRegexp(`foo: .*`))
-				Expect(app.GetBody("/")).ToNot(Equal(app_body))
 			})
 		})
 	})

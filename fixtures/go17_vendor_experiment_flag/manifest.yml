@@ -1,3 +1,0 @@
----
-  env:
-    GO15VENDOREXPERIMENT: 1

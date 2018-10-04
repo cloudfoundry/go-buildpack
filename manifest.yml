@@ -2,11 +2,15 @@
 language: go
 default_versions:
 - name: go
-  version: 1.8.x
+  version: 1.10.x
 dependency_deprecation_dates:
-- version_line: 1.6.x
+- version_line: 1.8.x
   name: go
-  date: 2017-02-16
+  date: 2018-02-16
+  link: https://golang.org/doc/devel/release.html
+- version_line: 1.9.x
+  name: go
+  date: 2018-08-24
   link: https://golang.org/doc/devel/release.html
 dependencies:
 - name: dep
@@ -31,48 +35,6 @@ dependencies:
   version: 0.13.2
   uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.2-linux-x64-cflinuxfs3-b50997e2.tgz
   sha256: b50997e2dea986f600045b7467c683c515ae44fd10395d3fa5cea5504635b47b
-  cf_stacks:
-  - cflinuxfs3
-- name: go
-  version: 1.6.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.3.linux-amd64-cflinuxfs2-046b62a3.tar.gz
-  sha256: 046b62a3028687848e77733b872ee7380cf606ce4c897320e24e66b1f03ad575
-  cf_stacks:
-  - cflinuxfs2
-- name: go
-  version: 1.6.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.3.linux-amd64-cflinuxfs3-c917e630.tar.gz
-  sha256: c917e6303e9ef6fe1169e5cab5377f5e1a48c3905a6a2d810109f9b21f51cd22
-  cf_stacks:
-  - cflinuxfs3
-- name: go
-  version: 1.6.4
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.4.linux-amd64-cflinuxfs2-682695f7.tar.gz
-  sha256: 682695f7ed9a6c412691ffe312e5f25818ffa3b7740a83657029659e3a1beac5
-  cf_stacks:
-  - cflinuxfs2
-- name: go
-  version: 1.6.4
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.6.4.linux-amd64-cflinuxfs3-fcc7dd48.tar.gz
-  sha256: fcc7dd485d5a08efcd2e02a6b848e2bff6abb4abda93ae16b81901847ce4c63f
-  cf_stacks:
-  - cflinuxfs3
-- name: go
-  version: 1.7.5
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.5.linux-amd64-cflinuxfs2-ec222f16.tar.gz
-  sha256: ec222f16572ffa1ab5cd948a125321c1e1ab0758b92fea6127f3f768c03017a6
-  cf_stacks:
-  - cflinuxfs2
-- name: go
-  version: 1.7.6
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.6.linux-amd64-cflinuxfs2-ffb16ea0.tar.gz
-  sha256: ffb16ea09d38ebd238c707dc4e635b64befd7deacf0ceb4332770679a6b76f54
-  cf_stacks:
-  - cflinuxfs2
-- name: go
-  version: 1.7.6
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.7.6.linux-amd64-cflinuxfs3-5f14cde3.tar.gz
-  sha256: 5f14cde346d950bf9e68f116bc5bf3d7ea1af57421fbb7d89aea58cde687567b
   cf_stacks:
   - cflinuxfs3
 - name: go
