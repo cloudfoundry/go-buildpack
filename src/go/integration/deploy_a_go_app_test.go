@@ -268,7 +268,7 @@ var _ = Describe("CF Go Buildpack", func() {
 			AssertNoInternetTraffic("glide_and_vendoring/src/glide_and_vendoring")
 		})
 
-		Context("go 1.7 app with GO_SETUP_GOPATH_IN_IMAGE", func() {
+		Context("go 1.X app with GO_SETUP_GOPATH_IN_IMAGE", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "gopath_in_container", "src", "go_app"))
 				app.SetEnv("GO_SETUP_GOPATH_IN_IMAGE", "true")
@@ -280,16 +280,17 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 		})
 
-		Context("go 1.7 app with GO_INSTALL_TOOLS_IN_IMAGE", func() {
+		Context("go 1.X app with GO_INSTALL_TOOLS_IN_IMAGE", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "toolchain_in_container", "src", "go_app"))
 				app.SetEnv("GO_INSTALL_TOOLS_IN_IMAGE", "true")
+				app.Disk = "1G"
 			})
 
 			It("displays the go version", func() {
 				PushAppAndConfirm(app)
 
-				Expect(app.GetBody("/")).To(ContainSubstring("go version go1.7.6 linux/amd64"))
+				Expect(app.GetBody("/")).To(MatchRegexp(`go version go1\.\d+\.\d+ linux/amd64`))
 			})
 
 			Context("running a task", func() {
@@ -305,7 +306,7 @@ var _ = Describe("CF Go Buildpack", func() {
 					_, err := app.RunTask(`echo "RUNNING A TASK: $(go version)"`)
 					Expect(err).ToNot(HaveOccurred())
 
-					Eventually(func() string { return app.Stdout.String() }, 10*time.Second).Should(ContainSubstring("RUNNING A TASK: go version go1.7.6 linux/amd64"))
+					Eventually(func() string { return app.Stdout.String() }, 10*time.Second).Should(MatchRegexp(`RUNNING A TASK: go version go1\.\d+\.\d+ linux/amd64`))
 				})
 			})
 
@@ -318,7 +319,7 @@ var _ = Describe("CF Go Buildpack", func() {
 				It("displays the go version", func() {
 					PushAppAndConfirm(app)
 
-					Expect(app.GetBody("/")).To(ContainSubstring("go version go1.7.6 linux/amd64"))
+					Expect(app.GetBody("/")).To(MatchRegexp(`go version go1\.\d+\.\d+ linux/amd64`))
 					Expect(app.GetBody("/gopath")).To(ContainSubstring("GOPATH: /home/vcap/app"))
 				})
 			})
@@ -345,6 +346,7 @@ var _ = Describe("CF Go Buildpack", func() {
 		})
 
 	})
+
 	Context("without cached buildpack dependencies", func() {
 		BeforeEach(func() {
 			if cutlass.Cached {

@@ -1,5 +1,5 @@
 {
-	"ImportPath": "go_app_with_dependencies",
+	"ImportPath": "go_dependencies",
 	"GoVersion": "go1.X",
 	"Deps": [
 		{
