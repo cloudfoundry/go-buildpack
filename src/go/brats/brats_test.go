@@ -13,7 +13,10 @@ var _ = Describe("Go buildpack", func() {
 	bratshelper.StagingWithBuildpackThatSetsEOL("go", func(_ string) *cutlass.App {
 		return CopyBrats("1.8.7")
 	})
-	bratshelper.StagingWithADepThatIsNotTheLatest("go", CopyBrats)
+	bratshelper.StagingWithADepThatIsNotTheLatest("go", func(_ string) *cutlass.App {
+		return CopyBrats("1.8.6")
+	})
+
 	bratshelper.StagingWithCustomBuildpackWithCredentialsInDependencies(CopyBrats)
 	bratshelper.DeployAppWithExecutableProfileScript("go", CopyBrats)
 	bratshelper.DeployAnAppWithSensitiveEnvironmentVariables(CopyBrats)
