@@ -14,7 +14,7 @@ var _ = Describe("Go buildpack", func() {
 		return CopyBrats("1.8.7")
 	})
 	bratshelper.StagingWithADepThatIsNotTheLatest("go", func(_ string) *cutlass.App {
-		return CopyBrats("1.8.6")
+		return CopyBrats("1.10.3")
 	})
 
 	bratshelper.StagingWithCustomBuildpackWithCredentialsInDependencies(CopyBrats)
