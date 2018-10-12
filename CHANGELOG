@@ -1,3 +1,19 @@
+v1.8.28 Oct 12, 2018
+=====================
+
+* Remove go 1.6, 1.7. Make 1.10 the default version
+  (https://www.pivotaltracker.com/story/show/159859847)
+
+* Add go 1.11.1
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/160932747)
+
+* Add glide 0.13.2, remove glide 0.13.1
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/160806874)
+
+* Build supply and finalize with GOOS=linux
+
 v1.8.27 Sep 07, 2018
 =====================
 
