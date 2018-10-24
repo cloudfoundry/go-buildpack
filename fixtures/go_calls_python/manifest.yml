@@ -1,0 +1,5 @@
+---
+applications:
+- path: .
+  env:
+    GOPACKAGENAME: go-online

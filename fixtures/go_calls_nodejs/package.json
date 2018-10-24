@@ -1,0 +1,17 @@
+{
+  "name": "go_calls_nodejs",
+  "version": "0.0.0",
+  "description": "go app that calls nodejs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "log": "^1.4.0"
+  },
+  "engines": {
+    "node": "~>10"
+  }
+}

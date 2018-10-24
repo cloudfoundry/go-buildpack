@@ -1,0 +1,3 @@
+name: pydata_test
+dependencies:
+- ujson=1.35
