@@ -98,18 +98,6 @@ dependencies:
   cf_stacks:
   - cflinuxfs3
 - name: go
-  version: '1.11'
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.linux-amd64-cflinuxfs2-02d3f9ce.tar.gz
-  sha256: 02d3f9cea35ef31b1f8869151a50be3d057d01271adcfd16ce888cd1c44cd1c3
-  cf_stacks:
-  - cflinuxfs2
-- name: go
-  version: '1.11'
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.linux-amd64-cflinuxfs3-89b1a8ab.tar.gz
-  sha256: 89b1a8ab10a349cdb754ef7976d7e6a0de6e650af0c55de4371085e088d83eb5
-  cf_stacks:
-  - cflinuxfs3
-- name: go
   version: 1.11.1
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.1.linux-amd64-cflinuxfs2-c718dccf.tar.gz
   sha256: c718dccf258abecbcf1a44b35b44b9ae404094f8ddbac3812b15a5d99d9a2b9b
@@ -119,6 +107,18 @@ dependencies:
   version: 1.11.1
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.1.linux-amd64-cflinuxfs3-b3cae5cb.tar.gz
   sha256: b3cae5cb0cf688dfbed2b8555882ff8e0b2c1238cb52e3ee68762ec6a6666f1a
+  cf_stacks:
+  - cflinuxfs3
+- name: go
+  version: 1.11.2
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.2.linux-amd64-cflinuxfs2-9e4045df.tar.gz
+  sha256: 9e4045dfa6f459ba80b5dd040bb594e35c985e9bf35f25c160f3986941e443c2
+  cf_stacks:
+  - cflinuxfs2
+- name: go
+  version: 1.11.2
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.2.linux-amd64-cflinuxfs3-ea36bdde.tar.gz
+  sha256: ea36bddecabd7c5c23abe6d5d39a14e39d8b2f9e8cf5c4152384000c3ee2e780
   cf_stacks:
   - cflinuxfs3
 - name: godep
