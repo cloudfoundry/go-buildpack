@@ -25,6 +25,7 @@ var _ = Describe("pushing an app a second time", func() {
 
 		app = cutlass.New(filepath.Join(bpDir, "fixtures", "single_file"))
 		app.SetEnv("BP_DEBUG", "true")
+		app.Buildpacks = []string{"go_buildpack"}
 	})
 
 	Regexp := `\[.*\/go[\d\.]+\.linux-amd64-(cflinuxfs.*-)?[\da-f]+\.tar\.gz\]`
