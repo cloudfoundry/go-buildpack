@@ -1,6 +1,8 @@
 package brats_test
 
 import (
+	"fmt"
+
 	"github.com/cloudfoundry/libbuildpack/bratshelper"
 	"github.com/cloudfoundry/libbuildpack/cutlass"
 	. "github.com/onsi/ginkgo"
@@ -8,13 +10,25 @@ import (
 )
 
 var _ = Describe("Go buildpack", func() {
+	var (
+		latestVersion       string
+		secondLatestVersion string
+	)
+
+	BeforeEach(func() {
+		bpDir, err := cutlass.FindRoot()
+		Expect(err).NotTo(HaveOccurred())
+		latestVersion = GetLatestDepVersion("go", "x", bpDir)
+		secondLatestVersion = GetLatestDepVersion("go", fmt.Sprintf("<%s", latestVersion), bpDir)
+	})
+
 	bratshelper.UnbuiltBuildpack("go", CopyBrats)
 	bratshelper.DeployingAnAppWithAnUpdatedVersionOfTheSameBuildpack(CopyBrats)
 	bratshelper.StagingWithBuildpackThatSetsEOL("go", func(_ string) *cutlass.App {
 		return CopyBrats("1.8.7")
 	})
 	bratshelper.StagingWithADepThatIsNotTheLatest("go", func(_ string) *cutlass.App {
-		return CopyBrats("1.10.3")
+		return CopyBrats(secondLatestVersion)
 	})
 
 	bratshelper.StagingWithCustomBuildpackWithCredentialsInDependencies(CopyBrats)

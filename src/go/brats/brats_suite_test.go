@@ -71,6 +71,16 @@ func CopyBrats(version string) *cutlass.App {
 	return cutlass.New(dir)
 }
 
+func GetLatestDepVersion(dep, constraint, bpDir string) string {
+	manifest, err := libbuildpack.NewManifest(bpDir, nil, time.Now())
+	Expect(err).ToNot(HaveOccurred())
+	deps := manifest.AllDependencyVersions(dep)
+	runtimeVersion, err := libbuildpack.FindMatchingVersion(constraint, deps)
+	Expect(err).ToNot(HaveOccurred())
+
+	return runtimeVersion
+}
+
 func PushApp(app *cutlass.App) {
 	Expect(app.Push()).To(Succeed())
 	Eventually(app.InstanceStates, 20*time.Second).Should(Equal([]string{"RUNNING"}))
