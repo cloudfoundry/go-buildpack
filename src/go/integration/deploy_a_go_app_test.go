@@ -27,7 +27,7 @@ var _ = Describe("CF Go Buildpack", func() {
 	Context("with cached buildpack dependencies", func() {
 		BeforeEach(func() {
 			if !cutlass.Cached {
-				Skip("but running uncached tests")
+				Skip("running uncached tests")
 			}
 		})
 
@@ -306,7 +306,7 @@ var _ = Describe("CF Go Buildpack", func() {
 					_, err := app.RunTask(`echo "RUNNING A TASK: $(go version)"`)
 					Expect(err).ToNot(HaveOccurred())
 
-					Eventually(func() string { return app.Stdout.String() }, 10*time.Second).Should(MatchRegexp(`RUNNING A TASK: go version go1\.\d+\.\d+ linux/amd64`))
+					Eventually(func() string { return app.Stdout.String() }, 1*time.Minute).Should(MatchRegexp(`RUNNING A TASK: go version go1\.\d+\.\d+ linux/amd64`))
 				})
 			})
 
