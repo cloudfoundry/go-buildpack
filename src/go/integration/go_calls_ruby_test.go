@@ -27,7 +27,7 @@ var _ = Describe("running supply ruby buildpack before the go buildpack", func()
 
 			app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_calls_ruby"))
 			app.Buildpacks = []string{
-				"https://github.com/cloudfoundry/ruby-buildpack#develop",
+				"https://github.com/cloudfoundry/ruby-buildpack#master",
 				"go_buildpack",
 			}
 		})

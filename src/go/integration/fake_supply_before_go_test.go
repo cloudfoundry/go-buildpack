@@ -27,7 +27,7 @@ var _ = Describe("running supply buildpacks before the go buildpack", func() {
 
 			app = cutlass.New(filepath.Join(bpDir, "fixtures", "fake_supply_go_app"))
 			app.Buildpacks = []string{
-				"https://github.com/cloudfoundry/dotnet-core-buildpack#develop",
+				"https://github.com/cloudfoundry/dotnet-core-buildpack#master",
 				"go_buildpack",
 			}
 			app.SetEnv("GOPACKAGENAME", "whatever")
