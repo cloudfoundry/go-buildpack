@@ -1,3 +1,18 @@
+v1.8.29 Nov 07, 2018
+=====================
+
+* Set buildpack when pushing twice
+      - Pushing with --no-start fails on the second push when no buildpack
+        is specified in PCF 1.12, our new lts version
+
+* Add go 1.11.2, remove go 1.11
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/161693550)
+
+* Add go 1.10.5, remove go 1.10.3
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/161693545)
+
 v1.8.28 Oct 12, 2018
 =====================
 
