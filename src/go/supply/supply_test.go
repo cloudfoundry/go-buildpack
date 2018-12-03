@@ -1,19 +1,16 @@
 package supply_test
 
 import (
+	"bytes"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
 
-	"bytes"
-
-	"go/godep"
-	"go/supply"
-
+	"github.com/cloudfoundry/go-buildpack/src/go/godep"
+	"github.com/cloudfoundry/go-buildpack/src/go/supply"
 	"github.com/cloudfoundry/libbuildpack"
 	"github.com/cloudfoundry/libbuildpack/ansicleaner"
-
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

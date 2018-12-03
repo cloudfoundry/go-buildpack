@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"go/data"
-	"go/godep"
-	"go/warnings"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/cloudfoundry/go-buildpack/src/go/data"
+	"github.com/cloudfoundry/go-buildpack/src/go/godep"
+	"github.com/cloudfoundry/go-buildpack/src/go/warnings"
 	"github.com/cloudfoundry/libbuildpack"
 )
 

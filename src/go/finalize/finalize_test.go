@@ -1,16 +1,15 @@
 package finalize_test
 
 import (
-	"go/finalize"
-	"go/godep"
+	"bytes"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 
-	"bytes"
-
+	"github.com/cloudfoundry/go-buildpack/src/go/finalize"
+	"github.com/cloudfoundry/go-buildpack/src/go/godep"
 	"github.com/cloudfoundry/libbuildpack"
 	"github.com/cloudfoundry/libbuildpack/ansicleaner"
 

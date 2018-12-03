@@ -1,11 +1,11 @@
 package main
 
 import (
-	"go/finalize"
-	_ "go/hooks"
 	"os"
 	"time"
 
+	"github.com/cloudfoundry/go-buildpack/src/go/finalize"
+	_ "github.com/cloudfoundry/go-buildpack/src/go/hooks"
 	"github.com/cloudfoundry/libbuildpack"
 )
 

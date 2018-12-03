@@ -2,20 +2,19 @@ package finalize
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"go/data"
-	"go/godep"
-	"go/warnings"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"encoding/json"
-
 	"github.com/Masterminds/semver"
+	"github.com/cloudfoundry/go-buildpack/src/go/data"
+	"github.com/cloudfoundry/go-buildpack/src/go/godep"
+	"github.com/cloudfoundry/go-buildpack/src/go/warnings"
 	"github.com/cloudfoundry/libbuildpack"
 )
 

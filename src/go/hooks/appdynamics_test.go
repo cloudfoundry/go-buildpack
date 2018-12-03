@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"io/ioutil"
 	"os"
-	"go/hooks"
 	"path/filepath"
+
+	"github.com/cloudfoundry/go-buildpack/src/go/hooks"
 	"github.com/cloudfoundry/libbuildpack"
 	"github.com/cloudfoundry/libbuildpack/ansicleaner"
 	. "github.com/onsi/ginkgo"
@@ -61,7 +62,6 @@ var _ = Describe("Appdynamics", func() {
 	AfterEach(func() {
 		Expect(os.RemoveAll(buildDir)).To(Succeed())
 	})
-
 
 	Context("GenerateAppdynamicsScript", func() {
 		It("Generates script from Env map", func() {
