@@ -10,8 +10,8 @@ export BUILDPACK_DIR=`dirname $(readlink -f ${BASH_SOURCE%/*})`
 source "$BUILDPACK_DIR/scripts/install_go.sh"
 output_dir=$(mktemp -d -t supplyXXX)
 
-pushd $BUILDPACK_DIR
 echo "-----> Running go build supply"
+pushd $BUILDPACK_DIR
 GOROOT=$GoInstallDir/go $GoInstallDir/go/bin/go build -o $output_dir/supply ./src/go/supply/cli
 popd
 
