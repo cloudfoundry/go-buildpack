@@ -444,7 +444,7 @@ var _ = Describe("CF Go Buildpack", func() {
 				buildpack_language = fmt.Sprintf("go-unpackaged-%s", cutlass.RandStringRunes(10))
 				buildpack_file := fmt.Sprintf("/tmp/%s.zip", buildpack_language)
 
-				cmd := exec.Command("zip", "-r", buildpack_file, "bin/", "src/", "scripts/", "manifest.yml", "VERSION")
+				cmd := exec.Command("zip", "-r", buildpack_file, "bin/", "src/", "scripts/", "manifest.yml", "VERSION", "go.mod", "go.sum")
 				cmd.Dir = bpDir
 				_, err := cmd.Output()
 				Expect(err).ToNot(HaveOccurred())

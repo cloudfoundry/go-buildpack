@@ -1,3 +1,4 @@
+#!/bin/bash
 set -euo pipefail
 
 GO_VERSION="1.11.2"
