@@ -8,12 +8,12 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/boltdb/bolt v1.3.1 // indirect
 	github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23
-	github.com/cloudfoundry/libbuildpack v0.0.0-20181203192608-40fcf6231d2e
+	github.com/cloudfoundry/libbuildpack v0.0.0-20181211154449-49acf76fd9c6
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a
 	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/golang/dep v0.5.0
-	github.com/golang/mock v1.1.1
+	github.com/golang/mock v1.2.0
 	github.com/golang/protobuf v1.2.0
 	github.com/inconshreveable/go-vhost v0.0.0-20160627193104-06d84117953b
 	github.com/jmank88/nuts v0.3.0 // indirect
