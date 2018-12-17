@@ -1,3 +1,14 @@
+v1.8.30 Dec 17, 2018
+=====================
+
+* Add go 1.10.7, remove go 1.10.4
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/162679832)
+
+* Add go 1.11.4, remove go 1.11.1
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/162679831)
+
 v1.8.29 Nov 07, 2018
 =====================
 
