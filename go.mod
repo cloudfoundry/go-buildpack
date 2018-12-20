@@ -8,7 +8,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/boltdb/bolt v1.3.1 // indirect
 	github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23
-	github.com/cloudfoundry/libbuildpack v0.0.0-20181211154449-49acf76fd9c6
+	github.com/cloudfoundry/libbuildpack v0.0.0-20181220194100-ab9ad86e0dc5
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a
 	github.com/go-yaml/yaml v2.1.0+incompatible
@@ -34,7 +34,7 @@ require (
 	github.com/sdboyer/constext v0.0.0-20170321163424-836a14457353
 	github.com/stretchr/testify v1.2.2 // indirect
 	github.com/tidwall/gjson v1.1.3
-	github.com/tidwall/match v1.0.0
+	github.com/tidwall/match v1.0.1
 	go4.org v0.0.0-20181109185143-00e24f1b2599
 	golang.org/x/crypto v0.0.0-20181203042331-505ab145d0a9
 	golang.org/x/net v0.0.0-20181201002055-351d144fa1fc
