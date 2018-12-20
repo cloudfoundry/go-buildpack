@@ -8,7 +8,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible
 	github.com/boltdb/bolt v1.3.1 // indirect
 	github.com/buger/jsonparser v0.0.0-20181115193947-bf1c66bbce23
-	github.com/cloudfoundry/libbuildpack v0.0.0-20181220194100-ab9ad86e0dc5
+	github.com/cloudfoundry/libbuildpack v0.0.0-20181220194546-030f4c4f404a
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/elazarl/goproxy v0.0.0-20181111060418-2ce16c963a8a
 	github.com/go-yaml/yaml v2.1.0+incompatible
