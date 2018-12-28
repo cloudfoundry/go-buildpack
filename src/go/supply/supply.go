@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Masterminds/semver"
 	"github.com/cloudfoundry/go-buildpack/src/go/data"
 	"github.com/cloudfoundry/go-buildpack/src/go/godep"
 	"github.com/cloudfoundry/go-buildpack/src/go/warnings"
@@ -43,6 +44,7 @@ type Supplier struct {
 	VendorTool string
 	GoVersion  string
 	Godep      godep.Godep
+	HasGoMod   bool
 }
 
 func Run(gs *Supplier) error {
@@ -90,6 +92,11 @@ func (gs *Supplier) SelectVendorTool() error {
 	if isGodir {
 		gs.Log.Error(warnings.GodirError())
 		return errors.New(".godir deprecated")
+	}
+
+	if _, err := os.Stat(filepath.Join(gs.Stager.BuildDir(), "go.mod")); !os.IsNotExist(err) {
+		gs.Stager.WriteEnvFile("GO111MODULE", "on")
+		gs.HasGoMod = true
 	}
 
 	isGoPath, err := gs.isGoPath()
@@ -196,6 +203,20 @@ func (gs *Supplier) SelectGoVersion() error {
 	}
 
 	gs.GoVersion = parsed
+	if gs.HasGoMod {
+		goVersion, err := semver.NewVersion(gs.GoVersion)
+		if err != nil {
+			return err
+		}
+		goModConstraint, err := semver.NewConstraint(">= 1.11.0")
+		if err != nil {
+			return err
+		}
+		if !goModConstraint.Check(goVersion) {
+			gs.Log.Error("Using a go version that does not support go.mod go modules")
+		}
+	}
+
 	return nil
 }
 

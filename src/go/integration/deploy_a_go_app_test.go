@@ -394,6 +394,33 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 		})
 
+		Context("app has go modules and go version > 1.11", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_app"))
+			})
+
+			It("", func() {
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(MatchRegexp("Installing go 1.11.4"))
+				Expect(app.Stdout.String()).To(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+		})
+
+		Context("app has go modules and modules are vendored", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_app"))
+				app.SetEnv("GOFLAGS", "-mod=vendor")
+			})
+
+			It("", func() {
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(MatchRegexp("Installing go 1.11.4"))
+				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+		})
+
 		Context("expects a non-packaged version of go", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go99"))

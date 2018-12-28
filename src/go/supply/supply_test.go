@@ -173,6 +173,42 @@ var _ = Describe("Supply", func() {
 				})
 			})
 		})
+		Context("there is a go.mod file", func() {
+			BeforeEach(func() {
+				Expect(ioutil.WriteFile(filepath.Join(buildDir, "go.mod"), []byte("xxx"), 0666)).To(Succeed())
+			})
+			AfterEach(func() {
+				Expect(os.RemoveAll(filepath.Join(buildDir, "go.mod"))).To(Succeed())
+				os.Setenv("GOVERSION", "")
+			})
+
+			It("The Stager writes an environment variable file", func() {
+				localSupplier := *gs
+				mockStager := NewMockStager(mockCtrl)
+				localSupplier.Stager = mockStager
+				buf := new(bytes.Buffer)
+				localSupplier.Log = libbuildpack.NewLogger(ansicleaner.New(buf))
+
+				mockStager.EXPECT().BuildDir().Return(gs.Stager.BuildDir()).AnyTimes()
+				mockStager.EXPECT().WriteEnvFile("GO111MODULE", "on")
+				Expect(localSupplier.SelectVendorTool()).To(Succeed())
+				Expect(localSupplier.HasGoMod).To(Equal(true))
+				Expect(buf.String()).NotTo(ContainSubstring("**ERROR** Using a go version that does not support go.mod go modules"))
+			})
+			It("The Stager prints a warning when the go version is incompatible with go modules", func() {
+				mockManifest.EXPECT().AllDependencyVersions("go").Return([]string{"1.10.0"})
+				localSupplier := *gs
+				localSupplier.HasGoMod = true
+				buf := new(bytes.Buffer)
+
+				localSupplier.Log = libbuildpack.NewLogger(ansicleaner.New(buf))
+
+				os.Setenv("GOVERSION", "1.10")
+				Expect(localSupplier.SelectGoVersion()).To(Succeed())
+				Expect(buf.String()).To(ContainSubstring("**ERROR** Using a go version that does not support go.mod go modules"))
+			})
+
+		})
 
 		Context("there is a .godir file", func() {
 			BeforeEach(func() {
