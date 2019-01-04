@@ -409,8 +409,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has go modules and modules are vendored", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_app"))
-				app.SetEnv("GOFLAGS", "-mod=vendor")
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_vendored_app"))
 			})
 
 			It("", func() {

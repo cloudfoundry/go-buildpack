@@ -208,12 +208,20 @@ func (gs *Supplier) SelectGoVersion() error {
 		if err != nil {
 			return err
 		}
+
 		goModConstraint, err := semver.NewConstraint(">= 1.11.0")
 		if err != nil {
 			return err
 		}
+
 		if !goModConstraint.Check(goVersion) {
-			gs.Log.Error("Using a go version that does not support go.mod go modules")
+			return fmt.Errorf("go version %s does not support go modules", gs.GoVersion)
+		}
+
+		if exists, err := libbuildpack.FileExists(filepath.Join(gs.Stager.BuildDir(), "vendor")); err != nil {
+			return err
+		} else if exists {
+			gs.Stager.WriteEnvFile("GOFLAGS", "-mod=vendor")
 		}
 	}
 
