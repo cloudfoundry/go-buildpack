@@ -44,7 +44,6 @@ type Supplier struct {
 	VendorTool string
 	GoVersion  string
 	Godep      godep.Godep
-	HasGoMod   bool
 }
 
 func Run(gs *Supplier) error {
@@ -94,9 +93,12 @@ func (gs *Supplier) SelectVendorTool() error {
 		return errors.New(".godir deprecated")
 	}
 
-	if _, err := os.Stat(filepath.Join(gs.Stager.BuildDir(), "go.mod")); !os.IsNotExist(err) {
+	if exists, err := libbuildpack.FileExists(filepath.Join(gs.Stager.BuildDir(), "go.mod")); err != nil {
+		return err
+	} else if exists {
 		gs.Stager.WriteEnvFile("GO111MODULE", "on")
-		gs.HasGoMod = true
+		gs.VendorTool = "gomod"
+		return nil
 	}
 
 	isGoPath, err := gs.isGoPath()
@@ -149,6 +151,7 @@ func (gs *Supplier) SelectVendorTool() error {
 		gs.VendorTool = "dep"
 		return nil
 	}
+
 	gs.VendorTool = "go_nativevendoring"
 	return nil
 }
@@ -203,7 +206,7 @@ func (gs *Supplier) SelectGoVersion() error {
 	}
 
 	gs.GoVersion = parsed
-	if gs.HasGoMod {
+	if gs.VendorTool == "gomod" {
 		goVersion, err := semver.NewVersion(gs.GoVersion)
 		if err != nil {
 			return err

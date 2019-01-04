@@ -113,18 +113,21 @@ var _ = Describe("Supply", func() {
 }
 `
 				})
+
 				It("sets the tool to godep", func() {
 					err = gs.SelectVendorTool()
 					Expect(err).To(BeNil())
 
 					Expect(gs.VendorTool).To(Equal("godep"))
 				})
+
 				It("logs that it is checking the Godeps.json file", func() {
 					err = gs.SelectVendorTool()
 					Expect(err).To(BeNil())
 
 					Expect(buffer.String()).To(ContainSubstring("-----> Checking Godeps/Godeps.json file"))
 				})
+
 				It("stores the Godep info in the supplier struct", func() {
 					err = gs.SelectVendorTool()
 					Expect(err).To(BeNil())
@@ -173,6 +176,7 @@ var _ = Describe("Supply", func() {
 				})
 			})
 		})
+
 		Context("there is a go.mod file", func() {
 			BeforeEach(func() {
 				Expect(ioutil.WriteFile(filepath.Join(buildDir, "go.mod"), []byte("xxx"), 0666)).To(Succeed())
@@ -191,13 +195,13 @@ var _ = Describe("Supply", func() {
 				mockStager.EXPECT().BuildDir().Return(gs.Stager.BuildDir()).AnyTimes()
 				mockStager.EXPECT().WriteEnvFile("GO111MODULE", "on")
 				Expect(localSupplier.SelectVendorTool()).To(Succeed())
-				Expect(localSupplier.HasGoMod).To(Equal(true))
+				Expect(localSupplier.VendorTool).To(Equal("gomod"))
 			})
 
 			It("The Stager fails when the go version is incompatible with go modules", func() {
 				mockManifest.EXPECT().AllDependencyVersions("go").Return([]string{"1.10.0"})
 				localSupplier := *gs
-				localSupplier.HasGoMod = true
+				localSupplier.VendorTool = "gomod"
 				buf := new(bytes.Buffer)
 
 				localSupplier.Log = libbuildpack.NewLogger(ansicleaner.New(buf))

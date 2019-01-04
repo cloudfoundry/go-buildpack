@@ -78,9 +78,11 @@ func NewFinalizer(stager Stager, command Command, logger *libbuildpack.Logger) (
 func Run(gf *Finalizer) error {
 	var err error
 
-	if err := gf.SetMainPackageName(); err != nil {
-		gf.Log.Error("Unable to determine import path: %s", err.Error())
-		return err
+	if gf.VendorTool != "gomod" {
+		if err := gf.SetMainPackageName(); err != nil {
+			gf.Log.Error("Unable to determine import path: %s", err.Error())
+			return err
+		}
 	}
 
 	if err := os.MkdirAll(filepath.Join(gf.Stager.BuildDir(), "bin"), 0755); err != nil {
@@ -88,9 +90,13 @@ func Run(gf *Finalizer) error {
 		return err
 	}
 
-	if err := gf.SetupGoPath(); err != nil {
-		gf.Log.Error("Unable to setup Go path: %s", err.Error())
-		return err
+	if gf.VendorTool != "gomod" {
+		if err := gf.SetupGoPath(); err != nil {
+			gf.Log.Error("Unable to setup Go path: %s", err.Error())
+			return err
+		}
+	} else {
+		os.Setenv("GOBIN", filepath.Join(gf.Stager.BuildDir(), "bin"))
 	}
 
 	if err := gf.HandleVendorExperiment(); err != nil {
@@ -141,7 +147,6 @@ func (gf *Finalizer) SetMainPackageName() error {
 			return err
 		}
 		gf.MainPackageName = strings.TrimSpace(buffer.String())
-
 	case "dep":
 		fallthrough
 	case "go_nativevendoring":
@@ -450,6 +455,9 @@ func (gf *Finalizer) CreateStartupEnvironment(tempDir string) error {
 }
 
 func (gf *Finalizer) mainPackagePath() string {
+	if gf.VendorTool == "gomod" {
+		return gf.Stager.BuildDir()
+	}
 	return filepath.Join(gf.GoPath, "src", gf.MainPackageName)
 }
 
