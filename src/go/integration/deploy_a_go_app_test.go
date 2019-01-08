@@ -1,10 +1,6 @@
 package integration_test
 
 import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"time"
 
@@ -461,43 +457,6 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 
 			AssertUsesProxyDuringStagingIfPresent("glide_and_vendoring/src/glide_and_vendoring")
-		})
-
-		Context("buildpack is not compiled eg. when source used from github", func() {
-			var buildpack_language string
-
-			BeforeEach(func() {
-				buildpack_language = fmt.Sprintf("go-unpackaged-%s", cutlass.RandStringRunes(10))
-				buildpack_file := fmt.Sprintf("/tmp/%s.zip", buildpack_language)
-
-				cmd := exec.Command("zip", "-r", buildpack_file, "bin/", "src/", "scripts/", "manifest.yml", "VERSION", "go.mod", "go.sum")
-				cmd.Dir = bpDir
-				_, err := cmd.Output()
-				Expect(err).ToNot(HaveOccurred())
-				err = cutlass.CreateOrUpdateBuildpack(buildpack_language, buildpack_file, "")
-				os.Remove(buildpack_file)
-				Expect(err).ToNot(HaveOccurred())
-
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_app"))
-				app.Buildpacks = []string{fmt.Sprintf("%s_buildpack", buildpack_language)}
-			})
-
-			AfterEach(func() {
-				cutlass.DeleteBuildpack(buildpack_language)
-			})
-
-			It("runs apps", func() {
-				Expect(app.Push()).To(Succeed())
-				Eventually(func() ([]string, error) { return app.InstanceStates() }, 20*time.Second).Should(Equal([]string{"RUNNING"}))
-				buildpackVersion, err := ioutil.ReadFile(filepath.Join(bpDir, "VERSION"))
-				Expect(err).NotTo(HaveOccurred())
-				Expect(app.ConfirmBuildpack(string(buildpackVersion))).To(Succeed())
-
-				Expect(app.Stdout.String()).To(ContainSubstring("Running go build supply"))
-				Expect(app.Stdout.String()).To(ContainSubstring("Running go build finalize"))
-
-				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-			})
 		})
 
 		Context("a .godir file is detected", func() {
