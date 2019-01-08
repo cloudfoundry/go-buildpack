@@ -2,7 +2,6 @@
 go_buildpack*.zip
 .DS_Store
 log/
-vendor
 !src/go/vendor
 _workspace
 pkg/
