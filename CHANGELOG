@@ -1,3 +1,16 @@
+v1.8.31 Jan 11, 2019
+=====================
+
+* Ignore GOPACKAGENAME when go modules are used
+  (https://www.pivotaltracker.com/story/show/162973859)
+
+* Detect the usage vendored modules with go.mod, and set GOFLAGS accordingly
+  (https://www.pivotaltracker.com/story/show/162689261)
+
+* Detect the usage of go modules, and set GO111MODULES accordingly
+  (https://www.pivotaltracker.com/story/show/162689261)
+
+
 v1.8.30 Dec 17, 2018
 =====================
 
