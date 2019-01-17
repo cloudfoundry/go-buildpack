@@ -11,7 +11,8 @@ if test -f "$build/Godeps/Godeps.json" ||
    (test -d "$build/src" && test -n "$(find "$build/src" -mindepth 2 -type f -name '*.go' | sed 1q)") || # gb
    test -f "$build/Godeps" -o -f "$build/.godir" || # success on .godir so that bin/compile can give error
    (test -d "$build/vendor" && test -n "$(find "$build" -type f -name '*.go' | sed 1q)") || # native go vendoring (option 1)
-   (test ! -z $GOPACKAGENAME && test -n "$(find "$build" -type f -name '*.go' | sed 1q)") # native go vendoring (option 2)
+   (test ! -z $GOPACKAGENAME && test -n "$(find "$build" -type f -name '*.go' | sed 1q)") || # native go vendoring (option 2)
+   test -f "$build/go.mod"
 then
   echo Go
 else

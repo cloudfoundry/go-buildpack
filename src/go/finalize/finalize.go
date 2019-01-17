@@ -76,13 +76,9 @@ func NewFinalizer(stager Stager, command Command, logger *libbuildpack.Logger) (
 }
 
 func Run(gf *Finalizer) error {
-	var err error
-
-	if gf.VendorTool != "gomod" {
-		if err := gf.SetMainPackageName(); err != nil {
-			gf.Log.Error("Unable to determine import path: %s", err.Error())
-			return err
-		}
+	if err := gf.SetMainPackageName(); err != nil {
+		gf.Log.Error("Unable to determine import path: %s", err.Error())
+		return err
 	}
 
 	if err := os.MkdirAll(filepath.Join(gf.Stager.BuildDir(), "bin"), 0755); err != nil {
@@ -96,7 +92,10 @@ func Run(gf *Finalizer) error {
 			return err
 		}
 	} else {
-		os.Setenv("GOBIN", filepath.Join(gf.Stager.BuildDir(), "bin"))
+		if err := os.Setenv("GOBIN", filepath.Join(gf.Stager.BuildDir(), "bin")); err != nil {
+			gf.Log.Error("Unable to setup GOBIN: %s", err.Error())
+			return err
+		}
 	}
 
 	if err := gf.HandleVendorExperiment(); err != nil {
@@ -117,7 +116,8 @@ func Run(gf *Finalizer) error {
 	}
 
 	gf.SetBuildFlags()
-	if err = gf.SetInstallPackages(); err != nil {
+
+	if err := gf.SetInstallPackages(); err != nil {
 		gf.Log.Error("Unable to determine packages to install: %s", err.Error())
 		return err
 	}
@@ -155,7 +155,13 @@ func (gf *Finalizer) SetMainPackageName() error {
 			gf.Log.Error(warnings.NoGOPACKAGENAMEerror())
 			return errors.New("GOPACKAGENAME unset")
 		}
+	case "gomod":
+		buffer := new(bytes.Buffer)
 
+		if err := gf.Command.Execute(gf.Stager.BuildDir(), buffer, ioutil.Discard, "go", "list", "-m"); err != nil {
+			return err
+		}
+		gf.MainPackageName = strings.TrimSpace(buffer.String())
 	default:
 		return errors.New("invalid vendor tool")
 	}
@@ -352,13 +358,14 @@ func (gf *Finalizer) HandleVendorExperiment() error {
 
 func (gf *Finalizer) SetInstallPackages() error {
 	var packages []string
-	vendorDirExists, err := libbuildpack.FileExists(filepath.Join(gf.mainPackagePath(), "vendor"))
-	if err != nil {
-		return err
-	}
 
 	if os.Getenv("GO_INSTALL_PACKAGE_SPEC") != "" {
 		packages = append(packages, strings.Split(os.Getenv("GO_INSTALL_PACKAGE_SPEC"), " ")...)
+	}
+
+	vendorDirExists, err := libbuildpack.FileExists(filepath.Join(gf.mainPackagePath(), "vendor"))
+	if err != nil {
+		return err
 	}
 
 	if gf.VendorTool == "godep" {
@@ -423,9 +430,14 @@ func (gf *Finalizer) CompileApp() error {
 }
 
 func (gf *Finalizer) CreateStartupEnvironment(tempDir string) error {
-	err := ioutil.WriteFile(filepath.Join(tempDir, "buildpack-release-step.yml"), []byte(data.ReleaseYAML(gf.MainPackageName)), 0644)
+	mainPkgName := gf.MainPackageName
+	if len(gf.PackageList) > 0 && gf.PackageList[0] != "." {
+		mainPkgName = filepath.Base(gf.PackageList[0])
+	}
+
+	err := ioutil.WriteFile(filepath.Join(tempDir, "buildpack-release-step.yml"), []byte(data.ReleaseYAML(mainPkgName)), 0644)
 	if err != nil {
-		gf.Log.Error("Unable to write relase yml: %s", err.Error())
+		gf.Log.Error("Unable to write release yml: %s", err.Error())
 		return err
 	}
 
@@ -446,7 +458,7 @@ func (gf *Finalizer) CreateStartupEnvironment(tempDir string) error {
 			return err
 		}
 
-		if err := gf.Stager.WriteProfileD("zzgopath.sh", data.ZZGoPathScript(gf.MainPackageName)); err != nil {
+		if err := gf.Stager.WriteProfileD("zzgopath.sh", data.ZZGoPathScript(mainPkgName)); err != nil {
 			return err
 		}
 	}

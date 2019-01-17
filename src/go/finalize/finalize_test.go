@@ -162,6 +162,7 @@ config:
 			BeforeEach(func() {
 				vendorTool = "glide"
 			})
+
 			It("sets the main package name to the value of 'glide name'", func() {
 
 				mockCommand.EXPECT().Execute(buildDir, gomock.Any(), gomock.Any(), "glide", "name").Do(func(_ string, buffer, _ io.Writer, _, _ string) {
@@ -223,6 +224,23 @@ config:
 
 			AssertRequiresAndUsesGOPACKAGENAME()
 		})
+
+		Context("the vendor tool is go modules", func() {
+			BeforeEach(func() {
+				vendorTool = "gomod"
+			})
+
+			It("sets the main package name to the value of the main go module", func() {
+				mockCommand.EXPECT().Execute(buildDir, gomock.Any(), gomock.Any(), "go", "list", "-m").Do(func(_ string, buffer, _ io.Writer, _, _, _ string) {
+					_, err := buffer.Write([]byte("go-package-name\n"))
+					Expect(err).To(BeNil())
+				}).Return(nil)
+
+				err = gf.SetMainPackageName()
+				Expect(err).To(BeNil())
+				Expect(gf.MainPackageName).To(Equal("go-package-name"))
+			})
+		})
 	})
 
 	Describe("SetupGoPath", func() {
@@ -261,6 +279,10 @@ config:
 
 			err = ioutil.WriteFile(filepath.Join(buildDir, ".profile.d", "filename.sh"), []byte("xx"), 0644)
 			Expect(err).To(BeNil())
+		})
+
+		JustBeforeEach(func() {
+			gf.VendorTool = ""
 		})
 
 		AfterEach(func() {
@@ -950,6 +972,9 @@ config:
 		})
 
 		AfterEach(func() {
+			packageList = []string{}
+			buildFlags = []string{}
+
 			err = os.RemoveAll(goPath)
 			Expect(err).To(BeNil())
 		})

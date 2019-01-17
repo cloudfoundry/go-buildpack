@@ -1,0 +1,4 @@
+---
+env:
+  GOPACKAGENAME: example.com/install_pkg_spec
+  GO_INSTALL_PACKAGE_SPEC: example.com/install_pkg_spec/app

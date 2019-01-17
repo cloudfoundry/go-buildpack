@@ -20,6 +20,194 @@ var _ = Describe("CF Go Buildpack", func() {
 		app = nil
 	})
 
+	Context("without cached buildpack dependencies", func() {
+		BeforeEach(func() {
+			if cutlass.Cached {
+				Skip("but running cached tests")
+			}
+		})
+
+		Context("app uses glide", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "with_glide", "src", "with_glide"))
+			})
+
+			It("", func() {
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(ContainSubstring("Hello from foo!"))
+				Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
+			})
+			AssertUsesProxyDuringStagingIfPresent("with_glide/src/with_glide")
+		})
+
+		Context("app has dependencies", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "with_dependencies", "src", "with_dependencies"))
+			})
+
+			It("", func() {
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(MatchRegexp("Hello from foo!"))
+				Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
+			})
+
+			AssertUsesProxyDuringStagingIfPresent("with_dependencies/src/with_dependencies")
+		})
+
+		Context("app has no dependencies", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_app"))
+			})
+
+			It("", func() {
+				PushAppAndConfirm(app)
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+				Expect(app.Stdout.String()).To(MatchRegexp(`Installing go [\d\.]+`))
+				Expect(app.Stdout.String()).To(MatchRegexp(`Download \[https:\/\/.*\]`))
+			})
+		})
+
+		Context("app has go modules and go version > 1.11", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_app"))
+			})
+
+			It("", func() {
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(MatchRegexp("Installing go 1.11.4"))
+				Expect(app.Stdout.String()).To(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+		})
+
+		Context("app has go modules and modules are vendored", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_vendored_app"))
+			})
+
+			It("", func() {
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(MatchRegexp("Installing go 1.11.4"))
+				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+		})
+
+		Context("expects a non-packaged version of go", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go99"))
+			})
+
+			It("displays useful understandable errors", func() {
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
+				Expect(app.Stdout.String()).To(MatchRegexp("Unable to determine Go version to install: no match found for 99.99.99"))
+
+				Expect(app.Stdout.String()).ToNot(MatchRegexp("Installing go99.99.99"))
+				Expect(app.Stdout.String()).ToNot(MatchRegexp("Uploading droplet"))
+			})
+		})
+
+		Context("heroku example", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "heroku_example"))
+			})
+
+			It("", func() {
+				PushAppAndConfirm(app)
+				Expect(app.GetBody("/")).To(ContainSubstring("hello, heroku"))
+			})
+			AssertUsesProxyDuringStagingIfPresent("heroku_example")
+		})
+
+		Context("app uses glide and has vendored dependencies", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "glide_and_vendoring", "src", "glide_and_vendoring"))
+			})
+
+			It("", func() {
+				PushAppAndConfirm(app)
+				Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
+				Expect(app.Stdout.String()).To(ContainSubstring("Hello from foo!"))
+				Expect(app.Stdout.String()).To(ContainSubstring("Note: skipping (glide install) due to non-empty vendor directory."))
+			})
+
+			AssertUsesProxyDuringStagingIfPresent("glide_and_vendoring/src/glide_and_vendoring")
+		})
+
+		Context("a .godir file is detected", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "deprecated_heroku", "src", "deprecated_heroku"))
+			})
+
+			It("fails with a deprecation message", func() {
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
+				Expect(app.Stdout.String()).To(ContainSubstring("Deprecated, .godir file found! Please update to supported Godep or Glide dependency managers."))
+				Expect(app.Stdout.String()).To(ContainSubstring("See https://github.com/tools/godep or https://github.com/Masterminds/glide for usage information."))
+			})
+		})
+
+		Context("a go app with wildcard matcher", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "wildcard_go_version", "src", "go_app"))
+			})
+
+			It("fails with a deprecation message", func() {
+				PushAppAndConfirm(app)
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+				Expect(app.Stdout.String()).To(MatchRegexp(`Installing go 1\.\d+\.\d+`))
+			})
+		})
+
+		Context("a go app with an invalid wildcard matcher", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "invalid_wildcard_version", "src", "go_app"))
+			})
+
+			It("fails with a helpful warning message", func() {
+				Expect(app.Push()).To(HaveOccurred())
+				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
+
+				Expect(app.Stdout.String()).To(MatchRegexp(`Unable to determine Go version to install: no match found for 1.3.x`))
+				Expect(app.Stdout.String()).ToNot(MatchRegexp(`Installing go1.3`))
+			})
+		})
+
+		Context("a go app with a custom package spec", func() {
+			It("installs the custom package", func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec"))
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie example.com/install_pkg_spec/app"))
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+
+			It("installs the custom package using go modules", func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec_go_modules"))
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app"))
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+
+			It("installs the custom package using go modules and relative paths", func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec_mod_relative_pkg"))
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie ./cmd/app"))
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+
+			It("installs the custom package using vendored go modules", func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec_vendored_go_modules"))
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app"))
+				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/deckarep"))
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+		})
+	})
+
 	Context("with cached buildpack dependencies", func() {
 		BeforeEach(func() {
 			if !cutlass.Cached {
@@ -114,18 +302,26 @@ var _ = Describe("CF Go Buildpack", func() {
 		})
 
 		Context("app has vendored dependencies and custom package spec", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "vendored_custom_install_spec"))
-				app.SetEnv("BP_DEBUG", "1")
-			})
-
 			It("successfully stages", func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "vendored_custom_install_spec"))
 				PushAppAndConfirm(app)
 				Expect(app.Stdout.String()).To(MatchRegexp("Init: a.A == 1"))
 				Expect(app.GetBody("/")).To(ContainSubstring("Read: a.A == 1"))
 			})
 
 			AssertNoInternetTraffic("vendored_custom_install_spec")
+		})
+
+		Context("app has vendored dependencies and custom package spec", func() {
+			It("installs the custom package when vendoring with go modules", func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec_vendored_go_modules"))
+				PushAppAndConfirm(app)
+				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app"))
+				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/deckarep"))
+				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			})
+
+			AssertNoInternetTraffic("install_pkg_spec_vendored_go_modules")
 		})
 
 		Context("app has vendored dependencies and a vendor.json file", func() {
@@ -341,162 +537,5 @@ var _ = Describe("CF Go Buildpack", func() {
 			})
 		})
 
-	})
-
-	Context("without cached buildpack dependencies", func() {
-		BeforeEach(func() {
-			if cutlass.Cached {
-				Skip("but running cached tests")
-			}
-		})
-
-		Context("app uses glide", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "with_glide", "src", "with_glide"))
-			})
-
-			It("", func() {
-				PushAppAndConfirm(app)
-				Expect(app.Stdout.String()).To(ContainSubstring("Hello from foo!"))
-				Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
-			})
-			AssertUsesProxyDuringStagingIfPresent("with_glide/src/with_glide")
-		})
-
-		Context("app has dependencies", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "with_dependencies", "src", "with_dependencies"))
-			})
-
-			It("", func() {
-				PushAppAndConfirm(app)
-				Expect(app.Stdout.String()).To(MatchRegexp("Hello from foo!"))
-				Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
-			})
-
-			AssertUsesProxyDuringStagingIfPresent("with_dependencies/src/with_dependencies")
-		})
-
-		Context("app has no dependencies", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_app"))
-			})
-
-			It("", func() {
-				PushAppAndConfirm(app)
-				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-				Expect(app.Stdout.String()).To(MatchRegexp(`Installing go [\d\.]+`))
-				Expect(app.Stdout.String()).To(MatchRegexp(`Download \[https:\/\/.*\]`))
-			})
-		})
-
-		Context("app has go modules and go version > 1.11", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_app"))
-			})
-
-			It("", func() {
-				PushAppAndConfirm(app)
-				Expect(app.Stdout.String()).To(MatchRegexp("Installing go 1.11.4"))
-				Expect(app.Stdout.String()).To(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
-				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-			})
-		})
-
-		Context("app has go modules and modules are vendored", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_vendored_app"))
-			})
-
-			It("", func() {
-				PushAppAndConfirm(app)
-				Expect(app.Stdout.String()).To(MatchRegexp("Installing go 1.11.4"))
-				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
-				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-			})
-		})
-
-		Context("expects a non-packaged version of go", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go99"))
-			})
-
-			It("displays useful understandable errors", func() {
-				Expect(app.Push()).To(HaveOccurred())
-				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
-
-				Expect(app.Stdout.String()).To(MatchRegexp("Unable to determine Go version to install: no match found for 99.99.99"))
-
-				Expect(app.Stdout.String()).ToNot(MatchRegexp("Installing go99.99.99"))
-				Expect(app.Stdout.String()).ToNot(MatchRegexp("Uploading droplet"))
-			})
-		})
-
-		Context("heroku example", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "heroku_example"))
-			})
-
-			It("", func() {
-				PushAppAndConfirm(app)
-				Expect(app.GetBody("/")).To(ContainSubstring("hello, heroku"))
-			})
-			AssertUsesProxyDuringStagingIfPresent("heroku_example")
-		})
-
-		Context("app uses glide and has vendored dependencies", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "glide_and_vendoring", "src", "glide_and_vendoring"))
-			})
-
-			It("", func() {
-				PushAppAndConfirm(app)
-				Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
-				Expect(app.Stdout.String()).To(ContainSubstring("Hello from foo!"))
-				Expect(app.Stdout.String()).To(ContainSubstring("Note: skipping (glide install) due to non-empty vendor directory."))
-			})
-
-			AssertUsesProxyDuringStagingIfPresent("glide_and_vendoring/src/glide_and_vendoring")
-		})
-
-		Context("a .godir file is detected", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "deprecated_heroku", "src", "deprecated_heroku"))
-			})
-
-			It("fails with a deprecation message", func() {
-				Expect(app.Push()).To(HaveOccurred())
-				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
-
-				Expect(app.Stdout.String()).To(ContainSubstring("Deprecated, .godir file found! Please update to supported Godep or Glide dependency managers."))
-				Expect(app.Stdout.String()).To(ContainSubstring("See https://github.com/tools/godep or https://github.com/Masterminds/glide for usage information."))
-			})
-		})
-
-		Context("a go app with wildcard matcher", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "wildcard_go_version", "src", "go_app"))
-			})
-
-			It("fails with a deprecation message", func() {
-				PushAppAndConfirm(app)
-				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-				Expect(app.Stdout.String()).To(MatchRegexp(`Installing go 1\.\d+\.\d+`))
-			})
-		})
-
-		Context("a go app with an invalid wildcard matcher", func() {
-			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "invalid_wildcard_version", "src", "go_app"))
-			})
-
-			It("fails with a helpful warning message", func() {
-				Expect(app.Push()).To(HaveOccurred())
-				Eventually(app.Stdout.String, 3*time.Second).Should(MatchRegexp("(?i)failed"))
-
-				Expect(app.Stdout.String()).To(MatchRegexp(`Unable to determine Go version to install: no match found for 1.3.x`))
-				Expect(app.Stdout.String()).ToNot(MatchRegexp(`Installing go1.3`))
-			})
-		})
 	})
 })
