@@ -1,3 +1,12 @@
+v1.8.32 Jan 23, 2019
+=====================
+
+* Use built version of go 1.11.4 in online unbuilt/URL buildpack
+  (https://www.pivotaltracker.com/story/show/163089977)
+
+* Fix GO_INSTALL_PACKAGE_SPEC for go module based apps
+  (https://www.pivotaltracker.com/story/show/163204149)
+
 v1.8.31 Jan 11, 2019
 =====================
 
