@@ -8,4 +8,5 @@ require (
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 	github.com/onsi/ginkgo v1.7.0
 	github.com/onsi/gomega v1.4.3
+	github.com/valyala/fasthttp v1.1.0
 )

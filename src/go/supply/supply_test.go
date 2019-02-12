@@ -253,9 +253,9 @@ var _ = Describe("Supply", func() {
 
 			It("logs that gb is deprecated and returns an error", func() {
 				err = gs.SelectVendorTool()
-				Expect(err).NotTo(BeNil())
+				Expect(err).NotTo(HaveOccurred())
 
-				Expect(buffer.String()).To(ContainSubstring("**ERROR** Cloud Foundry does not support the GB package manager."))
+				Expect(buffer.String()).To(ContainSubstring("Cloud Foundry does not support the GB package manager."))
 				Expect(buffer.String()).To(ContainSubstring("We currently only support the Godep, Glide and dep package managers for go apps"))
 				Expect(buffer.String()).To(ContainSubstring("For support please file an issue: https://github.com/cloudfoundry/go-buildpack/issues"))
 
