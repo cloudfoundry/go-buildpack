@@ -1,3 +1,12 @@
+v1.8.34 Feb 19, 2019
+=====================
+
+* Remove all GB-package-manager related logic
+  (https://www.pivotaltracker.com/story/show/154881427)
+
+* Update go to 1.11.5 for install_go
+  (https://www.pivotaltracker.com/story/show/163701450)
+
 v1.8.33 Jan 28, 2019
 =====================
 
