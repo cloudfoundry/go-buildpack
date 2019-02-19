@@ -14,11 +14,6 @@ else
   exit 1
 fi
 
-
-echo "Hellooooooooooooooooooooo"
-echo $CF_STACK
-echo $GO_SHA256
-
 export GoInstallDir="/tmp/go$GO_VERSION"
 mkdir -p $GoInstallDir
 
