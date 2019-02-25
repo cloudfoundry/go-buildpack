@@ -1,3 +1,4 @@
+---
 language: go
 default_versions:
 - name: go
@@ -34,6 +35,8 @@ dependencies:
   sha256: b50997e2dea986f600045b7467c683c515ae44fd10395d3fa5cea5504635b47b
   cf_stacks:
   - cflinuxfs2
+  source: https://github.com/Masterminds/glide/archive/v0.13.2.tar.gz
+  source_sha256: 0886851af2437b161d47b279a32bef426577e7bec3f5acdadebe34549aae8270
 - name: glide
   version: 0.13.2
   uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.2-linux-x64-cflinuxfs3-b50997e2.tgz
@@ -48,24 +51,24 @@ dependencies:
   sha256: 5f55a234b1406e10ad7dda80cd56e1280a23b3c0e59fb405298a25bd3f424804
   cf_stacks:
   - cflinuxfs2
-  source: https://github.com/golang/go/archive/go1.8.6.tar.gz
-  source_sha256: 2379b04b15865dd9608a2b1e1115ace6474a6a8b251369a5c66f514b9a9b1719
+  source: https://dl.google.com/go/go1.8.6.src.tar.gz
+  source_sha256: efc1221d3ae033c69e149801eff1d9872e214832a89f089fc5beb7a9fd98d9fb
 - name: go
   version: 1.8.7
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.7.linux-amd64-cflinuxfs2-fff10274.tar.gz
   sha256: fff10274afa926172dffb1baf8109af81b41e46082c0efd31d38ffcc01500143
   cf_stacks:
   - cflinuxfs2
-  source: https://github.com/golang/go/archive/go1.8.7.tar.gz
-  source_sha256: 2b32fd5bbb6431deaaf9a87624bf90833be659509d4bc4cddf51d159550c71a7
+  source: https://dl.google.com/go/go1.8.7.src.tar.gz
+  source_sha256: 5911e751807eebbc1980dad4305ef5492b96d6cd720bf93cbcefa86e1c195f9e
 - name: go
   version: 1.8.7
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.8.7.linux-amd64-cflinuxfs3-db742637.tar.gz
   sha256: db7426377434394297496e5ea1b874f5f63e08684d14411d2af44555008ad47a
   cf_stacks:
   - cflinuxfs3
-  source: https://github.com/golang/go/archive/go1.8.7.tar.gz
-  source_sha256: 2b32fd5bbb6431deaaf9a87624bf90833be659509d4bc4cddf51d159550c71a7
+  source: https://dl.google.com/go/go1.8.7.src.tar.gz
+  source_sha256: 5911e751807eebbc1980dad4305ef5492b96d6cd720bf93cbcefa86e1c195f9e
 - name: go
   version: 1.9.6
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.6.linux-amd64-65c53867.tar.gz
@@ -80,16 +83,16 @@ dependencies:
   sha256: 2642c8f0081e465cd472bd149b86853362b6199dc98b763697bbaa2faa266c99
   cf_stacks:
   - cflinuxfs2
-  source: https://github.com/golang/go/archive/go1.9.7.tar.gz
-  source_sha256: 00d37081c206159de561bcd9230ee19b4775e5b55e22334f212913b2923e90a7
+  source: https://dl.google.com/go/go1.9.7.src.tar.gz
+  source_sha256: 582814fa45e8ecb0859a208e517b48aa0ad951e3b36c7fff203d834e0ef27722
 - name: go
   version: 1.9.7
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.9.7.linux-amd64-cflinuxfs3-3c966138.tar.gz
   sha256: 3c966138c8b576638c59899c41d35d02dd92754637438a6aa7bbf2c93b8fc76e
   cf_stacks:
   - cflinuxfs3
-  source: https://github.com/golang/go/archive/go1.9.7.tar.gz
-  source_sha256: 00d37081c206159de561bcd9230ee19b4775e5b55e22334f212913b2923e90a7
+  source: https://dl.google.com/go/go1.9.7.src.tar.gz
+  source_sha256: 582814fa45e8ecb0859a208e517b48aa0ad951e3b36c7fff203d834e0ef27722
 - name: go
   version: 1.10.7
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.10.7.linux-amd64-cflinuxfs2-99388615.tar.gz
