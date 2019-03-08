@@ -158,7 +158,7 @@ var _ = Describe("CF Go Buildpack", func() {
 			It("fails with a deprecation message", func() {
 				PushAppAndConfirm(app)
 				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-				Expect(app.Stdout.String()).To(MatchRegexp(`Installing go 1\.\d+\.\d+`))
+				Expect(app.Stdout.String()).To(MatchRegexp(`Installing go 1\.\d+(\.\d+)?`))
 			})
 		})
 

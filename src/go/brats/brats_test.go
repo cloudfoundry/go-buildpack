@@ -25,7 +25,7 @@ var _ = Describe("Go buildpack", func() {
 	bratshelper.UnbuiltBuildpack("go", CopyBrats)
 	bratshelper.DeployingAnAppWithAnUpdatedVersionOfTheSameBuildpack(CopyBrats)
 	bratshelper.StagingWithBuildpackThatSetsEOL("go", func(_ string) *cutlass.App {
-		return CopyBrats("1.8.7")
+		return CopyBrats("1.11.4")
 	})
 	bratshelper.StagingWithADepThatIsNotTheLatest("go", func(_ string) *cutlass.App {
 		return CopyBrats(secondLatestVersion)
