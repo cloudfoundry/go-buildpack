@@ -482,7 +482,7 @@ var _ = Describe("CF Go Buildpack", func() {
 			It("displays the go version", func() {
 				PushAppAndConfirm(app)
 
-				Expect(app.GetBody("/")).To(MatchRegexp(`go version go1\.\d+\.\d+ linux/amd64`))
+				Expect(app.GetBody("/")).To(MatchRegexp(`go version go1\.\d+(\.\d+)? linux/amd64`))
 			})
 
 			Context("running a task", func() {
@@ -498,7 +498,7 @@ var _ = Describe("CF Go Buildpack", func() {
 					_, err := app.RunTask(`echo "RUNNING A TASK: $(go version)"`)
 					Expect(err).ToNot(HaveOccurred())
 
-					Eventually(func() string { return app.Stdout.String() }, 1*time.Minute).Should(MatchRegexp(`RUNNING A TASK: go version go1\.\d+\.\d+ linux/amd64`))
+					Eventually(func() string { return app.Stdout.String() }, 1*time.Minute).Should(MatchRegexp(`RUNNING A TASK: go version go1\.\d+(\.\d+)? linux/amd64`))
 				})
 			})
 
@@ -511,7 +511,7 @@ var _ = Describe("CF Go Buildpack", func() {
 				It("displays the go version", func() {
 					PushAppAndConfirm(app)
 
-					Expect(app.GetBody("/")).To(MatchRegexp(`go version go1\.\d+\.\d+ linux/amd64`))
+					Expect(app.GetBody("/")).To(MatchRegexp(`go version go1\.\d+(\.\d+)? linux/amd64`))
 					Expect(app.GetBody("/gopath")).To(ContainSubstring("GOPATH: /home/vcap/app"))
 				})
 			})
