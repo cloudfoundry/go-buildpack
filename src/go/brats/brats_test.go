@@ -1,8 +1,6 @@
 package brats_test
 
 import (
-	"fmt"
-
 	"github.com/cloudfoundry/libbuildpack/bratshelper"
 	"github.com/cloudfoundry/libbuildpack/cutlass"
 	. "github.com/onsi/ginkgo"
@@ -10,32 +8,34 @@ import (
 )
 
 var _ = Describe("Go buildpack", func() {
+	const (
+		DEP = "go"
+	)
+
 	var (
-		latestVersion       string
-		secondLatestVersion string
+		bpDir				string
+		err					error
 	)
 
 	BeforeEach(func() {
-		bpDir, err := cutlass.FindRoot()
+		bpDir, err = cutlass.FindRoot()
 		Expect(err).NotTo(HaveOccurred())
-		latestVersion = GetLatestDepVersion("go", "x", bpDir)
-		secondLatestVersion = GetLatestDepVersion("go", fmt.Sprintf("<%s", latestVersion), bpDir)
 	})
 
-	bratshelper.UnbuiltBuildpack("go", CopyBrats)
+	bratshelper.UnbuiltBuildpack(DEP, CopyBrats)
 	bratshelper.DeployingAnAppWithAnUpdatedVersionOfTheSameBuildpack(CopyBrats)
-	bratshelper.StagingWithBuildpackThatSetsEOL("go", func(_ string) *cutlass.App {
-		return CopyBrats("1.10.7")
+	bratshelper.StagingWithBuildpackThatSetsEOL(DEP, func(_ string) *cutlass.App {
+		return CopyBrats(GetOldestVersion(DEP, bpDir))
 	})
-	bratshelper.StagingWithADepThatIsNotTheLatest("go", func(_ string) *cutlass.App {
-		return CopyBrats(secondLatestVersion)
+	bratshelper.StagingWithADepThatIsNotTheLatest(DEP, func(_ string) *cutlass.App {
+		return CopyBrats(GetOlderDepThatDiffersInPatch(DEP, bpDir))
 	})
 
 	bratshelper.StagingWithCustomBuildpackWithCredentialsInDependencies(CopyBrats)
-	bratshelper.DeployAppWithExecutableProfileScript("go", CopyBrats)
+	bratshelper.DeployAppWithExecutableProfileScript(DEP, CopyBrats)
 	bratshelper.DeployAnAppWithSensitiveEnvironmentVariables(CopyBrats)
 
-	bratshelper.ForAllSupportedVersions("go", CopyBrats, func(goVersion string, app *cutlass.App) {
+	bratshelper.ForAllSupportedVersions(DEP, CopyBrats, func(goVersion string, app *cutlass.App) {
 		PushApp(app)
 
 		By("installs the correct go version", func() {
