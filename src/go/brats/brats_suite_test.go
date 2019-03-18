@@ -4,13 +4,15 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/Masterminds/semver"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/Masterminds/semver"
 
 	"github.com/cloudfoundry/libbuildpack"
 	"github.com/cloudfoundry/libbuildpack/bratshelper"
@@ -73,27 +75,6 @@ func CopyBrats(version string) *cutlass.App {
 	return cutlass.New(dir)
 }
 
-func GetOlderDepThatDiffersInPatch(dep, bpDir string) string {
-	manifest, err := libbuildpack.NewManifest(bpDir, nil, time.Now())
-	Expect(err).ToNot(HaveOccurred())
-	deps := manifest.AllDependencyVersions(dep)
-
-	prev, err := semver.NewVersion(deps[len(dep)-1])
-	prevMinor := prev.Minor()
-
-	for i := len(deps)-2; i >= 1; i-- {
-		v, err := semver.NewVersion(deps[i])
-		Expect(err).ToNot(HaveOccurred())
-
-		vMinor := v.Minor()
-		if vMinor != prevMinor {
-			return deps[i-1]
-		}
-	}
-	Fail(fmt.Sprintf("could not find a older pair of %s's with differing patch version", dep))
-	return ""
-}
-
 func GetOldestVersion(dep, bpDir string) string {
 	manifest, err := libbuildpack.NewManifest(bpDir, nil, time.Now())
 	Expect(err).ToNot(HaveOccurred())
@@ -102,6 +83,14 @@ func GetOldestVersion(dep, bpDir string) string {
 	if len(deps) == 0 {
 		Fail(fmt.Sprintf("No dependencies found in manifest.yml for %s", dep))
 	}
+
+	sort.Slice(deps, func(i, j int) bool {
+		s1, err := semver.NewVersion(deps[i])
+		Expect(err).NotTo(HaveOccurred())
+		s2, err := semver.NewVersion(deps[i])
+		Expect(err).NotTo(HaveOccurred())
+		return s1.LessThan(s2)
+	})
 
 	return deps[0]
 }

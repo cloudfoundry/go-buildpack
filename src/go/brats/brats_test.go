@@ -13,8 +13,8 @@ var _ = Describe("Go buildpack", func() {
 	)
 
 	var (
-		bpDir				string
-		err					error
+		bpDir string
+		err   error
 	)
 
 	BeforeEach(func() {
@@ -28,7 +28,7 @@ var _ = Describe("Go buildpack", func() {
 		return CopyBrats(GetOldestVersion(DEP, bpDir))
 	})
 	bratshelper.StagingWithADepThatIsNotTheLatest(DEP, func(_ string) *cutlass.App {
-		return CopyBrats(GetOlderDepThatDiffersInPatch(DEP, bpDir))
+		return CopyBrats(GetOldestVersion(DEP, bpDir))
 	})
 
 	bratshelper.StagingWithCustomBuildpackWithCredentialsInDependencies(CopyBrats)
