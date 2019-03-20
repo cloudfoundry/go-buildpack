@@ -1,3 +1,25 @@
+v1.8.36 Mar 20, 2019
+=====================
+
+* Add go 1.12.1
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/164646722)
+
+* Add go 1.11.6, remove go 1.11.4
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/164646729)
+
+* Add dep 0.5.1, remove dep 0.5.0
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/164527522)
+
+* Remove go 1.8.x and 1.9.x, add go 1.12.x
+  (https://www.pivotaltracker.com/story/show/163594716)
+
+* Add go 1.12
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/164497998)
+
 v1.8.35 Mar 01, 2019
 =====================
 
