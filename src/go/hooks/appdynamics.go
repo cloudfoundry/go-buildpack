@@ -58,7 +58,6 @@ func (h AppdynamicsHook) GenerateAppdynamicsScript(envVars map[string]string) st
 	return scriptContents
 }
 
-
 func (h AppdynamicsHook) CreateAppDynamicsEnv(stager *libbuildpack.Stager, environmentVars map[string]string) error {
 	scriptContents := h.GenerateAppdynamicsScript(environmentVars)
 	h.Log.BeginStep("Writing Appdynamics Environment")
@@ -67,6 +66,15 @@ func (h AppdynamicsHook) CreateAppDynamicsEnv(stager *libbuildpack.Stager, envir
 }
 
 func (h AppdynamicsHook) BeforeCompile(stager *libbuildpack.Stager) error {
+	if os.Getenv("APPD_AGENT") != "" {
+		// APPD_AGENT is set => multibuildpack is used to configure appdynamics agent. Do nothing.
+		return nil
+	}
+
+	h.Log.Warning("[DEPRECATION WARNING]:")
+	h.Log.Warning("Please use AppDynamics extension buildpack for Golang Application instrumentation")
+	h.Log.Warning("for more details: https://docs.pivotal.io/partners/appdynamics/multibuildpack.html")
+
 	vcapServices := os.Getenv("VCAP_SERVICES")
 	services := make(map[string][]Plan)
 
