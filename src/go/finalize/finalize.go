@@ -24,6 +24,7 @@ type Command interface {
 
 type Stager interface {
 	BuildDir() string
+	CacheDir() string
 	ClearDepDir() error
 	DepDir() string
 	DepsIdx() string
@@ -76,6 +77,11 @@ func NewFinalizer(stager Stager, command Command, logger *libbuildpack.Logger) (
 }
 
 func Run(gf *Finalizer) error {
+	if err := gf.SetGoCache(); err != nil {
+		gf.Log.Error("Unable to print gocache location: %s", err.Error())
+		return err
+	}
+
 	if err := gf.SetMainPackageName(); err != nil {
 		gf.Log.Error("Unable to determine import path: %s", err.Error())
 		return err
@@ -166,6 +172,10 @@ func (gf *Finalizer) SetMainPackageName() error {
 		return errors.New("invalid vendor tool")
 	}
 	return nil
+}
+
+func (gf *Finalizer) SetGoCache() error {
+	return os.Setenv("GOCACHE", filepath.Join(gf.Stager.CacheDir(), "go-cache"))
 }
 
 func (gf *Finalizer) SetupGoPath() error {

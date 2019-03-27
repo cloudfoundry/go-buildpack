@@ -1202,4 +1202,22 @@ default_process_types:
 		})
 	})
 
+	Describe("SetGoCache", func() {
+		var currentVar string
+		BeforeEach(func() {
+			currentVar, _ = os.LookupEnv("GOCACHE")
+		})
+
+		AfterEach(func() {
+			Expect(os.Setenv("GOCACHE", currentVar)).To(Succeed())
+		})
+
+		It("Sets GOCACHE inside cache directory", func() {
+			Expect(gf.SetGoCache()).To(Succeed())
+ 			newVal, goCacheSet := os.LookupEnv("GOCACHE")
+			Expect(goCacheSet).To(BeTrue())
+			Expect(newVal).To(Equal(filepath.Join(gf.Stager.CacheDir(), "go-cache")))
+		})
+	})
+
 })
