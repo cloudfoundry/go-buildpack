@@ -1,3 +1,12 @@
+v1.8.37 Apr 02, 2019
+=====================
+
+* Point GOCACHE to app cache
+  (https://www.pivotaltracker.com/story/show/162973383)
+
+* Add depreciation warning for Appdynamics if multibuildpack not in use
+  (https://github.com/Appdynamics/go-buildpack)
+
 v1.8.36 Mar 20, 2019
 =====================
 
