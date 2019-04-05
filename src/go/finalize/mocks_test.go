@@ -89,6 +89,20 @@ func (mr *MockStagerMockRecorder) BuildDir() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BuildDir", reflect.TypeOf((*MockStager)(nil).BuildDir))
 }
 
+// CacheDir mocks base method
+func (m *MockStager) CacheDir() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CacheDir")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// CacheDir indicates an expected call of CacheDir
+func (mr *MockStagerMockRecorder) CacheDir() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CacheDir", reflect.TypeOf((*MockStager)(nil).CacheDir))
+}
+
 // ClearDepDir mocks base method
 func (m *MockStager) ClearDepDir() error {
 	m.ctrl.T.Helper()
