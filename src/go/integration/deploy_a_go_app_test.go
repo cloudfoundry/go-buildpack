@@ -87,7 +87,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 			It("", func() {
 				PushAppAndConfirm(app)
-				Expect(app.Stdout.String()).To(MatchRegexp("Installing go 1.11.5"))
+				Expect(app.Stdout.String()).To(MatchRegexp("Installing go 1.11"))
 				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
 				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
 			})
