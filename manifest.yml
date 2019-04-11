@@ -6,7 +6,7 @@ default_versions:
 dependency_deprecation_dates:
 - version_line: 1.10.x
   name: go
-  date: '2019-02-25'
+  date: 2019-02-25
   link: https://golang.org/doc/devel/release.html
 dependencies:
 - name: dep
