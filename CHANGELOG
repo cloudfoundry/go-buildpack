@@ -1,3 +1,16 @@
+v1.8.39 Apr 23, 2019
+=====================
+
+* Remove warning logs causing bosh cli error
+
+* Add go 1.12.4, remove go 1.12.1
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/165301974)
+
+* Add go 1.11.9, remove go 1.11.6
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/165301978)
+
 v1.8.38 Apr 08, 2019
 =====================
 
