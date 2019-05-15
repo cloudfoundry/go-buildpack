@@ -1,3 +1,20 @@
+v1.8.40 May 15, 2019
+=====================
+
+* Add dep 0.5.3, remove dep 0.5.1
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/165978044)
+
+* Add go 1.12.5, remove go 1.12.2
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/165844549)
+
+* Add go 1.11.10, remove go 1.11.7
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/165844023)
+
+* update install_go.sh script to use go 1.12.4
+
 v1.8.39 Apr 23, 2019
 =====================
 
