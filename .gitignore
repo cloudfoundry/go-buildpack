@@ -5,7 +5,6 @@ log/
 !src/go/vendor
 _workspace
 pkg/
-!vendor/**
 /.bin/
 /src/github.com/
 /src/gopkg.in/
