@@ -7,9 +7,12 @@ require (
 	github.com/cloudfoundry/libbuildpack v0.0.0-20190606141245-8119571fa48b
 	github.com/golang/mock v1.3.1
 	github.com/golang/protobuf v1.3.1 // indirect
+	github.com/kr/fs v0.1.0 // indirect
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 	github.com/onsi/ginkgo v1.8.0
 	github.com/onsi/gomega v1.4.3
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/tools/godep v0.0.0-20180126220526-ce0bfadeb516 // indirect
 	golang.org/x/net v0.0.0-20190424112056-4829fb13d2c6 // indirect
 	golang.org/x/sys v0.0.0-20190425145619-16072639606e // indirect
 	golang.org/x/text v0.3.1 // indirect

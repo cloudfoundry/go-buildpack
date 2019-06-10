@@ -198,20 +198,6 @@ var _ = Describe("Supply", func() {
 				Expect(localSupplier.VendorTool).To(Equal("gomod"))
 			})
 
-			It("The Stager fails when the go version is incompatible with go modules", func() {
-				mockManifest.EXPECT().AllDependencyVersions("go").Return([]string{"1.10.0"})
-				localSupplier := *gs
-				localSupplier.VendorTool = "gomod"
-				buf := new(bytes.Buffer)
-
-				localSupplier.Log = libbuildpack.NewLogger(ansicleaner.New(buf))
-
-				os.Setenv("GOVERSION", "1.10")
-				err := localSupplier.SelectGoVersion()
-				Expect(err).NotTo(BeNil())
-				Expect(err.Error()).To(ContainSubstring("go version 1.10.0 does not support go modules"))
-			})
-
 		})
 
 		Context("there is a .godir file", func() {

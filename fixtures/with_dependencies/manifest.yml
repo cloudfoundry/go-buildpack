@@ -1,0 +1,11 @@
+applications:
+- name: with_dependencies
+  memory: 512M
+  instances: 1
+  buildpacks:
+    - go_buildpack
+  stack: cflinuxfs3
+  env:
+    GOPACKAGENAME: with_dependencies
+    GOVERSION: go1.11
+    GOMOD: off
