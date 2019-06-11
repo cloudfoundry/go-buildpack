@@ -74,22 +74,6 @@ dependencies:
   source: https://dl.google.com/go/go1.10.8.src.tar.gz
   source_sha256: 6faf74046b5e24c2c0b46e78571cca4d65e1b89819da1089e53ea57539c63491
 - name: go
-  version: 1.11.9
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.9.linux-amd64-cflinuxfs2-a51895e0.tar.gz
-  sha256: a51895e02d00a7aa72c645a724cd43bf546af40c10df0cb193ff8266b6218ed6
-  cf_stacks:
-  - cflinuxfs2
-  source: https://dl.google.com/go/go1.11.9.src.tar.gz
-  source_sha256: ee80684b352f8d6b49d804d4e615f015ae92da41c4096cfee89ed4783b2498e3
-- name: go
-  version: 1.11.9
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.9.linux-amd64-cflinuxfs3-4217f379.tar.gz
-  sha256: 4217f379920aae70b4086ee987884cd745ab6f0f2c82fdf88a184f77ae6b8c8d
-  cf_stacks:
-  - cflinuxfs3
-  source: https://dl.google.com/go/go1.11.9.src.tar.gz
-  source_sha256: ee80684b352f8d6b49d804d4e615f015ae92da41c4096cfee89ed4783b2498e3
-- name: go
   version: 1.11.10
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.10.linux-amd64-cflinuxfs2-d82ad290.tar.gz
   sha256: d82ad290db8548265283bfe9d8f8485ed2f13599b4256b3b10a9638e025a23de
@@ -105,6 +89,22 @@ dependencies:
   - cflinuxfs3
   source: https://dl.google.com/go/go1.11.10.src.tar.gz
   source_sha256: df27e96a9d1d362c46ecd975f1faa56b8c300f5c529074e9ea79bdd885493c1b
+- name: go
+  version: 1.11.11
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.11.linux-amd64-cflinuxfs2-afedfb53.tar.gz
+  sha256: afedfb53b3fa1519a268c88f01223d08d8e96da8504679c7340e582774b5ac79
+  cf_stacks:
+  - cflinuxfs2
+  source: https://dl.google.com/go/go1.11.11.src.tar.gz
+  source_sha256: 1fff7c33ef2522e6dfaf6ab96ec4c2a8b76d018aae6fc88ce2bd40f2202d0f8c
+- name: go
+  version: 1.11.11
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.11.11.linux-amd64-cflinuxfs3-83a94732.tar.gz
+  sha256: 83a947325bb8837ec3043cbd806ce09e1c6caafbb7508d396650eedbd8616a0a
+  cf_stacks:
+  - cflinuxfs3
+  source: https://dl.google.com/go/go1.11.11.src.tar.gz
+  source_sha256: 1fff7c33ef2522e6dfaf6ab96ec4c2a8b76d018aae6fc88ce2bd40f2202d0f8c
 - name: go
   version: 1.12.4
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.12.4.linux-amd64-cflinuxfs2-1a6d80b1.tar.gz
