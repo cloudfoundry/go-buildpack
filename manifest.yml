@@ -3,7 +3,15 @@ language: go
 default_versions:
 - name: go
   version: 1.12.x
-dependency_deprecation_dates: []
+dependency_deprecation_dates:
+- version_line: 1.11.x
+  name: go
+  date: 2019-08-31
+  link: https://golang.org/doc/devel/release.html
+- version_line: 1.12.x
+  name: go
+  date: 2020-02-28
+  link: https://golang.org/doc/devel/release.html
 dependencies:
 - name: dep
   version: 0.5.3
