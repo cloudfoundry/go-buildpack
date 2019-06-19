@@ -245,7 +245,6 @@ func (gf *Finalizer) SetupGoPath() error {
 			return err
 		}
 	}
-
 	// unset git dir or it will mess with go install
 	return os.Unsetenv("GIT_DIR")
 }
