@@ -148,8 +148,10 @@ func (gf *Finalizer) SetMainPackageName() error {
 
 	case "glide":
 		buffer := new(bytes.Buffer)
+		errorBuffer := new(bytes.Buffer)
 
-		if err := gf.Command.Execute(gf.Stager.BuildDir(), buffer, ioutil.Discard, "glide", "name"); err != nil {
+		if err := gf.Command.Execute(gf.Stager.BuildDir(), buffer, errorBuffer, "glide", "name"); err != nil {
+			gf.Log.Error("problem retrieving main package name: %s", errorBuffer)
 			return err
 		}
 		gf.MainPackageName = strings.TrimSpace(buffer.String())
@@ -163,8 +165,10 @@ func (gf *Finalizer) SetMainPackageName() error {
 		}
 	case "gomod":
 		buffer := new(bytes.Buffer)
+		errorBuffer := new(bytes.Buffer)
 
-		if err := gf.Command.Execute(gf.Stager.BuildDir(), buffer, ioutil.Discard, "go", "list", "-m"); err != nil {
+		if err := gf.Command.Execute(gf.Stager.BuildDir(), buffer, errorBuffer, "go", "list", "-m"); err != nil {
+			gf.Log.Error("problem retrieving main package name: %s", errorBuffer)
 			return err
 		}
 		gf.MainPackageName = strings.TrimSpace(buffer.String())
@@ -245,7 +249,6 @@ func (gf *Finalizer) SetupGoPath() error {
 			return err
 		}
 	}
-
 	// unset git dir or it will mess with go install
 	return os.Unsetenv("GIT_DIR")
 }
