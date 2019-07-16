@@ -1,3 +1,25 @@
+v1.8.42 Jul 16, 2019
+=====================
+
+* Add glide 0.13.3, remove glide 0.13.2
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/167202576)
+
+* Add go 1.12.7, remove go 1.12.5
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/167155333)
+
+* Add go 1.11.12, remove go 1.11.10
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/167155347)
+
+* Add dep 0.5.4, remove dep 0.5.3
+  for stack(s) cflinuxfs2, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/167006586)
+
+* Add error logs if findMainPackageName errors out
+  (https://www.pivotaltracker.com/story/show/167105792)
+
 v1.8.41 Jun 19, 2019
 =====================
 
