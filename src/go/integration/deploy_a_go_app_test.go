@@ -445,6 +445,23 @@ var _ = Describe("CF Go Buildpack", func() {
 			AssertNoInternetTraffic("go_ldflags/src/go_app")
 		})
 
+		Context("a go app using multiple ldflags", func() {
+			BeforeEach(func() {
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_ldflags_multiple", "src", "go_app"))
+			})
+
+			It("links correctly", func() {
+				PushAppAndConfirm(app)
+
+				Expect(app.GetBody("/")).To(ContainSubstring("flag_linked"))
+				Expect(app.GetBody("/")).To(ContainSubstring("the_other_value"))
+				Expect(app.Stdout.String()).To(ContainSubstring("main.linker_flag=flag_linked"))
+				Expect(app.Stdout.String()).To(ContainSubstring("main.the_other_flag=the_other_value"))
+			})
+
+			AssertNoInternetTraffic("go_ldflags_multiple/src/go_app")
+		})
+
 		Context("app uses glide and has vendored dependencies", func() {
 			BeforeEach(func() {
 				app = cutlass.New(filepath.Join(bpDir, "fixtures", "glide_and_vendoring", "src", "glide_and_vendoring"))
