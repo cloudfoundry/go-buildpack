@@ -409,12 +409,13 @@ config:
 	Describe("SetBuildFlags", func() {
 		Context("link environment variables not set", func() {
 			It("contains the default flags", func() {
-				gf.SetBuildFlags()
+				err = gf.SetBuildFlags()
+				Expect(err).To(BeNil())
 				Expect(gf.BuildFlags).To(Equal([]string{"-tags", "cloudfoundry", "-buildmode", "pie"}))
 			})
 		})
 
-		Context("link environment variables are set set", func() {
+		Context("link environment variables are set", func() {
 			var (
 				oldGoLinkerSymbol string
 				oldGoLinkerValue  string
@@ -441,8 +442,107 @@ config:
 			})
 
 			It("contains the ldflags argument", func() {
-				gf.SetBuildFlags()
-				Expect(gf.BuildFlags).To(Equal([]string{"-tags", "cloudfoundry", "-buildmode", "pie", "-ldflags", "-X package.main.thing=some_string"}))
+				err = gf.SetBuildFlags()
+				Expect(err).To(BeNil())
+				Expect(gf.BuildFlags).To(Equal([]string{"-tags", "cloudfoundry", "-buildmode", "pie", "-ldflags", "\"-X 'package.main.thing=some_string' \""}))
+			})
+		})
+
+		Context("link environment variables are set with multiple values", func() {
+			var (
+				oldGoLinkerSymbol string
+				oldGoLinkerValue  string
+			)
+
+			BeforeEach(func() {
+				oldGoLinkerSymbol = os.Getenv("GO_LINKER_SYMBOL")
+				oldGoLinkerValue = os.Getenv("GO_LINKER_VALUE")
+
+				err = os.Setenv("GO_LINKER_SYMBOL", "package.main.thing,package.main.thing2")
+				Expect(err).To(BeNil())
+
+				err = os.Setenv("GO_LINKER_VALUE", "some_string,some_string2")
+				Expect(err).To(BeNil())
+
+			})
+
+			AfterEach(func() {
+				err = os.Setenv("GO_LINKER_SYMBOL", oldGoLinkerSymbol)
+				Expect(err).To(BeNil())
+
+				err = os.Setenv("GO_LINKER_VALUE", oldGoLinkerValue)
+				Expect(err).To(BeNil())
+			})
+
+			It("contains multiple ldflags argument", func() {
+				err = gf.SetBuildFlags()
+				Expect(err).To(BeNil())
+				Expect(gf.BuildFlags).To(Equal([]string{"-tags", "cloudfoundry", "-buildmode", "pie", "-ldflags", "\"-X 'package.main.thing=some_string' -X 'package.main.thing2=some_string2' \""}))
+			})
+		})
+
+		Context("link environment variables are set with multiple escaped values", func() {
+			var (
+				oldGoLinkerSymbol string
+				oldGoLinkerValue  string
+			)
+
+			BeforeEach(func() {
+				oldGoLinkerSymbol = os.Getenv("GO_LINKER_SYMBOL")
+				oldGoLinkerValue = os.Getenv("GO_LINKER_VALUE")
+
+				err = os.Setenv("GO_LINKER_SYMBOL", "package.main.thing,package.main.thing2")
+				Expect(err).To(BeNil())
+
+				err = os.Setenv("GO_LINKER_VALUE", `some\,escaped string,some_string2`)
+				Expect(err).To(BeNil())
+
+			})
+
+			AfterEach(func() {
+				err = os.Setenv("GO_LINKER_SYMBOL", oldGoLinkerSymbol)
+				Expect(err).To(BeNil())
+
+				err = os.Setenv("GO_LINKER_VALUE", oldGoLinkerValue)
+				Expect(err).To(BeNil())
+			})
+
+			It("contains multiple ldflags argument", func() {
+				err = gf.SetBuildFlags()
+				Expect(err).To(BeNil())
+				Expect(gf.BuildFlags).To(Equal([]string{"-tags", "cloudfoundry", "-buildmode", "pie", "-ldflags", "\"-X 'package.main.thing=some,escaped string' -X 'package.main.thing2=some_string2' \""}))
+			})
+		})
+
+		Context("link environment variables are set with multiple incorrectly escaped values", func() {
+			var (
+				oldGoLinkerSymbol string
+				oldGoLinkerValue  string
+			)
+
+			BeforeEach(func() {
+				oldGoLinkerSymbol = os.Getenv("GO_LINKER_SYMBOL")
+				oldGoLinkerValue = os.Getenv("GO_LINKER_VALUE")
+
+				err = os.Setenv("GO_LINKER_SYMBOL", "package.main.thing,package.main.thing2")
+				Expect(err).To(BeNil())
+
+				err = os.Setenv("GO_LINKER_VALUE", `some,escaped string,some_string2`)
+				Expect(err).To(BeNil())
+
+			})
+
+			AfterEach(func() {
+				err = os.Setenv("GO_LINKER_SYMBOL", oldGoLinkerSymbol)
+				Expect(err).To(BeNil())
+
+				err = os.Setenv("GO_LINKER_VALUE", oldGoLinkerValue)
+				Expect(err).To(BeNil())
+			})
+
+			It("return an error", func() {
+				err = gf.SetBuildFlags()
+				Expect(err.Error()).To(ContainSubstring("linker symbol value length mismatch"))
 			})
 		})
 	})
@@ -1214,7 +1314,7 @@ default_process_types:
 
 		It("Sets GOCACHE inside cache directory", func() {
 			Expect(gf.SetGoCache()).To(Succeed())
- 			newVal, goCacheSet := os.LookupEnv("GOCACHE")
+			newVal, goCacheSet := os.LookupEnv("GOCACHE")
 			Expect(goCacheSet).To(BeTrue())
 			Expect(newVal).To(Equal(filepath.Join(gf.Stager.CacheDir(), "go-cache")))
 		})

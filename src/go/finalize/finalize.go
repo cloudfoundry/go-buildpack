@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/Masterminds/semver"
@@ -121,7 +122,10 @@ func Run(gf *Finalizer) error {
 		}
 	}
 
-	gf.SetBuildFlags()
+	if err := gf.SetBuildFlags(); err != nil {
+		gf.Log.Error("Unable to setup build flags:': %s", err.Error())
+		return err
+	}
 
 	if err := gf.SetInstallPackages(); err != nil {
 		gf.Log.Error("Unable to determine packages to install: %s", err.Error())
@@ -253,17 +257,51 @@ func (gf *Finalizer) SetupGoPath() error {
 	return os.Unsetenv("GIT_DIR")
 }
 
-func (gf *Finalizer) SetBuildFlags() {
+func unescapeBuildFlagString(s string) string {
+	return strings.ReplaceAll(s, `\,`, `,`)
+}
+
+func unescapeBuildFlagStringSlice(str []string) []string {
+	var ret []string
+	for _, s := range str {
+		ret = append(ret, unescapeBuildFlagString(s))
+	}
+	return ret
+}
+
+func (gf *Finalizer) SetBuildFlags() error {
 	flags := []string{"-tags", "cloudfoundry", "-buildmode", "pie"}
 
 	if os.Getenv("GO_LINKER_SYMBOL") != "" && os.Getenv("GO_LINKER_VALUE") != "" {
-		ld_flags := []string{"-ldflags", fmt.Sprintf("-X %s=%s", os.Getenv("GO_LINKER_SYMBOL"), os.Getenv("GO_LINKER_VALUE"))}
+		// regex to split on comma but allow escaping with backslash
+		r := regexp.MustCompile(`(?m)(?:\\.|[^,\\]+)*`)
 
+		// derive the linker symbols/values from the environment
+		linkerSymbols := r.FindAllString(os.Getenv("GO_LINKER_SYMBOL"), -1)
+		linkerSymbols = unescapeBuildFlagStringSlice(linkerSymbols)
+		linkerValues := r.FindAllString(os.Getenv("GO_LINKER_VALUE"), -1)
+		linkerValues = unescapeBuildFlagStringSlice(linkerValues)
+		if len(linkerSymbols) != len(linkerValues) {
+			return errors.New("linker symbol value length mismatch")
+		}
+
+		// generate the linker symbol/value pairs
+		var linkerString strings.Builder
+		linkerString.WriteString(`"`) // start it with a quote
+		for i := 0; i < len(linkerSymbols); i++ {
+			linkerString.WriteString(fmt.Sprintf("-X '%s=%s' ", linkerSymbols[i], linkerValues[i]))
+		}
+		linkerString.WriteString(`"`) // end it with a quote
+
+		// append the linker symbol/value string to the ldflags
+		ld_flags := []string{"-ldflags", linkerString.String()}
+
+		// append the ld_flags to the other build flags
 		flags = append(flags, ld_flags...)
 	}
 
 	gf.BuildFlags = flags
-	return
+	return nil
 }
 
 func (gf *Finalizer) RunDepEnsure() error {
