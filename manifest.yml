@@ -78,22 +78,6 @@ dependencies:
   source: https://dl.google.com/go/go1.11.13.src.tar.gz
   source_sha256: 5032095fd3f641cafcce164f551e5ae873785ce7b07ca7c143aecd18f7ba4076
 - name: go
-  version: 1.12.6
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.12.6.linux-amd64-cflinuxfs2-75a8f165.tar.gz
-  sha256: 75a8f165c577fec0faedffe98494df795a6a9e5039ab1daeacc00ca04f83fc38
-  cf_stacks:
-  - cflinuxfs2
-  source: https://dl.google.com/go/go1.12.6.src.tar.gz
-  source_sha256: c96c5ccc7455638ae1a8b7498a030fe653731c8391c5f8e79590bce72f92b4ca
-- name: go
-  version: 1.12.6
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.12.6.linux-amd64-cflinuxfs3-888b9bf8.tar.gz
-  sha256: 888b9bf862b1c553ba0b69b0d25c4d29e04d3f7e24c96d8aff3e3141326d6044
-  cf_stacks:
-  - cflinuxfs3
-  source: https://dl.google.com/go/go1.12.6.src.tar.gz
-  source_sha256: c96c5ccc7455638ae1a8b7498a030fe653731c8391c5f8e79590bce72f92b4ca
-- name: go
   version: 1.12.7
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.12.7.linux-amd64-cflinuxfs2-ef4b2fb4.tar.gz
   sha256: ef4b2fb4a2158c32029ee1e2cba4275071db0010df8bfc2890d621d70fc15f03
@@ -109,6 +93,22 @@ dependencies:
   - cflinuxfs3
   source: https://dl.google.com/go/go1.12.7.src.tar.gz
   source_sha256: 95e8447d6f04b8d6a62de1726defbb20ab203208ee167ed15f83d7978ce43b13
+- name: go
+  version: 1.12.8
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.12.8.linux-amd64-cflinuxfs2-29a11cd1.tar.gz
+  sha256: 29a11cd10321acbb002741d603edf77e4a6edb1553e6ae7e0494896fc7d5a0ec
+  cf_stacks:
+  - cflinuxfs2
+  source: https://dl.google.com/go/go1.12.8.src.tar.gz
+  source_sha256: 11ad2e2e31ff63fcf8a2bdffbe9bfa2e1845653358daed593c8c2d03453c9898
+- name: go
+  version: 1.12.8
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.12.8.linux-amd64-cflinuxfs3-15c942c1.tar.gz
+  sha256: 15c942c1c5193613e813e70ee668e85ad0bd4c26283dd500ee9de1a8ab3c8d12
+  cf_stacks:
+  - cflinuxfs3
+  source: https://dl.google.com/go/go1.12.8.src.tar.gz
+  source_sha256: 11ad2e2e31ff63fcf8a2bdffbe9bfa2e1845653358daed593c8c2d03453c9898
 - name: godep
   version: '80'
   uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-cflinuxfs2-06cdb761.tgz
