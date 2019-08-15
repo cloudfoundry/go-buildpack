@@ -30,7 +30,7 @@ var _ = Describe("override yml", func() {
 		buildpackName = "override_yml_" + cutlass.RandStringRunes(5)
 		Expect(cutlass.CreateOrUpdateBuildpack(buildpackName, filepath.Join(bpDir, "fixtures", "overrideyml_bp"), "")).To(Succeed())
 
-		app = cutlass.New(filepath.Join(bpDir, "fixtures", "native_vendoring"))
+		app = cutlass.New(filepath.Join(bpDir, "fixtures", "without_vendoring_tool"))
 		app.Buildpacks = []string{buildpackName + "_buildpack", "go_buildpack"}
 	})
 

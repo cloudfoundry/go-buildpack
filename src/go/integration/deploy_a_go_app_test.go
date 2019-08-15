@@ -289,7 +289,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has vendored dependencies and no Godeps folder", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "native_vendoring"))
+				app = cutlass.New(filepath.Join(bpDir, "fixtures", "without_vendoring_tool"))
 			})
 
 			It("successfully stages", func() {
@@ -298,7 +298,7 @@ var _ = Describe("CF Go Buildpack", func() {
 				Expect(app.GetBody("/")).To(ContainSubstring("Read: a.A == 1"))
 			})
 
-			AssertNoInternetTraffic("native_vendoring")
+			AssertNoInternetTraffic("without_vendoring_tool")
 		})
 
 		Context("app has vendored dependencies and custom package spec", func() {
