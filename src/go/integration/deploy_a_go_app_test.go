@@ -1,6 +1,7 @@
 package integration_test
 
 import (
+	"fmt"
 	"path/filepath"
 	"time"
 
@@ -9,6 +10,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
+
+const go1XRegex = `1\.\d+(\.\d+)?`
 
 var _ = Describe("CF Go Buildpack", func() {
 	var app *cutlass.App
@@ -74,7 +77,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 			It("", func() {
 				PushAppAndConfirm(app)
-				Expect(app.Stdout.String()).To(MatchRegexp(`Installing go 1\.11\.\d+`))
+				Expect(app.Stdout.String()).To(MatchRegexp(fmt.Sprintf(`Installing go %s`, go1XRegex)))
 				Expect(app.Stdout.String()).To(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
 				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
 			})
@@ -87,7 +90,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 			It("", func() {
 				PushAppAndConfirm(app)
-				Expect(app.Stdout.String()).To(MatchRegexp("Installing go 1.11"))
+				Expect(app.Stdout.String()).To(MatchRegexp(fmt.Sprintf(`Installing go %s`, go1XRegex)))
 				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
 				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
 			})
@@ -482,7 +485,7 @@ var _ = Describe("CF Go Buildpack", func() {
 			It("displays the go version", func() {
 				PushAppAndConfirm(app)
 
-				Expect(app.GetBody("/")).To(MatchRegexp(`go version go1\.\d+(\.\d+)? linux/amd64`))
+				Expect(app.GetBody("/")).To(MatchRegexp(fmt.Sprintf(`go version go%s linux/amd64`, go1XRegex)))
 			})
 
 			Context("running a task", func() {
@@ -511,7 +514,7 @@ var _ = Describe("CF Go Buildpack", func() {
 				It("displays the go version", func() {
 					PushAppAndConfirm(app)
 
-					Expect(app.GetBody("/")).To(MatchRegexp(`go version go1\.\d+(\.\d+)? linux/amd64`))
+					Expect(app.GetBody("/")).To(MatchRegexp(fmt.Sprintf(`go version go%s linux/amd64`, go1XRegex)))
 					Expect(app.GetBody("/gopath")).To(ContainSubstring("GOPATH: /home/vcap/app"))
 				})
 			})
