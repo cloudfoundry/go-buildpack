@@ -22,6 +22,10 @@ type Command interface {
 	Execute(string, io.Writer, io.Writer, string, ...string) error
 }
 
+type BuildpackConfig struct {
+	LDFlags map[string]string `yaml:"ldflags"`
+}
+
 type Stager interface {
 	BuildDir() string
 	CacheDir() string
@@ -54,14 +58,14 @@ func NewFinalizer(stager Stager, command Command, logger *libbuildpack.Logger) (
 		} `yaml:"config"`
 	}{}
 	if err := libbuildpack.NewYAML().Load(filepath.Join(stager.DepDir(), "config.yml"), &config); err != nil {
-		logger.Error("Unable to read config.yml: %s", err.Error())
+		logger.Error("Unable to read config.yml: %s", err)
 		return nil, err
 	}
 
 	var godep godep.Godep
 	if config.Config.VendorTool == "godep" {
 		if err := json.Unmarshal([]byte(config.Config.Godep), &godep); err != nil {
-			logger.Error("Unable to load config Godep json: %s", err.Error())
+			logger.Error("Unable to load config Godep json: %s", err)
 			return nil, err
 		}
 	}
@@ -77,64 +81,83 @@ func NewFinalizer(stager Stager, command Command, logger *libbuildpack.Logger) (
 }
 
 func Run(gf *Finalizer) error {
+	var config struct {
+		Go BuildpackConfig `yaml:"go"`
+	}
+	config.Go.LDFlags = map[string]string{}
+
+	buildpackYAMLPath := filepath.Join(gf.Stager.BuildDir(), "buildpack.yml")
+	ok, err := libbuildpack.FileExists(buildpackYAMLPath)
+	if err != nil {
+		gf.Log.Error("Unable to stat buildpack.yml: %s", err)
+		return err
+	}
+
+	if ok {
+		if err := libbuildpack.NewYAML().Load(buildpackYAMLPath, &config); err != nil {
+			gf.Log.Error("Unable to parse buildpack.yml: %s", err)
+			return err
+		}
+	}
+
 	if err := gf.SetGoCache(); err != nil {
-		gf.Log.Error("Unable to print gocache location: %s", err.Error())
+		gf.Log.Error("Unable to print gocache location: %s", err)
 		return err
 	}
 
 	if err := gf.SetMainPackageName(); err != nil {
-		gf.Log.Error("Unable to determine import path: %s", err.Error())
+		gf.Log.Error("Unable to determine import path: %s", err)
 		return err
 	}
 
 	if err := os.MkdirAll(filepath.Join(gf.Stager.BuildDir(), "bin"), 0755); err != nil {
-		gf.Log.Error("Unable to create <build-dir>/bin: %s", err.Error())
+		gf.Log.Error("Unable to create <build-dir>/bin: %s", err)
 		return err
 	}
 
 	if gf.VendorTool != "gomod" {
 		if err := gf.SetupGoPath(); err != nil {
-			gf.Log.Error("Unable to setup Go path: %s", err.Error())
+			gf.Log.Error("Unable to setup Go path: %s", err)
 			return err
 		}
 	} else {
 		if err := os.Setenv("GOBIN", filepath.Join(gf.Stager.BuildDir(), "bin")); err != nil {
-			gf.Log.Error("Unable to setup GOBIN: %s", err.Error())
+			gf.Log.Error("Unable to setup GOBIN: %s", err)
 			return err
 		}
 	}
 
 	if err := gf.HandleVendorExperiment(); err != nil {
-		gf.Log.Error("Invalid vendor config: %s", err.Error())
+		gf.Log.Error("Invalid vendor config: %s", err)
 		return err
 	}
 
 	if gf.VendorTool == "glide" {
 		if err := gf.RunGlideInstall(); err != nil {
-			gf.Log.Error("Error running 'glide install': %s", err.Error())
+			gf.Log.Error("Error running 'glide install': %s", err)
 			return err
 		}
 	} else if gf.VendorTool == "dep" {
 		if err := gf.RunDepEnsure(); err != nil {
-			gf.Log.Error("Error running 'dep ensure': %s", err.Error())
+			gf.Log.Error("Error running 'dep ensure': %s", err)
 			return err
 		}
 	}
 
-	gf.SetBuildFlags()
+	gf.SetBuildFlags(config.Go)
 
 	if err := gf.SetInstallPackages(); err != nil {
-		gf.Log.Error("Unable to determine packages to install: %s", err.Error())
+		gf.Log.Error("Unable to determine packages to install: %s", err)
 		return err
 	}
 
 	if err := gf.CompileApp(); err != nil {
-		gf.Log.Error("Unable to compile application: %s", err.Error())
+		gf.Log.Error("Unable to compile application: %s", err)
 		return err
 	}
 
 	if err := gf.CreateStartupEnvironment("/tmp"); err != nil {
-		gf.Log.Error("Unable to create startup scripts: %s", err.Error())
+		gf.Log.Error("Unable to create startup scripts: %s", err)
 		return err
 	}
 
@@ -253,13 +276,19 @@ func (gf *Finalizer) SetupGoPath() error {
 	return os.Unsetenv("GIT_DIR")
 }
 
-func (gf *Finalizer) SetBuildFlags() {
+func (gf *Finalizer) SetBuildFlags(config BuildpackConfig) {
 	flags := []string{"-tags", "cloudfoundry", "-buildmode", "pie"}
 
 	if os.Getenv("GO_LINKER_SYMBOL") != "" && os.Getenv("GO_LINKER_VALUE") != "" {
-		ld_flags := []string{"-ldflags", fmt.Sprintf("-X %s=%s", os.Getenv("GO_LINKER_SYMBOL"), os.Getenv("GO_LINKER_VALUE"))}
+		config.LDFlags[os.Getenv("GO_LINKER_SYMBOL")] = os.Getenv("GO_LINKER_VALUE")
+	}
 
-		flags = append(flags, ld_flags...)
+	if len(config.LDFlags) > 0 {
+		var ldflags []string
+		for key, val := range config.LDFlags {
+			ldflags = append(ldflags, fmt.Sprintf("-X %s=%s", key, val))
+		}
+		flags = append(flags, "-ldflags", strings.Join(ldflags, " "))
 	}
 
 	gf.BuildFlags = flags
@@ -450,7 +479,7 @@ func (gf *Finalizer) CreateStartupEnvironment(tempDir string) error {
 
 	err := ioutil.WriteFile(filepath.Join(tempDir, "buildpack-release-step.yml"), []byte(data.ReleaseYAML(mainPkgName)), 0644)
 	if err != nil {
-		gf.Log.Error("Unable to write release yml: %s", err.Error())
+		gf.Log.Error("Unable to write release yml: %s", err)
 		return err
 	}
 
