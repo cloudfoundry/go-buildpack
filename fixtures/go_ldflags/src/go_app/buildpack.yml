@@ -1,0 +1,5 @@
+---
+go:
+  ldflags:
+    main.linker_flag: flag_linked_should_not_appear
+    main.other_linker_flag: other_flag_linked
