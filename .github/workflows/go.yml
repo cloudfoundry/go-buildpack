@@ -12,5 +12,6 @@ jobs:
         go-version: 1.12
       id: go
 
+    - uses: actions/checkout@master
     - name: Unit Test
-      run: ./scripts/unit.sh
+      run: $GITHUB_WORKSPACE/scripts/unit.sh
