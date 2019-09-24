@@ -6,7 +6,10 @@ import (
 	"os"
 )
 
-var linker_flag string
+var (
+	linker_flag       string
+	other_linker_flag string
+)
 
 func main() {
 	http.HandleFunc("/", hello)
@@ -18,6 +21,7 @@ func main() {
 }
 
 func hello(res http.ResponseWriter, req *http.Request) {
-	fmt.Fprintln(res, linker_flag)
+	fmt.Fprintf(res, "linker_flag=%s\n", linker_flag)
+	fmt.Fprintf(res, "other_linker_flag=%s\n", other_linker_flag)
 	fmt.Fprintln(res, "done")
 }

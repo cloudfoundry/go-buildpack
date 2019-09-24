@@ -409,7 +409,7 @@ config:
 	Describe("SetBuildFlags", func() {
 		Context("link environment variables not set", func() {
 			It("contains the default flags", func() {
-				gf.SetBuildFlags()
+				gf.SetBuildFlags(finalize.BuildpackConfig{LDFlags: map[string]string{}})
 				Expect(gf.BuildFlags).To(Equal([]string{"-tags", "cloudfoundry", "-buildmode", "pie"}))
 			})
 		})
@@ -441,8 +441,29 @@ config:
 			})
 
 			It("contains the ldflags argument", func() {
-				gf.SetBuildFlags()
-				Expect(gf.BuildFlags).To(Equal([]string{"-tags", "cloudfoundry", "-buildmode", "pie", "-ldflags", "-X package.main.thing=some_string"}))
+				gf.SetBuildFlags(finalize.BuildpackConfig{LDFlags: map[string]string{
+					"package.main.other": "another_string",
+				}})
+				Expect(gf.BuildFlags[0:5]).To(Equal([]string{
+					"-tags", "cloudfoundry",
+					"-buildmode", "pie",
+					"-ldflags",
+				}))
+				Expect(gf.BuildFlags[5]).To(ContainSubstring("-X package.main.thing=some_string"))
+				Expect(gf.BuildFlags[5]).To(ContainSubstring("-X package.main.other=another_string"))
+			})
+
+			Context("when there is an environment variable that collides a value in the ldflags map", func() {
+				It("prefers the value given in the environment variable", func() {
+					gf.SetBuildFlags(finalize.BuildpackConfig{LDFlags: map[string]string{
+						"package.main.thing": "another_string",
+					}})
+					Expect(gf.BuildFlags).To(Equal([]string{
+						"-tags", "cloudfoundry",
+						"-buildmode", "pie",
+						"-ldflags", "-X package.main.thing=some_string",
+					}))
+				})
 			})
 		})
 	})
@@ -1214,7 +1235,7 @@ default_process_types:
 
 		It("Sets GOCACHE inside cache directory", func() {
 			Expect(gf.SetGoCache()).To(Succeed())
- 			newVal, goCacheSet := os.LookupEnv("GOCACHE")
+			newVal, goCacheSet := os.LookupEnv("GOCACHE")
 			Expect(goCacheSet).To(BeTrue())
 			Expect(newVal).To(Equal(filepath.Join(gf.Stager.CacheDir(), "go-cache")))
 		})
