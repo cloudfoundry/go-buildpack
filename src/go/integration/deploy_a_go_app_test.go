@@ -441,12 +441,8 @@ var _ = Describe("CF Go Buildpack", func() {
 			It("links correctly", func() {
 				PushAppAndConfirm(app)
 
-				body, err := app.GetBody("/")
-				Expect(err).NotTo(HaveOccurred())
-
-				Expect(body).To(ContainSubstring("linker_flag=flag_linked"))
-				Expect(body).To(ContainSubstring("other_linker_flag=other_flag_linked"))
-				Expect(body).NotTo(ContainSubstring("flag_linked_should_not_appear"))
+				Expect(app.GetBody("/")).To(ContainSubstring("flag_linked"))
+				Expect(app.Stdout.String()).To(ContainSubstring("main.linker_flag=flag_linked"))
 			})
 
 			AssertNoInternetTraffic("go_ldflags/src/go_app")
