@@ -1,3 +1,18 @@
+v1.9.1 Oct 04, 2019
+====================
+
+* Add go 1.13.1
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/168771139)
+
+* Add go 1.12.10, remove go 1.12.7
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/168770339)
+
+* Adds support for multiple ldflags in buildpack.yml
+  (https://www.pivotaltracker.com/story/show/167839696)
+
+
 v1.9.0 Sep 11, 2019
 =====================
 
