@@ -107,6 +107,14 @@ func ApiHasStackAssociation() bool {
 	return supported
 }
 
+func Fixtures(names ...string) string {
+	root, err := cutlass.FindRoot()
+	Expect(err).NotTo(HaveOccurred())
+
+	names = append([]string{root, "fixtures"}, names...)
+	return filepath.Join(names...)
+}
+
 func AssertUsesProxyDuringStagingIfPresent(fixtureName string) {
 	Context("with an uncached buildpack", func() {
 		BeforeEach(func() {
@@ -128,7 +136,7 @@ func AssertUsesProxyDuringStagingIfPresent(fixtureName string) {
 
 			traffic, _, _, err := cutlass.InternetTraffic(
 				bpDir,
-				filepath.Join("fixtures", fixtureName),
+				Fixtures(fixtureName),
 				bpFile,
 				[]string{"HTTP_PROXY=" + proxy.URL, "HTTPS_PROXY=" + proxy.URL},
 			)
@@ -146,25 +154,22 @@ func AssertUsesProxyDuringStagingIfPresent(fixtureName string) {
 }
 
 func AssertNoInternetTraffic(fixtureName string) {
-	It("has no traffic", func() {
-		if !cutlass.Cached {
-			Skip("Running uncached tests")
-		}
+	if !cutlass.Cached {
+		Skip("Running uncached tests")
+	}
 
-		bpFile := filepath.Join(bpDir, buildpackVersion+"tmp")
-		cmd := exec.Command("cp", packagedBuildpack.File, bpFile)
-		err := cmd.Run()
-		Expect(err).To(BeNil())
-		defer os.Remove(bpFile)
+	bpFile := filepath.Join(bpDir, buildpackVersion+"tmp")
+	cmd := exec.Command("cp", packagedBuildpack.File, bpFile)
+	err := cmd.Run()
+	Expect(err).To(BeNil())
+	defer os.Remove(bpFile)
 
-		traffic, _, _, err := cutlass.InternetTraffic(
-			bpDir,
-			filepath.Join("fixtures", fixtureName),
-			bpFile,
-			[]string{},
-		)
-		Expect(err).To(BeNil())
-		// Expect(built).To(BeTrue())
-		Expect(traffic).To(BeEmpty())
-	})
+	traffic, _, _, err := cutlass.InternetTraffic(
+		bpDir,
+		Fixtures(fixtureName),
+		bpFile,
+		[]string{},
+	)
+	Expect(err).To(BeNil())
+	Expect(traffic).To(BeEmpty())
 }

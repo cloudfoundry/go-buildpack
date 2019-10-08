@@ -2,7 +2,6 @@ package integration_test
 
 import (
 	"fmt"
-	"path/filepath"
 	"time"
 
 	"github.com/cloudfoundry/libbuildpack/cutlass"
@@ -32,7 +31,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app uses glide", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "with_glide", "src", "with_glide"))
+				app = cutlass.New(Fixtures("with_glide", "src", "with_glide"))
 			})
 
 			It("", func() {
@@ -45,7 +44,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has dependencies", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "with_dependencies", "src", "with_dependencies"))
+				app = cutlass.New(Fixtures("with_dependencies", "src", "with_dependencies"))
 			})
 
 			It("", func() {
@@ -59,7 +58,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has no dependencies", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_app"))
+				app = cutlass.New(Fixtures("go_app"))
 			})
 
 			It("", func() {
@@ -72,7 +71,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has go modules and go version > 1.11", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_app"))
+				app = cutlass.New(Fixtures("go_mod_app"))
 			})
 
 			It("", func() {
@@ -85,7 +84,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has go modules and modules are vendored", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_mod_vendored_app"))
+				app = cutlass.New(Fixtures("go_mod_vendored_app"))
 			})
 
 			It("", func() {
@@ -98,7 +97,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("expects a non-packaged version of go", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go99"))
+				app = cutlass.New(Fixtures("go99"))
 			})
 
 			It("displays useful understandable errors", func() {
@@ -114,7 +113,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("heroku example", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "heroku_example"))
+				app = cutlass.New(Fixtures("heroku_example"))
 			})
 
 			It("", func() {
@@ -126,7 +125,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app uses glide and has vendored dependencies", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "glide_and_vendoring", "src", "glide_and_vendoring"))
+				app = cutlass.New(Fixtures("glide_and_vendoring", "src", "glide_and_vendoring"))
 			})
 
 			It("", func() {
@@ -141,7 +140,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("a .godir file is detected", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "deprecated_heroku", "src", "deprecated_heroku"))
+				app = cutlass.New(Fixtures("deprecated_heroku", "src", "deprecated_heroku"))
 			})
 
 			It("fails with a deprecation message", func() {
@@ -155,7 +154,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("a go app with wildcard matcher", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "wildcard_go_version", "src", "go_app"))
+				app = cutlass.New(Fixtures("wildcard_go_version", "src", "go_app"))
 			})
 
 			It("fails with a deprecation message", func() {
@@ -167,7 +166,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("a go app with an invalid wildcard matcher", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "invalid_wildcard_version", "src", "go_app"))
+				app = cutlass.New(Fixtures("invalid_wildcard_version", "src", "go_app"))
 			})
 
 			It("fails with a helpful warning message", func() {
@@ -181,28 +180,28 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("a go app with a custom package spec", func() {
 			It("installs the custom package", func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec"))
+				app = cutlass.New(Fixtures("install_pkg_spec"))
 				PushAppAndConfirm(app)
 				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie example.com/install_pkg_spec/app"))
 				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
 			})
 
 			It("installs the custom package using go modules", func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec_go_modules"))
+				app = cutlass.New(Fixtures("install_pkg_spec_go_modules"))
 				PushAppAndConfirm(app)
 				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app"))
 				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
 			})
 
 			It("installs the custom package using go modules and relative paths", func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec_mod_relative_pkg"))
+				app = cutlass.New(Fixtures("install_pkg_spec_mod_relative_pkg"))
 				PushAppAndConfirm(app)
 				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie ./cmd/app"))
 				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
 			})
 
 			It("installs the custom package using vendored go modules", func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec_vendored_go_modules"))
+				app = cutlass.New(Fixtures("install_pkg_spec_vendored_go_modules"))
 				PushAppAndConfirm(app)
 				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app"))
 				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/deckarep"))
@@ -220,7 +219,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has dependencies", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "with_dependencies", "src", "with_dependencies"))
+				app = cutlass.New(Fixtures("with_dependencies", "src", "with_dependencies"))
 			})
 
 			It("", func() {
@@ -229,12 +228,14 @@ var _ = Describe("CF Go Buildpack", func() {
 				Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
 			})
 
-			AssertNoInternetTraffic("with_dependencies/src/with_dependencies")
+			It("has no internet connection", func() {
+				AssertNoInternetTraffic("with_dependencies/src/with_dependencies")
+			})
 		})
 
 		Context("app uses go1.8 and dep", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go18_dep", "src", "go18_dep"))
+				app = cutlass.New(Fixtures("go18_dep", "src", "go18_dep"))
 			})
 
 			It("successfully stages", func() {
@@ -245,7 +246,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app uses go1.8 and dep but no lockfile", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go18_dep_nolockfile", "src", "go18_dep_nolockfile"))
+				app = cutlass.New(Fixtures("go18_dep_nolockfile", "src", "go18_dep_nolockfile"))
 			})
 
 			It("successfully stages", func() {
@@ -256,7 +257,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app uses go1.8 and dep with vendored dependencies", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go18_dep_vendored", "src", "go18_dep"))
+				app = cutlass.New(Fixtures("go18_dep_vendored", "src", "go18_dep"))
 			})
 
 			It("successfully stages", func() {
@@ -267,7 +268,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app uses godep with Godeps/_workspace dir", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_dependencies"))
+				app = cutlass.New(Fixtures("go_dependencies"))
 			})
 
 			It("", func() {
@@ -279,7 +280,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app uses godep and no vendor dir or Godeps/_workspace dir", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_no_vendor", "src", "go_no_vendor"))
+				app = cutlass.New(Fixtures("go_no_vendor", "src", "go_no_vendor"))
 			})
 
 			It("", func() {
@@ -292,7 +293,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has vendored dependencies and no Godeps folder", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "without_vendoring_tool"))
+				app = cutlass.New(Fixtures("without_vendoring_tool"))
 			})
 
 			It("successfully stages", func() {
@@ -301,35 +302,41 @@ var _ = Describe("CF Go Buildpack", func() {
 				Expect(app.GetBody("/")).To(ContainSubstring("Read: a.A == 1"))
 			})
 
-			AssertNoInternetTraffic("without_vendoring_tool")
+			It("has no internet connection", func() {
+				AssertNoInternetTraffic("without_vendoring_tool")
+			})
 		})
 
 		Context("app has vendored dependencies and custom package spec", func() {
 			It("successfully stages", func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "vendored_custom_install_spec"))
+				app = cutlass.New(Fixtures("vendored_custom_install_spec"))
 				PushAppAndConfirm(app)
 				Expect(app.Stdout.String()).To(MatchRegexp("Init: a.A == 1"))
 				Expect(app.GetBody("/")).To(ContainSubstring("Read: a.A == 1"))
 			})
 
-			AssertNoInternetTraffic("vendored_custom_install_spec")
+			It("has no internet connection", func() {
+				AssertNoInternetTraffic("vendored_custom_install_spec")
+			})
 		})
 
 		Context("app has vendored dependencies and custom package spec", func() {
 			It("installs the custom package when vendoring with go modules", func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "install_pkg_spec_vendored_go_modules"))
+				app = cutlass.New(Fixtures("install_pkg_spec_vendored_go_modules"))
 				PushAppAndConfirm(app)
 				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app"))
 				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/deckarep"))
 				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
 			})
 
-			AssertNoInternetTraffic("install_pkg_spec_vendored_go_modules")
+			It("has no internet connection", func() {
+				AssertNoInternetTraffic("install_pkg_spec_vendored_go_modules")
+			})
 		})
 
 		Context("app has vendored dependencies and a vendor.json file", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "with_vendor_json"))
+				app = cutlass.New(Fixtures("with_vendor_json"))
 			})
 
 			It("successfully stages", func() {
@@ -341,7 +348,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app with only a single go file and GOPACKAGENAME specified", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "single_file"))
+				app = cutlass.New(Fixtures("single_file"))
 			})
 
 			It("successfully stages", func() {
@@ -352,7 +359,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app with only a single go file, a vendor directory, and no GOPACKAGENAME specified", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "vendored_no_gopackagename"))
+				app = cutlass.New(Fixtures("vendored_no_gopackagename"))
 			})
 
 			It("fails with helpful error", func() {
@@ -365,7 +372,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has no dependencies", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_app"))
+				app = cutlass.New(Fixtures("go_app"))
 			})
 
 			It("", func() {
@@ -378,7 +385,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has before/after compile hooks", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_app"))
+				app = cutlass.New(Fixtures("go_app"))
 				app.SetEnv("BP_DEBUG", "1")
 			})
 
@@ -392,7 +399,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app has no Procfile", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "no_procfile", "src", "no_procfile"))
+				app = cutlass.New(Fixtures("no_procfile", "src", "no_procfile"))
 			})
 
 			It("", func() {
@@ -402,12 +409,14 @@ var _ = Describe("CF Go Buildpack", func() {
 				Expect(app.Stdout.String()).To(MatchRegexp(`Copy \[\/tmp\/`))
 			})
 
-			AssertNoInternetTraffic("no_procfile/src/no_procfile")
+			It("has no internet connection", func() {
+				AssertNoInternetTraffic("no_procfile/src/no_procfile")
+			})
 		})
 
 		Context("expects a non-packaged version of go", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go99"))
+				app = cutlass.New(Fixtures("go99"))
 			})
 
 			It("displays useful understandable errors", func() {
@@ -423,19 +432,22 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("heroku example", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "heroku_example"))
+				app = cutlass.New(Fixtures("heroku_example"))
 			})
 
 			It("", func() {
 				PushAppAndConfirm(app)
 				Expect(app.GetBody("/")).To(ContainSubstring("hello, heroku"))
 			})
-			AssertNoInternetTraffic("heroku_example")
+
+			It("has no internet connection", func() {
+				AssertNoInternetTraffic("heroku_example")
+			})
 		})
 
 		Context("a go app using ldflags", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_ldflags", "src", "go_app"))
+				app = cutlass.New(Fixtures("go_ldflags", "src", "go_app"))
 			})
 
 			It("links correctly", func() {
@@ -449,12 +461,14 @@ var _ = Describe("CF Go Buildpack", func() {
 				Expect(body).NotTo(ContainSubstring("flag_linked_should_not_appear"))
 			})
 
-			AssertNoInternetTraffic("go_ldflags/src/go_app")
+			It("has no internet connection", func() {
+				AssertNoInternetTraffic("go_ldflags/src/go_app")
+			})
 		})
 
 		Context("app uses glide and has vendored dependencies", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "glide_and_vendoring", "src", "glide_and_vendoring"))
+				app = cutlass.New(Fixtures("glide_and_vendoring", "src", "glide_and_vendoring"))
 			})
 
 			It("", func() {
@@ -464,12 +478,14 @@ var _ = Describe("CF Go Buildpack", func() {
 				Expect(app.Stdout.String()).To(ContainSubstring("Note: skipping (glide install) due to non-empty vendor directory."))
 			})
 
-			AssertNoInternetTraffic("glide_and_vendoring/src/glide_and_vendoring")
+			It("has no internet connection", func() {
+				AssertNoInternetTraffic("glide_and_vendoring/src/glide_and_vendoring")
+			})
 		})
 
 		Context("go 1.X app with GO_SETUP_GOPATH_IN_IMAGE", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "gopath_in_container", "src", "go_app"))
+				app = cutlass.New(Fixtures("gopath_in_container", "src", "go_app"))
 				app.SetEnv("GO_SETUP_GOPATH_IN_IMAGE", "true")
 			})
 
@@ -481,7 +497,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("go 1.X app with GO_INSTALL_TOOLS_IN_IMAGE", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "toolchain_in_container", "src", "go_app"))
+				app = cutlass.New(Fixtures("toolchain_in_container", "src", "go_app"))
 				app.SetEnv("GO_INSTALL_TOOLS_IN_IMAGE", "true")
 				app.Disk = "1G"
 			})
@@ -526,7 +542,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("packagename is the same as a bash builtin or on path", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "bashbuiltin"))
+				app = cutlass.New(Fixtures("bashbuiltin"))
 			})
 			It("sets the start command to run this app", func() {
 				PushAppAndConfirm(app)
@@ -536,7 +552,7 @@ var _ = Describe("CF Go Buildpack", func() {
 
 		Context("app contains a symlink to a directory", func() {
 			BeforeEach(func() {
-				app = cutlass.New(filepath.Join(bpDir, "fixtures", "symlink_dir"))
+				app = cutlass.New(Fixtures("symlink_dir"))
 			})
 			It("sets the start command to run this app", func() {
 				PushAppAndConfirm(app)

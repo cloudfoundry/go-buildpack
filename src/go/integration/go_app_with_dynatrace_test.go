@@ -2,7 +2,6 @@ package integration_test
 
 import (
 	"os/exec"
-	"path/filepath"
 
 	"github.com/cloudfoundry/libbuildpack/cutlass"
 
@@ -15,7 +14,7 @@ var _ = Describe("CF Go Buildpack", func() {
 	var createdServices []string
 
 	BeforeEach(func() {
-		app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_app"))
+		app = cutlass.New(Fixtures("go_app"))
 		app.SetEnv("BP_DEBUG", "true")
 		PushAppAndConfirm(app)
 

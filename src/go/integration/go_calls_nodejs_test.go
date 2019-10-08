@@ -1,8 +1,6 @@
 package integration_test
 
 import (
-	"path/filepath"
-
 	"github.com/cloudfoundry/libbuildpack/cutlass"
 
 	. "github.com/onsi/ginkgo"
@@ -25,7 +23,7 @@ var _ = Describe("running supply nodejs buildpack before the go buildpack", func
 				Skip("API version does not have multi-buildpack support")
 			}
 
-			app = cutlass.New(filepath.Join(bpDir, "fixtures", "go_calls_nodejs"))
+			app = cutlass.New(Fixtures("go_calls_nodejs"))
 			app.Buildpacks = []string{
 				"https://github.com/cloudfoundry/nodejs-buildpack#master",
 				"go_buildpack",

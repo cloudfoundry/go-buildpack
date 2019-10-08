@@ -1,8 +1,6 @@
 package integration_test
 
 import (
-	"path/filepath"
-
 	"github.com/cloudfoundry/libbuildpack/cutlass"
 
 	. "github.com/onsi/ginkgo"
@@ -28,9 +26,9 @@ var _ = Describe("override yml", func() {
 		}
 
 		buildpackName = "override_yml_" + cutlass.RandStringRunes(5)
-		Expect(cutlass.CreateOrUpdateBuildpack(buildpackName, filepath.Join(bpDir, "fixtures", "overrideyml_bp"), "")).To(Succeed())
+		Expect(cutlass.CreateOrUpdateBuildpack(buildpackName, Fixtures("overrideyml_bp"), "")).To(Succeed())
 
-		app = cutlass.New(filepath.Join(bpDir, "fixtures", "without_vendoring_tool"))
+		app = cutlass.New(Fixtures("without_vendoring_tool"))
 		app.Buildpacks = []string{buildpackName + "_buildpack", "go_buildpack"}
 	})
 

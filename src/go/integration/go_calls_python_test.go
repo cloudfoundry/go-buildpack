@@ -1,8 +1,6 @@
 package integration_test
 
 import (
-	"path/filepath"
-
 	"github.com/cloudfoundry/libbuildpack/cutlass"
 
 	. "github.com/onsi/ginkgo"
@@ -26,7 +24,7 @@ var _ = Describe("running supply python buildpack before the go buildpack", func
 	})
 
 	pushApp := func(fixture string) {
-		app = cutlass.New(filepath.Join(bpDir, "fixtures", fixture))
+		app = cutlass.New(Fixtures(fixture))
 		app.Buildpacks = []string{
 			"https://github.com/cloudfoundry/python-buildpack#master",
 			"go_buildpack",
