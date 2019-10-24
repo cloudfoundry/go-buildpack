@@ -6,5 +6,7 @@ Sample go web app using the GoLang example: http://golang.org/doc/articles/wiki/
 to run
 ======
 
+```
 $ go build site.go
 $ PORT=3000 ./site
+```
