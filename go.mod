@@ -9,7 +9,10 @@ require (
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 	github.com/onsi/ginkgo v1.10.3
 	github.com/onsi/gomega v1.7.0
-	golang.org/x/sys v0.0.0-20191120155948-bd437916bb0e // indirect
+	github.com/vendorlib v0.0.0-00010101000000-000000000000
+	golang.org/x/sys v0.0.0-20191127021746-63cb32ae39b2 // indirect
 )
+
+replace github.com/vendorlib => ./fixtures/vendored_custom_install_spec/vendor/github.com/vendorlib
 
 go 1.13
