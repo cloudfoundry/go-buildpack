@@ -1,3 +1,27 @@
+v1.9.4 Dec 09, 2019
+====================
+
+* Add go 1.13.5, remove go 1.13.3
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/170120160)
+
+* Add go 1.12.14, remove go 1.12.12
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/170118127)
+
+* Add replace directive to go.mod, to account for new Go Mod behavior
+  * One of our fixtures uses a fake go module, and go mod can now detect that module, which caused some issues in compilation. We explicitely add it now to the parent go.mod, in order to ensure the modules are accounted for.
+  (https://www.pivotaltracker.com/story/show/168519653)
+
+* Update to go 1.13
+  (https://www.pivotaltracker.com/story/show/169868686)
+
+* Merge pull request #96 from squeedee/patch-1
+  Improve run example in markdown so it's readable
+
+* Update call to InternetTraffic to reflect new signature
+
+
 v1.9.3 Nov 04, 2019
 ====================
 
