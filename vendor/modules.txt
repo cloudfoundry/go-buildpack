@@ -8,7 +8,7 @@ github.com/Masterminds/semver
 github.com/ZiCog/shiny-thing/foo
 # github.com/blang/semver v3.5.1+incompatible
 github.com/blang/semver
-# github.com/cloudfoundry/libbuildpack v0.0.0-20191126155948-3346c7990f5b
+# github.com/cloudfoundry/libbuildpack v0.0.0-20191216160021-525a07d011c1
 github.com/cloudfoundry/libbuildpack
 github.com/cloudfoundry/libbuildpack/ansicleaner
 github.com/cloudfoundry/libbuildpack/bratshelper
@@ -76,7 +76,7 @@ github.com/vendorlib
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
-# golang.org/x/sys v0.0.0-20191127021746-63cb32ae39b2
+# golang.org/x/sys v0.0.0-20191210023423-ac6580df4449
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/encoding
