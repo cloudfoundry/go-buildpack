@@ -389,7 +389,7 @@ var _ = Describe("Supply", func() {
 			goVersion = "1.3.4"
 			goInstallDir = filepath.Join(depsDir, depsIdx, "go1.3.4")
 			dep = libbuildpack.Dependency{Name: "go", Version: "1.3.4"}
-			err = os.MkdirAll(filepath.Join(goInstallDir, "go"), 0755)
+			err = os.MkdirAll(filepath.Join(goInstallDir), 0755)
 			Expect(err).To(BeNil())
 			mockInstaller.EXPECT().InstallDependency(dep, goInstallDir).Return(nil)
 		})
@@ -400,7 +400,7 @@ var _ = Describe("Supply", func() {
 
 			contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "GOROOT"))
 			Expect(err).To(BeNil())
-			Expect(string(contents)).To(Equal(filepath.Join(goInstallDir, "go")))
+			Expect(string(contents)).To(Equal(filepath.Join(goInstallDir)))
 		})
 
 		It("installs go to the depDir, creating a symlink in <depDir>/bin", func() {
@@ -410,7 +410,7 @@ var _ = Describe("Supply", func() {
 			link, err := os.Readlink(filepath.Join(depsDir, depsIdx, "bin", "go"))
 			Expect(err).To(BeNil())
 
-			Expect(link).To(Equal("../go1.3.4/go/bin/go"))
+			Expect(link).To(Equal("../go1.3.4/bin/go"))
 
 		})
 	})
@@ -427,7 +427,7 @@ var _ = Describe("Supply", func() {
 			contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "profile.d", "goroot.sh"))
 			Expect(err).To(BeNil())
 
-			Expect(string(contents)).To(ContainSubstring("export GOROOT=$DEPS_DIR/04/go3.4.5/go"))
+			Expect(string(contents)).To(ContainSubstring("export GOROOT=$DEPS_DIR/04/go3.4.5"))
 			Expect(string(contents)).To(ContainSubstring("PATH=$PATH:$GOROOT/bin"))
 		})
 

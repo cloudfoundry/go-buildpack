@@ -148,7 +148,7 @@ func (gs *Supplier) SelectVendorTool() error {
 }
 
 func (gs *Supplier) WriteGoRootToProfileD() error {
-	goRuntimeLocation := filepath.Join("$DEPS_DIR", gs.Stager.DepsIdx(), "go"+gs.GoVersion, "go")
+	goRuntimeLocation := filepath.Join("$DEPS_DIR", gs.Stager.DepsIdx(), "go"+gs.GoVersion)
 	if err := gs.Stager.WriteProfileD("goroot.sh", data.GoRootScript(goRuntimeLocation)); err != nil {
 		return err
 	}
@@ -230,11 +230,11 @@ func (gs *Supplier) InstallGo() error {
 		return err
 	}
 
-	if err := gs.Stager.AddBinDependencyLink(filepath.Join(goInstallDir, "go", "bin", "go"), "go"); err != nil {
+	if err := gs.Stager.AddBinDependencyLink(filepath.Join(goInstallDir, "bin", "go"), "go"); err != nil {
 		return err
 	}
 
-	return gs.Stager.WriteEnvFile("GOROOT", filepath.Join(goInstallDir, "go"))
+	return gs.Stager.WriteEnvFile("GOROOT", filepath.Join(goInstallDir))
 }
 
 func (gs *Supplier) WriteConfigYml() error {
