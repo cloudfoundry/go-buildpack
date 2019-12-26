@@ -39,8 +39,8 @@ dependencies:
   source_sha256: 5383d3b8db4baa48284ffcb14606d9cad6f03e9db843fa6d835b94d63cccf5a7
 - name: go
   version: 1.12.14
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.12.14.linux-amd64-cflinuxfs3-b940bc1b.tar.gz
-  sha256: b940bc1bb309a7b381e3345315cbe0e48fb31f38afe12195c54ef37245f9a8df
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.12.14.linux-amd64-cflinuxfs3-45ae40e2.tgz
+  sha256: 45ae40e25bab0e8c9e3b1ccb27d69a30a611c659a71e8c62041d7663138b8c06
   cf_stacks:
   - cflinuxfs3
   source: https://dl.google.com/go/go1.12.14.src.tar.gz
