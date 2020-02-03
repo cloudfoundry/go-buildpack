@@ -1,3 +1,21 @@
+v1.9.6 Feb 03, 2020
+====================
+
+* Fixes dynatrace integration tests
+  (https://www.pivotaltracker.com/story/show/170073530)
+
+* Merge pull request #97 from rbamberger/develop
+  Update libbuildpack-dynatrace
+
+* Add go 1.12.16, remove go 1.12.14
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/170954572)
+
+* Add go 1.13.7, remove go 1.13.5
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/170954570)
+
+
 v1.9.5 Jan 15, 2020
 ====================
 
