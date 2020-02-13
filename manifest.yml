@@ -46,14 +46,6 @@ dependencies:
   source: https://dl.google.com/go/go1.12.17.src.tar.gz
   source_sha256: de878218c43aa3c3bad54c1c52d95e3b0e5d336e1285c647383e775541a28b25
 - name: go
-  version: 1.13.6
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.13.6.linux-amd64-cflinuxfs3-56df080c.tgz
-  sha256: 56df080cd10ad7d827abb4e826cae46b66d68451f38bd1286610639d1601ead5
-  cf_stacks:
-  - cflinuxfs3
-  source: https://dl.google.com/go/go1.13.6.src.tar.gz
-  source_sha256: aae5be954bdc40bcf8006eb77e8d8a5dde412722bc8effcdaf9772620d06420c
-- name: go
   version: 1.13.7
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.13.7.linux-amd64-cflinuxfs3-be520124.tgz
   sha256: be5201245989826eebf9bff66887786219aebb671dd463f0e2dc911cc483fbc3
@@ -61,6 +53,14 @@ dependencies:
   - cflinuxfs3
   source: https://dl.google.com/go/go1.13.7.src.tar.gz
   source_sha256: e4ad42cc5f5c19521fbbbde3680995f2546110b5c6aa2b48c3754ff7af9b41f4
+- name: go
+  version: 1.13.8
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.13.8.linux-amd64-cflinuxfs3-40558d27.tgz
+  sha256: 40558d2781509e3619d9cbf37f0d9430ce1fa50684196f66612cc3a48cbe87b6
+  cf_stacks:
+  - cflinuxfs3
+  source: https://dl.google.com/go/go1.13.8.src.tar.gz
+  source_sha256: b13bf04633d4d8cf53226ebeaace8d4d2fd07ae6fa676d0844a688339debec34
 - name: godep
   version: '80'
   uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-cflinuxfs3-b60ac947.tgz
