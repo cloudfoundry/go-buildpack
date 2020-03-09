@@ -12,6 +12,10 @@ dependency_deprecation_dates:
   name: go
   date: 2020-09-03
   link: https://golang.org/doc/devel/release.html
+- version_line: 1.14.x
+  name: go
+  date: 2021-02-25
+  link: https://golang.org/doc/devel/release.html
 dependencies:
 - name: dep
   version: 0.5.4
@@ -61,6 +65,14 @@ dependencies:
   - cflinuxfs3
   source: https://dl.google.com/go/go1.13.8.src.tar.gz
   source_sha256: b13bf04633d4d8cf53226ebeaace8d4d2fd07ae6fa676d0844a688339debec34
+- name: go
+  version: '1.14'
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go1.14.linux-amd64-cflinuxfs3-7791b658.tgz
+  sha256: 7791b658b10dba530754c9dbdf52dcdec03b77c250ee44701a6120580feb5038
+  cf_stacks:
+  - cflinuxfs3
+  source: https://dl.google.com/go/go1.14.src.tar.gz
+  source_sha256: 6d643e46ad565058c7a39dac01144172ef9bd476521f42148be59249e4b74389
 - name: godep
   version: '80'
   uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-cflinuxfs3-b60ac947.tgz
