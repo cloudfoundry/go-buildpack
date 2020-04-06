@@ -1,3 +1,10 @@
+v1.9.10 Apr 06, 2020
+=====================
+
+* Remove go 1.12.X version line
+  (https://www.pivotaltracker.com/story/show/171525334)
+
+
 v1.9.9 Mar 24, 2020
 ====================
 
