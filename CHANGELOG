@@ -1,3 +1,10 @@
+v1.9.13 May 19, 2020
+=====================
+
+* Add go 1.13.11, remove go 1.13.9
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/172851578)
+
 v1.9.12 Apr 30, 2020
 =====================
 
