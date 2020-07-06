@@ -4,10 +4,10 @@ require (
 	github.com/Dynatrace/libbuildpack-dynatrace v1.2.2
 	github.com/Masterminds/semver v1.5.0
 	github.com/ZiCog/shiny-thing v0.0.0-20121130081921-e9e19444ccf5
-	github.com/cloudfoundry/libbuildpack v0.0.0-20200701132211-7dc23232c415
+	github.com/cloudfoundry/libbuildpack v0.0.0-20200706130154-bb22e76cb694
 	github.com/golang/mock v1.4.3
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
-	github.com/onsi/ginkgo v1.13.0
+	github.com/onsi/ginkgo v1.14.0
 	github.com/onsi/gomega v1.10.1
 	github.com/vendorlib v0.0.0-00010101000000-000000000000
 	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
