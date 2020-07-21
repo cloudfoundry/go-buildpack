@@ -30,13 +30,13 @@ dependencies:
   source: https://github.com/Masterminds/glide/archive/v0.13.3.tar.gz
   source_sha256: 817dad2f25303d835789c889bf2fac5e141ad2442b9f75da7b164650f0de3fee
 - name: go
-  version: 1.13.12
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.13.12_linux_x64_cflinuxfs3_171f8b81.tgz
-  sha256: 171f8b81bc50c4efc1ecd618ad418edd4843556e65f2850167bb40ba57c81b48
+  version: 1.13.13
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.13.13_linux_x64_cflinuxfs3_ac0368e6.tgz
+  sha256: ac0368e67ce89994ab1946b0e689e879d8aeedcbdf945202eb593b5e621086a3
   cf_stacks:
   - cflinuxfs3
-  source: https://dl.google.com/go/go1.13.12.src.tar.gz
-  source_sha256: 17ba2c4de4d78793a21cc659d9907f4356cd9c8de8b7d0899cdedcef712eba34
+  source: https://dl.google.com/go/go1.13.13.src.tar.gz
+  source_sha256: ab7e44461e734ce1fd5f4f82c74c6d236e947194d868514d48a2b1ea73d25137
 - name: go
   version: 1.13.14
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.13.14_linux_x64_cflinuxfs3_3f0cac97.tgz
@@ -54,13 +54,13 @@ dependencies:
   source: https://dl.google.com/go/go1.14.4.src.tar.gz
   source_sha256: 7011af3bbc2ac108d1b82ea8abb87b2e63f78844f0259be20cde4d42c5c40584
 - name: go
-  version: 1.14.5
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.14.5_linux_x64_cflinuxfs3_3f7111b6.tgz
-  sha256: 3f7111b6fa76d86421563a1cf768a90e1c8d3d5986926a72601d7e7e81884889
+  version: 1.14.6
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.14.6_linux_x64_cflinuxfs3_dae88e80.tgz
+  sha256: dae88e8007806194ad81aec74cc7f068c2ccc32615adea0ea7c88b593ee080ed
   cf_stacks:
   - cflinuxfs3
-  source: https://dl.google.com/go/go1.14.5.src.tar.gz
-  source_sha256: ca4c080c90735e56152ac52cd77ae57fe573d1debb1a58e03da9cc362440315c
+  source: "https://dl.google.com/go/go1.14.6.src.tar.gz"
+  source_sha256: 73fc9d781815d411928eccb92bf20d5b4264797be69410eac854babe44c94c09
 - name: godep
   version: '80'
   uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-cflinuxfs3-b60ac947.tgz
