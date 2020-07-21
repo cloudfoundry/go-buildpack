@@ -43,7 +43,7 @@ dependencies:
   sha256: 3f0cac97dd2bb415a094b6ba59c1f528f3f8ac080094b544050ece6d2cfd35b0
   cf_stacks:
   - cflinuxfs3
-  source: "/dl/go1.13.14.src.tar.gz"
+  source: https://dl.google.com/go/go1.13.14.src.tar.gz
   source_sha256: 197333e97290e9ea8796f738d61019dcba1c377c2f3961fd6a114918ecc7ab06
 - name: go
   version: 1.14.4
@@ -59,7 +59,7 @@ dependencies:
   sha256: 3f7111b6fa76d86421563a1cf768a90e1c8d3d5986926a72601d7e7e81884889
   cf_stacks:
   - cflinuxfs3
-  source: "/dl/go1.14.5.src.tar.gz"
+  source: https://dl.google.com/go/go1.14.5.src.tar.gz
   source_sha256: ca4c080c90735e56152ac52cd77ae57fe573d1debb1a58e03da9cc362440315c
 - name: godep
   version: '80'
