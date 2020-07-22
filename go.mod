@@ -10,7 +10,7 @@ require (
 	github.com/onsi/ginkgo v1.14.0
 	github.com/onsi/gomega v1.10.1
 	github.com/vendorlib v0.0.0-00010101000000-000000000000
-	golang.org/x/sys v0.0.0-20200625212154-ddb9806d33ae // indirect
+	golang.org/x/sys v0.0.0-20200720211630-cb9d2d5c5666 // indirect
 )
 
 replace github.com/vendorlib => ./fixtures/vendored_custom_install_spec/vendor/github.com/vendorlib
