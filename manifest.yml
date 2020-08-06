@@ -43,7 +43,7 @@ dependencies:
   sha256: 3f0cac97dd2bb415a094b6ba59c1f528f3f8ac080094b544050ece6d2cfd35b0
   cf_stacks:
   - cflinuxfs3
-  source: https://dl.google.com/go/go1.13.14.src.tar.gz
+  source: "/dl/go1.13.14.src.tar.gz"
   source_sha256: 197333e97290e9ea8796f738d61019dcba1c377c2f3961fd6a114918ecc7ab06
 - name: go
   version: 1.14.5
