@@ -1,3 +1,25 @@
+v1.9.16 Aug 11, 2020
+=====================
+
+* Update libbuildpack
+
+* Add go 1.14.7, remove go 1.14.5
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/174216746)
+
+* Add go 1.13.15, remove go 1.13.13
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/174216834)
+
+* Rebuild go 1.13.14
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/173843852)
+
+* Rebuild go 1.13.14
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/173843852)
+
+
 v1.9.15 Jul 29, 2020
 =====================
 
