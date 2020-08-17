@@ -1,3 +1,11 @@
+v1.9.17 Aug 17, 2020
+=====================
+
+* Add go 1.15
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/174298085)
+
+
 v1.9.16 Aug 11, 2020
 =====================
 
