@@ -5,4 +5,4 @@ applications:
   buildpacks:
     - go_buildpack
   env:
-    GOVERSION: go1.13
+    GOVERSION: go1.14
