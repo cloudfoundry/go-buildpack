@@ -1,3 +1,18 @@
+v1.9.20 Oct 12, 2020
+=====================
+
+* Updates fixtures
+
+* Removes Go 1.13.x line
+  - Sets default to 1.15.x line
+
+* Update libbuildpack
+
+* Fixed go mod vendoring
+
+* updated libbuildpack-dynatrace to v1.3.0
+
+
 v1.9.19 Sep 22, 2020
 =====================
 
