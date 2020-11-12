@@ -1,3 +1,19 @@
+v1.9.22 Nov 12, 2020
+=====================
+
+* Updating version for go for 1.15.X
+
+
+* Add go 1.15.4, remove go 1.15.2
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/175607451)
+
+
+* Add go 1.14.11, remove go 1.14.9
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/175607445)
+
+
 v1.9.21 Oct 19, 2020
 =====================
 
