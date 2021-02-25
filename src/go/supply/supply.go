@@ -119,6 +119,7 @@ func (gs *Supplier) SelectVendorTool() error {
 			return err
 		}
 
+		gs.Stager.WriteEnvFile("GO111MODULE", "auto")
 		gs.VendorTool = "godep"
 		return nil
 	}
