@@ -114,6 +114,17 @@ var _ = Describe("Supply", func() {
 `
 				})
 
+				It("sets GO111MODULE to auto", func() {
+					localSupplier := *gs
+					mockStager := NewMockStager(mockCtrl)
+					localSupplier.Stager = mockStager
+
+					mockStager.EXPECT().BuildDir().Return(gs.Stager.BuildDir()).AnyTimes()
+					mockStager.EXPECT().WriteEnvFile("GO111MODULE", "auto")
+					Expect(localSupplier.SelectVendorTool()).To(Succeed())
+					Expect(localSupplier.VendorTool).To(Equal("godep"))
+				})
+
 				It("sets the tool to godep", func() {
 					err = gs.SelectVendorTool()
 					Expect(err).To(BeNil())
