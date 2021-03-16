@@ -1,3 +1,15 @@
+v1.9.28 Mar 16, 2021
+=====================
+
+* Add go 1.15.10, remove go 1.15.7
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/177308978)
+  (https://www.pivotaltracker.com/story/show/177288455)
+
+* Add go 1.16.2
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/177309018)
+
 v1.9.27 Mar 02, 2021
 =====================
 
