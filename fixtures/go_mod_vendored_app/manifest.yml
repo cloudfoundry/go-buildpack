@@ -7,4 +7,4 @@ applications:
   stack: cflinuxfs3
   env:
     GOPACKAGENAME: go-online
-    GOVERSION: go1.14
+    GOVERSION: go1.15
