@@ -10,7 +10,7 @@ require (
 	github.com/onsi/ginkgo v1.16.1
 	github.com/onsi/gomega v1.11.0
 	github.com/vendorlib v0.0.0-00010101000000-000000000000
-	golang.org/x/sys v0.0.0-20210426230700-d19ff857e887 // indirect
+	golang.org/x/sys v0.0.0-20210503080704-8803ae5d1324 // indirect
 	golang.org/x/tools v0.1.0 // indirect
 )
 
