@@ -1,3 +1,11 @@
+v1.9.30 May 05, 2021
+=====================
+
+* Remove go versions 1.14.x
+
+* Update libbuildpack
+
+
 v1.9.29 Apr 05, 2021
 =====================
 
