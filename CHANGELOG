@@ -1,3 +1,19 @@
+v1.9.31 May 12, 2021
+=====================
+
+* Auto merge pull request 159
+
+* Add go 1.16.4, remove go 1.16.2
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/178058405)
+
+* Auto merge pull request 158
+
+* Add go 1.15.12, remove go 1.15.10
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/178057432)
+
+
 v1.9.30 May 05, 2021
 =====================
 
