@@ -1,3 +1,19 @@
+v1.9.32 Jun 11, 2021
+=====================
+
+* Add go 1.15.13, remove go 1.15.11
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/178401936)
+
+* Add go 1.16.5, remove go 1.16.3
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/178401853)
+
+* Bootstraps with github-config
+
+* Update libbuildpack
+
+
 v1.9.31 May 12, 2021
 =====================
 
