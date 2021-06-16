@@ -231,7 +231,7 @@ config:
 			})
 
 			It("sets the main package name to the value of the main go module", func() {
-				mockCommand.EXPECT().Execute(buildDir, gomock.Any(), gomock.Any(), "go", "list", "-m").Do(func(_ string, buffer, _ io.Writer, _, _, _ string) {
+				mockCommand.EXPECT().Execute(buildDir, gomock.Any(), gomock.Any(), "go", "list", "-m").Do(func(_ string, buffer, _ io.Writer, _ string, _ ...string) {
 					_, err := buffer.Write([]byte("go-package-name\n"))
 					Expect(err).To(BeNil())
 				}).Return(nil)
