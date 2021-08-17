@@ -1,5 +1,7 @@
 module github.com/cloudfoundry/go-buildpack
 
+go 1.16
+
 require (
 	github.com/Dynatrace/libbuildpack-dynatrace v1.3.0
 	github.com/Masterminds/semver v1.5.0
@@ -9,10 +11,8 @@ require (
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 	github.com/onsi/ginkgo v1.16.4
 	github.com/onsi/gomega v1.14.0
+	github.com/sclevine/spec v1.4.0
 	github.com/vendorlib v0.0.0-00010101000000-000000000000
-	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 )
 
-replace github.com/vendorlib => ./fixtures/vendored_custom_install_spec/vendor/github.com/vendorlib
-
-go 1.13
+replace github.com/vendorlib => ./fixtures/default/install_package_spec/vendored/vendor/github.com/vendorlib
