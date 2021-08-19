@@ -1,4 +1,4 @@
 ---
 env:
   GO_INSTALL_PACKAGE_SPEC: github.com/full/path/cmd/app
-  GOVERSION: go1.15
+  GOVERSION: go1.16

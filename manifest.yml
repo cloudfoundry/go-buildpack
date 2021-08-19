@@ -2,11 +2,11 @@
 language: go
 default_versions:
 - name: go
-  version: 1.15.x
+  version: 1.16.x
 dependency_deprecation_dates:
-- version_line: 1.15.x
+- version_line: 1.16.x
   name: go
-  date: 2021-08-11
+  date: 2022-02-16
   link: https://golang.org/doc/devel/release.html
 dependencies:
 - name: dep
@@ -25,22 +25,6 @@ dependencies:
   - cflinuxfs3
   source: https://github.com/Masterminds/glide/archive/v0.13.3.tar.gz
   source_sha256: 817dad2f25303d835789c889bf2fac5e141ad2442b9f75da7b164650f0de3fee
-- name: go
-  version: 1.15.14
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.15.14_linux_x64_cflinuxfs3_8b9b139d.tgz
-  sha256: 8b9b139d3bb1b79e574c1f1d971eb86bdbfedf1beac86ee82487734cf306c0fe
-  cf_stacks:
-  - cflinuxfs3
-  source: https://dl.google.com/go/go1.15.14.src.tar.gz
-  source_sha256: 60a4a5c48d63d0a13eca8849009b624629ff429c8bc5d1a6a8c3c4da9f34e70a
-- name: go
-  version: 1.15.15
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.15.15_linux_x64_cflinuxfs3_f6aef00d.tgz
-  sha256: f6aef00d6ac46a44af68dd6824e8cc8508136ef7a9504964339625185f1c896a
-  cf_stacks:
-  - cflinuxfs3
-  source: https://dl.google.com/go/go1.15.15.src.tar.gz
-  source_sha256: 0662ae3813330280d5f1a97a2ee23bbdbe3a5a7cfa6001b24a9873a19a0dc7ec
 - name: go
   version: 1.16.6
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.16.6_linux_x64_cflinuxfs3_7f9ac238.tgz
