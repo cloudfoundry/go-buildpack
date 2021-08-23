@@ -235,6 +235,10 @@ func (gs *Supplier) InstallGo() error {
 		return err
 	}
 
+	if err := gs.Stager.WriteEnvFile("GO111MODULE", "auto"); err != nil {
+		return err
+	}
+
 	return gs.Stager.WriteEnvFile("GOROOT", filepath.Join(goInstallDir))
 }
 

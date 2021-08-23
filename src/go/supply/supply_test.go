@@ -405,13 +405,17 @@ var _ = Describe("Supply", func() {
 			mockInstaller.EXPECT().InstallDependency(dep, goInstallDir).Return(nil)
 		})
 
-		It("Write GOROOT to envfile", func() {
+		It("Writes GOROOT and GO111MODULE envs", func() {
 			err = gs.InstallGo()
 			Expect(err).To(BeNil())
 
 			contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "GOROOT"))
 			Expect(err).To(BeNil())
 			Expect(string(contents)).To(Equal(filepath.Join(goInstallDir)))
+
+			contents, err = ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "GO111MODULE"))
+			Expect(err).To(BeNil())
+			Expect(string(contents)).To(Equal("auto"))
 		})
 
 		It("installs go to the depDir, creating a symlink in <depDir>/bin", func() {
