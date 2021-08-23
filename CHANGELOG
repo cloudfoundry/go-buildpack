@@ -1,3 +1,25 @@
+v1.9.35 Aug 23, 2021
+=====================
+
+* remove 1.15.X, change default version to 1.16.X
+
+* Add go 1.17
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/179286885)
+
+* Add go 1.16.7, remove go 1.16.5
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/179135857)
+
+* Auto Go Modules/Go Path mode
+  In Go 1.16, the default behavior for how Go handles modules has changed. It
+  now defaults to the Go Modules mode (as opposed to the GO Path mode). Since
+  we have apps not yet following the go modules mode, the GO111MODULE
+  environment variable is set to auto as this will switch based on the presence
+  of a go.mod file. Check out https://blog.golang.org/go116-module-changes for
+  more details.
+
+
 v1.9.34 Jul 16, 2021
 =====================
 
