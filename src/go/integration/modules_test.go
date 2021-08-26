@@ -4,84 +4,103 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/cloudfoundry/libbuildpack/cutlass"
+	"github.com/cloudfoundry/switchblade"
 	"github.com/sclevine/spec"
 
+	. "github.com/cloudfoundry/switchblade/matchers"
 	. "github.com/onsi/gomega"
 )
 
-func testModules(t *testing.T, context spec.G, it spec.S) {
-	var (
-		Expect = NewWithT(t).Expect
+func testModules(platform switchblade.Platform, fixtures string) func(*testing.T, spec.G, spec.S) {
+	return func(t *testing.T, context spec.G, it spec.S) {
+		var (
+			Expect     = NewWithT(t).Expect
+			Eventually = NewWithT(t).Eventually
 
-		app *cutlass.App
-	)
+			name string
+		)
 
-	it.Before(func() {
-		app = cutlass.New(filepath.Join(settings.FixturesPath, "mod", "simple"))
-	})
-
-	it.After(func() {
-		app = DestroyApp(t, app)
-	})
-
-	it("builds the app with modules", func() {
-		PushAppAndConfirm(t, app)
-
-		Expect(app.Stdout.String()).To(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
-		Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-	})
-
-	context("when given a custom package spec", func() {
 		it.Before(func() {
-			app = cutlass.New(filepath.Join(settings.FixturesPath, "mod", "install_package_spec", "absolute"))
+			var err error
+			name, err = switchblade.RandomName()
+			Expect(err).NotTo(HaveOccurred())
 		})
 
-		it("installs the custom package using go modules", func() {
-			PushAppAndConfirm(t, app)
-
-			Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app"))
-			Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-		})
-
-		context("when using relative paths", func() {
-			it.Before(func() {
-				app = cutlass.New(filepath.Join(settings.FixturesPath, "mod", "install_package_spec", "relative"))
-			})
-
-			it("installs the custom package using go modules and relative paths", func() {
-				PushAppAndConfirm(t, app)
-
-				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie ./cmd/app"))
-				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-			})
-		})
-	})
-
-	context("when the modules are vendored", func() {
-		it.Before(func() {
-			app = cutlass.New(filepath.Join(settings.FixturesPath, "mod", "vendored"))
+		it.After(func() {
+			Expect(platform.Delete.Execute(name)).To(Succeed())
 		})
 
 		it("builds the app with modules", func() {
-			PushAppAndConfirm(t, app)
+			deployment, logs, err := platform.Deploy.
+				WithEnv(map[string]string{
+					"GOVERSION": "go1.16",
+				}).
+				Execute(name, filepath.Join(fixtures, "mod", "simple"))
+			Expect(err).NotTo(HaveOccurred())
 
-			Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/BurntSushi/toml"))
-			Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			Expect(logs).To(ContainLines(ContainSubstring("go: downloading github.com/BurntSushi/toml")))
+			Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
 		})
 
 		context("when given a custom package spec", func() {
-			it.Before(func() {
-				app = cutlass.New(filepath.Join(settings.FixturesPath, "mod", "install_package_spec", "vendored"))
+			it("installs the custom package using go modules", func() {
+				deployment, logs, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"GO_INSTALL_PACKAGE_SPEC": "github.com/full/path/cmd/app",
+						"GOVERSION":               "go1.16",
+					}).
+					Execute(name, filepath.Join(fixtures, "mod", "install_package_spec", "absolute"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(logs).To(ContainLines(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app")))
+				Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
 			})
 
-			it("installs the custom package using vendored go modules", func() {
-				PushAppAndConfirm(t, app)
+			context("when using relative paths", func() {
+				it("installs the custom package using go modules and relative paths", func() {
+					deployment, logs, err := platform.Deploy.
+						WithEnv(map[string]string{
+							"GO_INSTALL_PACKAGE_SPEC": "./cmd/app",
+							"GOVERSION":               "go1.16",
+						}).
+						Execute(name, filepath.Join(fixtures, "mod", "install_package_spec", "relative"))
+					Expect(err).NotTo(HaveOccurred())
 
-				Expect(app.Stdout.String()).To(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app"))
-				Expect(app.Stdout.String()).NotTo(MatchRegexp("go: downloading github.com/deckarep"))
-				Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+					Expect(logs).To(ContainLines(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie ./cmd/app")))
+					Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+				})
 			})
 		})
-	})
+
+		context("when the modules are vendored", func() {
+			it("builds the app with modules", func() {
+				deployment, logs, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"GOPACKAGENAME": "go-online",
+						"GOVERSION":     "go1.16",
+					}).
+					Execute(name, filepath.Join(fixtures, "mod", "vendored"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(logs).NotTo(ContainLines(ContainSubstring("go: downloading github.com/BurntSushi/toml")))
+				Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+			})
+
+			context("when given a custom package spec", func() {
+				it("installs the custom package using vendored go modules", func() {
+					deployment, logs, err := platform.Deploy.
+						WithEnv(map[string]string{
+							"GO_INSTALL_PACKAGE_SPEC": "github.com/full/path/cmd/app",
+							"GOVERSION":               "go1.16",
+						}).
+						Execute(name, filepath.Join(fixtures, "mod", "install_package_spec", "vendored"))
+					Expect(err).NotTo(HaveOccurred())
+
+					Expect(logs).To(ContainLines(ContainSubstring("Running: go install -tags cloudfoundry -buildmode pie github.com/full/path/cmd/app")))
+					Expect(logs).NotTo(ContainLines(ContainSubstring("go: downloading github.com/deckarep")))
+					Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+				})
+			})
+		})
+	}
 }

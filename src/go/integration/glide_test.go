@@ -4,45 +4,50 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/cloudfoundry/libbuildpack/cutlass"
+	"github.com/cloudfoundry/switchblade"
 	"github.com/sclevine/spec"
 
+	. "github.com/cloudfoundry/switchblade/matchers"
 	. "github.com/onsi/gomega"
 )
 
-func testGlide(t *testing.T, context spec.G, it spec.S) {
-	var (
-		Expect = NewWithT(t).Expect
+func testGlide(platform switchblade.Platform, fixtures string) func(*testing.T, spec.G, spec.S) {
+	return func(t *testing.T, context spec.G, it spec.S) {
+		var (
+			Expect     = NewWithT(t).Expect
+			Eventually = NewWithT(t).Eventually
 
-		app *cutlass.App
-	)
+			name string
+		)
 
-	it.Before(func() {
-		app = cutlass.New(filepath.Join(settings.FixturesPath, "glide", "simple"))
-	})
-
-	it.After(func() {
-		app = DestroyApp(t, app)
-	})
-
-	it("builds app with Glide", func() {
-		PushAppAndConfirm(t, app)
-
-		Expect(app.Stdout.String()).To(ContainSubstring("Hello from foo!"))
-		Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
-	})
-
-	context("when the dependencies are vendored", func() {
 		it.Before(func() {
-			app = cutlass.New(filepath.Join(settings.FixturesPath, "glide", "vendored"))
+			var err error
+			name, err = switchblade.RandomName()
+			Expect(err).NotTo(HaveOccurred())
+		})
+
+		it.After(func() {
+			Expect(platform.Delete.Execute(name)).To(Succeed())
 		})
 
 		it("builds app with Glide", func() {
-			PushAppAndConfirm(t, app)
+			deployment, _, err := platform.Deploy.
+				Execute(name, filepath.Join(fixtures, "glide", "simple"))
+			Expect(err).NotTo(HaveOccurred())
 
-			Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
-			Expect(app.Stdout.String()).To(ContainSubstring("Hello from foo!"))
-			Expect(app.Stdout.String()).To(ContainSubstring("Note: skipping (glide install) due to non-empty vendor directory."))
+			Eventually(deployment).Should(Serve(ContainSubstring("hello, world")))
 		})
-	})
+
+		context("when the dependencies are vendored", func() {
+			it("builds app with Glide", func() {
+				deployment, logs, err := platform.Deploy.
+					Execute(name, filepath.Join(fixtures, "glide", "vendored"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(logs).To(ContainLines(ContainSubstring("Note: skipping (glide install) due to non-empty vendor directory.")))
+
+				Eventually(deployment).Should(Serve(ContainSubstring("hello, world")))
+			})
+		})
+	}
 }

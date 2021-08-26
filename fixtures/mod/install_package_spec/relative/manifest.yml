@@ -1,4 +1,0 @@
----
-env:
-  GO_INSTALL_PACKAGE_SPEC: ./cmd/app
-  GOVERSION: go1.16

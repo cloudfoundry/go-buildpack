@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cloudfoundry/libbuildpack/cutlass"
+	"github.com/cloudfoundry/switchblade"
 	"github.com/onsi/gomega/format"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
@@ -20,111 +20,86 @@ var settings struct {
 		Version string
 		Path    string
 	}
-	Dynatrace struct {
-		App *cutlass.App
-		URI string
-	}
+
+	Cached       bool
+	Serial       bool
 	FixturesPath string
 	GitHubToken  string
 	Platform     string
 }
 
 func init() {
-	flag.BoolVar(&cutlass.Cached, "cached", true, "cached buildpack")
-	flag.StringVar(&cutlass.DefaultMemory, "memory", "128M", "default memory for pushed apps")
-	flag.StringVar(&cutlass.DefaultDisk, "disk", "384M", "default disk for pushed apps")
-	flag.StringVar(&settings.Buildpack.Version, "version", "", "version to use (builds if empty)")
+	flag.BoolVar(&settings.Cached, "cached", false, "run cached buildpack tests")
+	flag.BoolVar(&settings.Serial, "serial", false, "run serial buildpack tests")
+	flag.StringVar(&settings.Platform, "platform", "cf", `switchblade platform to test against ("cf" or "docker")`)
 	flag.StringVar(&settings.GitHubToken, "github-token", "", "use the token to make GitHub API requests")
-	flag.StringVar(&settings.Platform, "platform", "cf", "platform to run against")
 }
 
 func TestIntegration(t *testing.T) {
+	var Expect = NewWithT(t).Expect
+
 	format.MaxLength = 0
+	SetDefaultEventuallyTimeout(10 * time.Second)
 
-	var (
-		Expect     = NewWithT(t).Expect
-		Eventually = NewWithT(t).Eventually
+	root, err := filepath.Abs("./../../..")
+	Expect(err).NotTo(HaveOccurred())
 
-		packagedBuildpack cutlass.VersionedBuildpackPackage
+	fixtures := filepath.Join(root, "fixtures")
+
+	platform, err := switchblade.NewPlatform(settings.Platform, settings.GitHubToken)
+	Expect(err).NotTo(HaveOccurred())
+
+	err = platform.Initialize(
+		switchblade.Buildpack{
+			Name: "go_buildpack",
+			URI:  os.Getenv("BUILDPACK_FILE"),
+		},
+		switchblade.Buildpack{
+			Name: "override_buildpack",
+			URI:  filepath.Join(fixtures, "util", "override_buildpack"),
+		},
 	)
-
-	root, err := cutlass.FindRoot()
 	Expect(err).NotTo(HaveOccurred())
 
-	settings.FixturesPath = filepath.Join(root, "fixtures")
-
-	if settings.Buildpack.Version == "" {
-		packagedBuildpack, err = cutlass.PackageUniquelyVersionedBuildpack(os.Getenv("CF_STACK"), true)
-		Expect(err).NotTo(HaveOccurred())
-
-		settings.Buildpack.Path = packagedBuildpack.File
-
-		info, err := os.Stat(settings.Buildpack.Path)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(info.Size() < 1024*1024*1024).To(BeTrue(), "Buildpack file size must be less than 1G")
-
-		settings.Buildpack.Version = packagedBuildpack.Version
-	}
-
-	err = cutlass.CreateOrUpdateBuildpack("override", filepath.Join(settings.FixturesPath, "util", "override_buildpack"), "")
+	dynatraceName, err := switchblade.RandomName()
 	Expect(err).NotTo(HaveOccurred())
 
-	Expect(cutlass.CopyCfHome()).To(Succeed())
-	cutlass.SeedRandom()
+	dynatraceDeployment, _, err := platform.Deploy.
+		WithBuildpacks("go_buildpack").
+		WithEnv(map[string]string{"BP_DEBUG": "true"}).
+		Execute(dynatraceName, filepath.Join(fixtures, "util", "dynatrace"))
+	Expect(err).NotTo(HaveOccurred())
 
-	settings.Dynatrace.App = cutlass.New(filepath.Join(settings.FixturesPath, "util", "dynatrace"))
-	settings.Dynatrace.App.SetEnv("BP_DEBUG", "true")
-	settings.Dynatrace.App.Buildpacks = []string{"go_buildpack"}
+	proxyName, err := switchblade.RandomName()
+	Expect(err).NotTo(HaveOccurred())
 
-	Expect(settings.Dynatrace.App.Push()).To(Succeed())
-	Eventually(func() ([]string, error) {
-		return settings.Dynatrace.App.InstanceStates()
-	}, 60*time.Second).Should(Equal([]string{"RUNNING"}))
-
-	settings.Dynatrace.URI, err = settings.Dynatrace.App.GetUrl("")
+	proxyDeployment, _, err := platform.Deploy.
+		WithBuildpacks("go_buildpack").
+		Execute(proxyName, filepath.Join(fixtures, "util", "proxy"))
 	Expect(err).NotTo(HaveOccurred())
 
 	suite := spec.New("integration", spec.Report(report.Terminal{}), spec.Parallel())
-	suite("Default", testDefault)
-	suite("Dep", testDep)
-	suite("Dynatrace", testDynatrace)
-	suite("Errors", testErrors)
-	suite("Glide", testGlide)
-	suite("GoToolchain", testGoToolchain)
-	suite("Godep", testGodep)
-	suite("Modules", testModules)
-	suite("MultiBuildpack", testMultiBuildpack)
-	suite("Override", testOverride)
+	suite("Default", testDefault(platform, fixtures))
+	suite("Dep", testDep(platform, fixtures))
+	suite("Dynatrace", testDynatrace(platform, fixtures, dynatraceDeployment.InternalURL))
+	suite("Errors", testErrors(platform, fixtures))
+	suite("Glide", testGlide(platform, fixtures))
+	suite("GoToolchain", testGoToolchain(platform, fixtures))
+	suite("Godep", testGodep(platform, fixtures))
+	suite("Modules", testModules(platform, fixtures))
+	suite("MultiBuildpack", testMultiBuildpack(platform, fixtures))
+	suite("Override", testOverride(platform, fixtures))
 
-	if cutlass.Cached {
-		suite("Offline", testOffline)
+	if settings.Cached {
+		suite("Offline", testOffline(platform, fixtures))
 	} else {
-		suite("Cache", testCache)
-		suite("Proxy", testProxy)
+		suite("Cache", testCache(platform, fixtures))
+		suite("Proxy", testProxy(platform, fixtures, proxyDeployment.InternalURL))
 	}
 
 	suite.Run(t)
 
-	DestroyApp(t, settings.Dynatrace.App)
-	Expect(cutlass.RemovePackagedBuildpack(packagedBuildpack)).To(Succeed())
-	Expect(cutlass.DeleteBuildpack("override")).To(Succeed())
-	Expect(cutlass.DeleteOrphanedRoutes()).To(Succeed())
-}
-
-func PushAppAndConfirm(t *testing.T, app *cutlass.App) {
-	var (
-		Expect     = NewWithT(t).Expect
-		Eventually = NewWithT(t).Eventually
-	)
-
-	Expect(app.Push()).To(Succeed())
-	Eventually(func() ([]string, error) { return app.InstanceStates() }, 20*time.Second).Should(Equal([]string{"RUNNING"}))
-	Expect(app.ConfirmBuildpack(settings.Buildpack.Version)).To(Succeed())
-}
-
-func DestroyApp(t *testing.T, app *cutlass.App) *cutlass.App {
-	var Expect = NewWithT(t).Expect
-	Expect(app.Destroy()).To(Succeed())
-
-	return nil
+	Expect(platform.Delete.Execute(proxyName)).To(Succeed())
+	Expect(platform.Delete.Execute(dynatraceName)).To(Succeed())
+	Expect(os.Remove(os.Getenv("BUILDPACK_FILE"))).To(Succeed())
 }

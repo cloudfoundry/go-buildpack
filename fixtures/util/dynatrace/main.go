@@ -24,12 +24,12 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		switch req.URL.Path {
 		case "/v1/deployment/installer/agent/unix/paas-sh/latest":
-			context := struct{ URI string }{URI: application.ApplicationURIs[0]}
+			context := struct{ URI string }{URI: req.Host}
 			t := template.Must(template.New("install.sh").ParseFiles("install.sh"))
 			err := t.Execute(w, context)
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				fmt.Fprint(w, err.Error())
 				return
 			}
 
@@ -37,10 +37,11 @@ func main() {
 			contents, err := ioutil.ReadFile(strings.TrimPrefix(req.URL.Path, "/"))
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte(err.Error()))
+				fmt.Fprint(w, err.Error())
 				return
 			}
-			w.Write(contents)
+
+			fmt.Fprintf(w, "%s", contents)
 
 		default:
 			w.WriteHeader(http.StatusNotFound)

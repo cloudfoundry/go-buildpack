@@ -3,61 +3,57 @@ package integration_test
 import (
 	"path/filepath"
 	"testing"
-	"time"
 
-	"github.com/cloudfoundry/libbuildpack/cutlass"
+	"github.com/cloudfoundry/switchblade"
 	"github.com/sclevine/spec"
 
+	. "github.com/cloudfoundry/switchblade/matchers"
 	. "github.com/onsi/gomega"
 )
 
-func testGoToolchain(t *testing.T, context spec.G, it spec.S) {
-	var (
-		Expect     = NewWithT(t).Expect
-		Eventually = NewWithT(t).Eventually
+func testGoToolchain(platform switchblade.Platform, fixtures string) func(*testing.T, spec.G, spec.S) {
+	return func(t *testing.T, context spec.G, it spec.S) {
+		var (
+			Expect     = NewWithT(t).Expect
+			Eventually = NewWithT(t).Eventually
 
-		app *cutlass.App
-	)
+			name string
+		)
 
-	it.After(func() {
-		app = DestroyApp(t, app)
-	})
-
-	context("when GO_SETUP_GOPATH_IN_IMAGE is specified", func() {
 		it.Before(func() {
-			app = cutlass.New(filepath.Join(settings.FixturesPath, "go_toolchain", "gopath"))
-			app.SetEnv("GO_SETUP_GOPATH_IN_IMAGE", "true")
+			var err error
+			name, err = switchblade.RandomName()
+			Expect(err).NotTo(HaveOccurred())
 		})
 
-		it("sets up the $HOME as the $GOPATH", func() {
-			PushAppAndConfirm(t, app)
-
-			Expect(app.GetBody("/")).To(ContainSubstring("GOPATH: /home/vcap/app"))
-		})
-	})
-
-	context("when GO_INSTALL_TOOLS_IN_IMAGE is specified", func() {
-		it.Before(func() {
-			app = cutlass.New(filepath.Join(settings.FixturesPath, "go_toolchain", "toolchain"))
-			app.SetEnv("GO_INSTALL_TOOLS_IN_IMAGE", "true")
-			app.Disk = "1G"
+		it.After(func() {
+			Expect(platform.Delete.Execute(name)).To(Succeed())
 		})
 
-		it("keeps the go toolchain in the droplet", func() {
-			PushAppAndConfirm(t, app)
+		context("when GO_SETUP_GOPATH_IN_IMAGE is specified", func() {
+			it("sets up the $HOME as the $GOPATH", func() {
+				deployment, _, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"GO_SETUP_GOPATH_IN_IMAGE": "true",
+					}).
+					Execute(name, filepath.Join(fixtures, "go_toolchain", "gopath"))
+				Expect(err).NotTo(HaveOccurred())
 
-			Expect(app.GetBody("/")).To(MatchRegexp(`go version go1\.\d+(\.\d+)? linux/amd64`))
-		})
-
-		context("when running a task", func() {
-			it("can execute the go toolchain", func() {
-				PushAppAndConfirm(t, app)
-
-				_, err := app.RunTask(`echo "RUNNING A TASK: $(go version)"`)
-				Expect(err).ToNot(HaveOccurred())
-
-				Eventually(func() string { return app.Stdout.String() }, 1*time.Minute).Should(MatchRegexp(`RUNNING A TASK: go version go1\.\d+(\.\d+)? linux/amd64`))
+				Eventually(deployment).Should(Serve(ContainSubstring("GOPATH: /home/vcap/app")))
 			})
 		})
-	})
+
+		context("when GO_INSTALL_TOOLS_IN_IMAGE is specified", func() {
+			it("keeps the go toolchain in the droplet", func() {
+				deployment, _, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"GO_INSTALL_TOOLS_IN_IMAGE": "true",
+					}).
+					Execute(name, filepath.Join(fixtures, "go_toolchain", "toolchain"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(deployment).Should(Serve(MatchRegexp(`go version go1\.\d+(\.\d+)? linux/amd64`)))
+			})
+		})
+	}
 }

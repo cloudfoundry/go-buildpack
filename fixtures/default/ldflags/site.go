@@ -21,6 +21,7 @@ func main() {
 }
 
 func hello(res http.ResponseWriter, req *http.Request) {
+	fmt.Fprintln(res, "hello world")
 	fmt.Fprintf(res, "linker_flag=%s\n", linker_flag)
 	fmt.Fprintf(res, "other_linker_flag=%s\n", other_linker_flag)
 	fmt.Fprintln(res, "done")

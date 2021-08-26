@@ -1,54 +1,78 @@
 package integration_test
 
 import (
-	"fmt"
-	"net/url"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"testing"
 
-	"github.com/cloudfoundry/libbuildpack/cutlass"
+	"github.com/cloudfoundry/switchblade"
 	"github.com/sclevine/spec"
 
+	. "github.com/cloudfoundry/switchblade/matchers"
 	. "github.com/onsi/gomega"
 )
 
-func testProxy(t *testing.T, context spec.G, it spec.S) {
-	AssertUsesProxyDuringStagingIfPresent(t, context, it, filepath.Join(settings.FixturesPath, "glide", "simple"))
-	AssertUsesProxyDuringStagingIfPresent(t, context, it, filepath.Join(settings.FixturesPath, "glide", "vendored"))
-	AssertUsesProxyDuringStagingIfPresent(t, context, it, filepath.Join(settings.FixturesPath, "godep", "vendored"))
-}
+func testProxy(platform switchblade.Platform, fixtures, uri string) func(*testing.T, spec.G, spec.S) {
+	return func(t *testing.T, context spec.G, it spec.S) {
+		var (
+			Expect     = NewWithT(t).Expect
+			Eventually = NewWithT(t).Eventually
 
-func AssertUsesProxyDuringStagingIfPresent(t *testing.T, context spec.G, it spec.S, fixture string) {
-	var Expect = NewWithT(t).Expect
+			name string
+		)
 
-	context("when an HTTP proxy is specified", func() {
-		it("uses that proxy", func() {
-			proxy, err := cutlass.NewProxy()
+		it.Before(func() {
+			var err error
+			name, err = switchblade.RandomName()
 			Expect(err).NotTo(HaveOccurred())
-			defer proxy.Close()
-
-			root, err := cutlass.FindRoot()
-			Expect(err).NotTo(HaveOccurred())
-
-			bpFile := filepath.Join(root, settings.Buildpack.Version+"tmp")
-			cmd := exec.Command("cp", settings.Buildpack.Path, bpFile)
-			Expect(cmd.Run()).To(Succeed())
-			defer os.Remove(bpFile)
-
-			traffic, _, _, err := cutlass.InternetTraffic(fixture, bpFile, []string{
-				"HTTP_PROXY=" + proxy.URL,
-				"HTTPS_PROXY=" + proxy.URL,
-			})
-			Expect(err).NotTo(HaveOccurred())
-
-			destURL, err := url.Parse(proxy.URL)
-			Expect(err).NotTo(HaveOccurred())
-
-			Expect(cutlass.UniqueDestination(
-				traffic, fmt.Sprintf("%s.%s", destURL.Hostname(), destURL.Port()),
-			)).To(Succeed())
 		})
-	})
+
+		it.After(func() {
+			Expect(platform.Delete.Execute(name)).To(Succeed())
+		})
+
+		context("when using glide", func() {
+			it("builds app with Glide", func() {
+				deployment, _, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"HTTP_PROXY":  uri,
+						"HTTPS_PROXY": uri,
+					}).
+					Execute(name, filepath.Join(fixtures, "glide", "simple"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(deployment).Should(Serve(ContainSubstring("hello, world")))
+			})
+
+			context("when the dependencies are vendored", func() {
+				it("builds app with Glide", func() {
+					deployment, logs, err := platform.Deploy.
+						WithEnv(map[string]string{
+							"HTTP_PROXY":  uri,
+							"HTTPS_PROXY": uri,
+						}).
+						Execute(name, filepath.Join(fixtures, "glide", "vendored"))
+					Expect(err).NotTo(HaveOccurred())
+
+					Expect(logs).To(ContainLines(ContainSubstring("Note: skipping (glide install) due to non-empty vendor directory.")))
+
+					Eventually(deployment).Should(Serve(ContainSubstring("hello, world")))
+				})
+
+			})
+		})
+
+		context("when using godep", func() {
+			it("builds app with Godep", func() {
+				deployment, _, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"HTTP_PROXY":  uri,
+						"HTTPS_PROXY": uri,
+					}).
+					Execute(name, filepath.Join(fixtures, "godep", "vendored"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(deployment).Should(Serve(ContainSubstring("hello, world")))
+			})
+		})
+	}
 }
