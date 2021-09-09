@@ -34,6 +34,7 @@ func init() {
 	flag.StringVar(&cutlass.DefaultDisk, "disk", "384M", "default disk for pushed apps")
 	flag.StringVar(&settings.Buildpack.Version, "version", "", "version to use (builds if empty)")
 	flag.StringVar(&settings.GitHubToken, "github-token", "", "use the token to make GitHub API requests")
+	flag.StringVar(&settings.Platform, "platform", "cf", "platform to run against")
 }
 
 func TestIntegration(t *testing.T) {
