@@ -26,6 +26,7 @@ var settings struct {
 	}
 	FixturesPath string
 	GitHubToken  string
+	Platform     string
 }
 
 func init() {
