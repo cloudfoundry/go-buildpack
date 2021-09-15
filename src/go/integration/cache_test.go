@@ -4,41 +4,55 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/cloudfoundry/libbuildpack/cutlass"
+	"github.com/cloudfoundry/switchblade"
 	"github.com/sclevine/spec"
 
+	. "github.com/cloudfoundry/switchblade/matchers"
 	. "github.com/onsi/gomega"
 )
 
-func testCache(t *testing.T, context spec.G, it spec.S) {
-	var (
-		Expect = NewWithT(t).Expect
+const (
+	Regexp         = `.*\/go(_)?[\d.]+[\._]linux[\-_](amd64)?(x64)?[\-_]cflinuxfs\d[\-_][\da-f]+\.tgz`
+	DownloadRegexp = "Download " + Regexp
+	CopyRegexp     = "Copy " + Regexp
+)
 
-		app            *cutlass.App
-		Regexp         = `.*\/go(_)?[\d.]+[\._]linux[\-_](amd64)?(x64)?[\-_]cflinuxfs\d[\-_][\da-f]+\.tgz`
-		DownloadRegexp = "Download " + Regexp
-		CopyRegexp     = "Copy " + Regexp
-	)
+func testCache(platform switchblade.Platform, fixtures string) func(*testing.T, spec.G, spec.S) {
+	return func(t *testing.T, context spec.G, it spec.S) {
+		var (
+			Expect = NewWithT(t).Expect
 
-	it.Before(func() {
-		app = cutlass.New(filepath.Join(settings.FixturesPath, "default", "single_file"))
-		app.SetEnv("BP_DEBUG", "true")
-		app.Buildpacks = []string{"go_buildpack"}
-	})
+			name string
+		)
 
-	it.After(func() {
-		app = DestroyApp(t, app)
-	})
+		it.Before(func() {
+			var err error
+			name, err = switchblade.RandomName()
+			Expect(err).NotTo(HaveOccurred())
+		})
 
-	it("uses the cache for manifest dependencies when deployed twice", func() {
-		PushAppAndConfirm(t, app)
-		Expect(app.Stdout.String()).To(MatchRegexp(DownloadRegexp))
-		Expect(app.Stdout.String()).ToNot(MatchRegexp(CopyRegexp))
+		it.After(func() {
+			Expect(platform.Delete.Execute(name)).To(Succeed())
+		})
 
-		app.Stdout.Reset()
+		it("uses the cache for manifest dependencies when deployed twice", func() {
+			deploy := platform.Deploy.
+				WithEnv(map[string]string{
+					"BP_DEBUG":      "true",
+					"GOPACKAGENAME": "go-single-file",
+				}).
+				WithBuildpacks("go_buildpack")
 
-		PushAppAndConfirm(t, app)
-		Expect(app.Stdout.String()).To(MatchRegexp(CopyRegexp))
-		Expect(app.Stdout.String()).ToNot(MatchRegexp(DownloadRegexp))
-	})
+			_, logs, err := deploy.Execute(name, filepath.Join(fixtures, "default", "single_file"))
+			Expect(err).NotTo(HaveOccurred())
+
+			Expect(logs).To(ContainLines(MatchRegexp(DownloadRegexp)))
+			Expect(logs).NotTo(ContainLines(MatchRegexp(CopyRegexp)))
+
+			_, logs, err = deploy.Execute(name, filepath.Join(fixtures, "default", "single_file"))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(logs).NotTo(ContainLines(MatchRegexp(DownloadRegexp)))
+			Expect(logs).To(ContainLines(MatchRegexp(CopyRegexp)))
+		})
+	}
 }

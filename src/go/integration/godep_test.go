@@ -4,57 +4,60 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/cloudfoundry/libbuildpack/cutlass"
+	"github.com/cloudfoundry/switchblade"
 	"github.com/sclevine/spec"
 
+	. "github.com/cloudfoundry/switchblade/matchers"
 	. "github.com/onsi/gomega"
 )
 
-func testGodep(t *testing.T, context spec.G, it spec.S) {
-	var (
-		Expect = NewWithT(t).Expect
+func testGodep(platform switchblade.Platform, fixtures string) func(*testing.T, spec.G, spec.S) {
+	return func(t *testing.T, context spec.G, it spec.S) {
+		var (
+			Expect     = NewWithT(t).Expect
+			Eventually = NewWithT(t).Eventually
 
-		app *cutlass.App
-	)
+			name string
+		)
 
-	it.Before(func() {
-		app = cutlass.New(filepath.Join(settings.FixturesPath, "godep", "vendored"))
-	})
-
-	it.After(func() {
-		app = DestroyApp(t, app)
-	})
-
-	it("builds app with Godep", func() {
-		PushAppAndConfirm(t, app)
-
-		Expect(app.Stdout.String()).To(MatchRegexp("Hello from foo!"))
-		Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
-	})
-
-	context("with a wildcard go version", func() {
 		it.Before(func() {
-			app = cutlass.New(filepath.Join(settings.FixturesPath, "godep", "wildcard_go_version"))
+			var err error
+			name, err = switchblade.RandomName()
+			Expect(err).NotTo(HaveOccurred())
 		})
 
-		it("uses the default version", func() {
-			PushAppAndConfirm(t, app)
-
-			Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-			Expect(app.Stdout.String()).To(MatchRegexp(`Installing go 1\.\d+(\.\d+)?`))
-		})
-	})
-
-	context("with a Godeps/_workspace dir", func() {
-		it.Before(func() {
-			app = cutlass.New(filepath.Join(settings.FixturesPath, "godep", "simple"))
+		it.After(func() {
+			Expect(platform.Delete.Execute(name)).To(Succeed())
 		})
 
-		it("builds the app", func() {
-			PushAppAndConfirm(t, app)
+		it("builds app with Godep", func() {
+			deployment, _, err := platform.Deploy.
+				Execute(name, filepath.Join(fixtures, "godep", "vendored"))
+			Expect(err).NotTo(HaveOccurred())
 
-			Expect(app.Stdout.String()).To(MatchRegexp("Hello from foo!"))
-			Expect(app.GetBody("/")).To(ContainSubstring("hello, world"))
+			Eventually(deployment).Should(Serve(ContainSubstring("hello, world")))
 		})
-	})
+
+		context("with a wildcard go version", func() {
+			it("uses the default version", func() {
+				deployment, logs, err := platform.Deploy.
+					Execute(name, filepath.Join(fixtures, "godep", "wildcard_go_version"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(logs).To(ContainLines(MatchRegexp(`Installing go 1\.\d+(\.\d+)?`)))
+				Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+			})
+		})
+
+		context("with a Godeps/_workspace dir", func() {
+			it("builds the app", func() {
+				deployment, logs, err := platform.Deploy.
+					Execute(name, filepath.Join(fixtures, "godep", "simple"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(logs).To(ContainLines(ContainSubstring("Running: godep go install -tags cloudfoundry -buildmode pie .")))
+				Eventually(deployment).Should(Serve(ContainSubstring("hello, world")))
+			})
+		})
+	}
 }

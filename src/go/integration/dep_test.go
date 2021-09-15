@@ -4,54 +4,67 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/cloudfoundry/libbuildpack/cutlass"
+	"github.com/cloudfoundry/switchblade"
 	"github.com/sclevine/spec"
 
+	. "github.com/cloudfoundry/switchblade/matchers"
 	. "github.com/onsi/gomega"
 )
 
-func testDep(t *testing.T, context spec.G, it spec.S) {
-	var (
-		Expect = NewWithT(t).Expect
+func testDep(platform switchblade.Platform, fixtures string) func(*testing.T, spec.G, spec.S) {
+	return func(t *testing.T, context spec.G, it spec.S) {
+		var (
+			Expect     = NewWithT(t).Expect
+			Eventually = NewWithT(t).Eventually
 
-		app *cutlass.App
-	)
+			name string
+		)
 
-	it.Before(func() {
-		app = cutlass.New(filepath.Join(settings.FixturesPath, "dep", "simple"))
-	})
-
-	it.After(func() {
-		app = DestroyApp(t, app)
-	})
-
-	it("builds app with dep", func() {
-		PushAppAndConfirm(t, app)
-
-		Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-	})
-
-	context("when there is no lockfile", func() {
 		it.Before(func() {
-			app = cutlass.New(filepath.Join(settings.FixturesPath, "dep", "no_lockfile"))
+			var err error
+			name, err = switchblade.RandomName()
+			Expect(err).NotTo(HaveOccurred())
 		})
 
-		it("successfully stages", func() {
-			PushAppAndConfirm(t, app)
-
-			Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
-		})
-	})
-
-	context("when the dependencies are vendored", func() {
-		it.Before(func() {
-			app = cutlass.New(filepath.Join(settings.FixturesPath, "dep", "vendored"))
+		it.After(func() {
+			Expect(platform.Delete.Execute(name)).To(Succeed())
 		})
 
-		it("successfully stages", func() {
-			PushAppAndConfirm(t, app)
+		it("builds app with dep", func() {
+			deployment, _, err := platform.Deploy.
+				WithEnv(map[string]string{
+					"GOPACKAGENAME": "simple",
+				}).
+				Execute(name, filepath.Join(fixtures, "dep", "simple"))
+			Expect(err).NotTo(HaveOccurred())
 
-			Expect(app.GetBody("/")).To(ContainSubstring("go, world"))
+			Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
 		})
-	})
+
+		context("when there is no lockfile", func() {
+			it("successfully stages", func() {
+				deployment, _, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"GOPACKAGENAME": "no-lockfile",
+					}).
+					Execute(name, filepath.Join(fixtures, "dep", "no_lockfile"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+			})
+		})
+
+		context("when the dependencies are vendored", func() {
+			it("successfully stages", func() {
+				deployment, _, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"GOPACKAGENAME": "vendored",
+					}).
+					Execute(name, filepath.Join(fixtures, "dep", "vendored"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+			})
+		})
+	}
 }

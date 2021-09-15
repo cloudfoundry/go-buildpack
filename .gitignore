@@ -1,10 +1,4 @@
-.idea
-go_buildpack*.zip
 .DS_Store
-log/
-!src/go/vendor
-_workspace
-pkg/
+.idea
 /.bin/
-/src/github.com/
-/src/gopkg.in/
+go_buildpack*.zip

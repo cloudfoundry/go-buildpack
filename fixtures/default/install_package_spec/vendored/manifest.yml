@@ -1,4 +1,0 @@
----
-env:
-  GOPACKAGENAME: go-online
-  GO_INSTALL_PACKAGE_SPEC: ./app
