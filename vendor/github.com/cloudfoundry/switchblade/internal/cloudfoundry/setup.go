@@ -10,7 +10,6 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strconv"
 	"strings"
 
 	"github.com/paketo-buildpacks/packit/fs"
@@ -113,7 +112,7 @@ func (s Setup) Run(log io.Writer, home, name, source string) (string, error) {
 	var domain string
 	for _, dom := range domains.Resources {
 		if !dom.Internal {
-			domain = dom.Name
+			domain = strings.TrimPrefix(dom.Name, "apps.")
 			break
 		}
 	}
@@ -273,14 +272,41 @@ func (s Setup) Run(log io.Writer, home, name, source string) (string, error) {
 		}
 	}
 
+	buffer = bytes.NewBuffer(nil)
 	err = s.cli.Execute(pexec.Execution{
-		Args:   []string{"update-security-group", "public_networks", filepath.Join(home, "empty-security-group.json")},
-		Stdout: log,
-		Stderr: log,
+		Args:   []string{"curl", "/v2/security_groups"},
+		Stdout: io.MultiWriter(log, buffer),
+		Stderr: io.MultiWriter(log, buffer),
 		Env:    env,
 	})
 	if err != nil {
-		return "", fmt.Errorf("failed to update-security-group: %w\n\nOutput:\n%s", err, log)
+		return "", fmt.Errorf("failed to curl /v2/security_groups: %w\n\nOutput:\n%s", err, log)
+	}
+
+	var securityGroups struct {
+		Resources []struct {
+			Entity struct {
+				Name string `json:"name"`
+			} `json:"entity"`
+		} `json:"resources"`
+	}
+	err = json.NewDecoder(buffer).Decode(&securityGroups)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse security groups: %w", err)
+	}
+
+	for _, securityGroup := range securityGroups.Resources {
+		if !strings.HasPrefix(securityGroup.Entity.Name, "switchblade") {
+			err = s.cli.Execute(pexec.Execution{
+				Args:   []string{"update-security-group", securityGroup.Entity.Name, filepath.Join(home, "empty-security-group.json")},
+				Stdout: log,
+				Stderr: log,
+				Env:    env,
+			})
+			if err != nil {
+				return "", fmt.Errorf("failed to update-security-group: %w\n\nOutput:\n%s", err, log)
+			}
+		}
 	}
 
 	args := []string{"push", name, "-p", source, "--no-start"}
@@ -299,13 +325,23 @@ func (s Setup) Run(log io.Writer, home, name, source string) (string, error) {
 	}
 
 	err = s.cli.Execute(pexec.Execution{
-		Args:   []string{"create-route", name, fmt.Sprintf("tcp.%s", domain), "--random-port"},
+		Args:   []string{"update-quota", "default", "--reserved-route-ports", "100"},
 		Stdout: log,
 		Stderr: log,
 		Env:    env,
 	})
 	if err != nil {
-		return "", fmt.Errorf("failed to create-route: %w\n\nOutput:\n%s", err, log)
+		return "", fmt.Errorf("failed to update-quota: %w\n\nOutput:\n%s", err, log)
+	}
+
+	err = s.cli.Execute(pexec.Execution{
+		Args:   []string{"map-route", name, fmt.Sprintf("tcp.%s", domain), "--random-port"},
+		Stdout: log,
+		Stderr: log,
+		Env:    env,
+	})
+	if err != nil {
+		return "", fmt.Errorf("failed to map-route: %w\n\nOutput:\n%s", err, log)
 	}
 
 	buffer = bytes.NewBuffer(nil)
@@ -366,16 +402,6 @@ func (s Setup) Run(log io.Writer, home, name, source string) (string, error) {
 			port = route.Port
 			break
 		}
-	}
-
-	err = s.cli.Execute(pexec.Execution{
-		Args:   []string{"map-route", name, fmt.Sprintf("tcp.%s", domain), "--port", strconv.Itoa(port)},
-		Stdout: log,
-		Stderr: log,
-		Env:    env,
-	})
-	if err != nil {
-		return "", fmt.Errorf("failed to map-route: %w\n\nOutput:\n%s", err, log)
 	}
 
 	var envKeys []string

@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 )
 
@@ -24,15 +23,6 @@ func NewZipArchive(inputReader io.Reader) ZipArchive {
 // Decompress reads from ZipArchive and writes files into the destination
 // specified.
 func (z ZipArchive) Decompress(destination string) error {
-	// Struct and slice to collect symlinks and create them after all files have
-	// been created
-	type header struct {
-		name     string
-		linkname string
-		path     string
-	}
-
-	var symlinkHeaders []header
 
 	// Use an os.File to buffer the zip contents. This is needed because
 	// zip.NewReader requires an io.ReaderAt so that it can jump around within
@@ -53,6 +43,7 @@ func (z ZipArchive) Decompress(destination string) error {
 		return fmt.Errorf("failed to create zip reader: %w", err)
 	}
 
+	var symlinks []symlink
 	for _, f := range zr.File {
 		// Clean the name in the header to prevent './filename' being stripped to
 		// 'filename' also to skip if the destination it the destination directory
@@ -96,10 +87,9 @@ func (z ZipArchive) Decompress(destination string) error {
 
 			// Collect all of the headers for symlinks so that they can be verified
 			// after all other files are written
-			symlinkHeaders = append(symlinkHeaders, header{
-				name:     f.Name,
-				linkname: string(linkname),
-				path:     path,
+			symlinks = append(symlinks, symlink{
+				name: string(linkname),
+				path: path,
 			})
 
 		default:
@@ -133,42 +123,21 @@ func (z ZipArchive) Decompress(destination string) error {
 		}
 	}
 
-	// Sort the symlinks so that symlinks of symlinks have their base link
-	// created before they are created.
-	//
-	// For example:
-	// b-sym -> a-sym/x
-	// a-sym -> z
-	// c-sym -> d-sym
-	// d-sym -> z
-	//
-	// Will sort to:
-	// a-sym -> z
-	// b-sym -> a-sym/x
-	// d-sym -> z
-	// c-sym -> d-sym
-	sort.Slice(symlinkHeaders, func(i, j int) bool {
-		if filepath.Clean(symlinkHeaders[i].name) == linknameFullPath(symlinkHeaders[j].name, symlinkHeaders[j].linkname) {
-			return true
-		}
+	symlinks, err = sortSymlinks(symlinks)
+	if err != nil {
+		return err
+	}
 
-		if filepath.Clean(symlinkHeaders[j].name) == linknameFullPath(symlinkHeaders[i].name, symlinkHeaders[i].linkname) {
-			return false
-		}
-
-		return filepath.Clean(symlinkHeaders[i].name) < linknameFullPath(symlinkHeaders[j].name, symlinkHeaders[j].linkname)
-	})
-
-	for _, h := range symlinkHeaders {
+	for _, link := range symlinks {
 		// Check to see if the file that will be linked to is valid for symlinking
-		_, err := filepath.EvalSymlinks(linknameFullPath(h.path, h.linkname))
+		_, err := filepath.EvalSymlinks(linknameFullPath(link.path, link.name))
 		if err != nil {
-			return fmt.Errorf("failed to evaluate symlink %s: %w", h.path, err)
+			return fmt.Errorf("failed to evaluate symlink %s: %w", link.path, err)
 		}
 
-		err = os.Symlink(h.linkname, h.path)
+		err = os.Symlink(link.name, link.path)
 		if err != nil {
-			return fmt.Errorf("failed to unzip symlink: %w", err)
+			return fmt.Errorf("failed to unzip symlink: %s", err)
 		}
 	}
 

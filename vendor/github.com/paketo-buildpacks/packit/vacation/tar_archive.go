@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 )
 
@@ -31,15 +30,7 @@ func (ta TarArchive) Decompress(destination string) error {
 	// metadata.
 	directories := map[string]interface{}{}
 
-	// Struct and slice to collect symlinks and create them after all files have
-	// been created
-	type header struct {
-		name     string
-		linkname string
-		path     string
-	}
-
-	var symlinkHeaders []header
+	var symlinks []symlink
 
 	tarReader := tar.NewReader(ta.reader)
 	for {
@@ -118,48 +109,26 @@ func (ta TarArchive) Decompress(destination string) error {
 		case tar.TypeSymlink:
 			// Collect all of the headers for symlinks so that they can be verified
 			// after all other files are written
-			symlinkHeaders = append(symlinkHeaders, header{
-				name:     hdr.Name,
-				linkname: hdr.Linkname,
-				path:     path,
+			symlinks = append(symlinks, symlink{
+				name: hdr.Linkname,
+				path: path,
 			})
 		}
 	}
 
-	// Sort the symlinks so that symlinks of symlinks have their base link
-	// created before they are created.
-	//
-	// For example:
-	// b-sym -> a-sym/x
-	// a-sym -> z
-	// c-sym -> d-sym
-	// d-sym -> z
-	//
-	// Will sort to:
-	// a-sym -> z
-	// b-sym -> a-sym/x
-	// d-sym -> z
-	// c-sym -> d-sym
-	sort.Slice(symlinkHeaders, func(i, j int) bool {
-		if filepath.Clean(symlinkHeaders[i].name) == linknameFullPath(symlinkHeaders[j].name, symlinkHeaders[j].linkname) {
-			return true
-		}
+	symlinks, err := sortSymlinks(symlinks)
+	if err != nil {
+		return err
+	}
 
-		if filepath.Clean(symlinkHeaders[j].name) == linknameFullPath(symlinkHeaders[i].name, symlinkHeaders[i].linkname) {
-			return false
-		}
-
-		return filepath.Clean(symlinkHeaders[i].name) < linknameFullPath(symlinkHeaders[j].name, symlinkHeaders[j].linkname)
-	})
-
-	for _, h := range symlinkHeaders {
+	for _, link := range symlinks {
 		// Check to see if the file that will be linked to is valid for symlinking
-		_, err := filepath.EvalSymlinks(linknameFullPath(h.path, h.linkname))
+		_, err := filepath.EvalSymlinks(linknameFullPath(link.path, link.name))
 		if err != nil {
-			return fmt.Errorf("failed to evaluate symlink %s: %w", h.path, err)
+			return fmt.Errorf("failed to evaluate symlink %s: %w", link.path, err)
 		}
 
-		err = os.Symlink(h.linkname, h.path)
+		err = os.Symlink(link.name, link.path)
 		if err != nil {
 			return fmt.Errorf("failed to extract symlink: %s", err)
 		}

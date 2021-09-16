@@ -6,7 +6,8 @@ github.com/Dynatrace/libbuildpack-dynatrace
 # github.com/Masterminds/semver v1.5.0
 ## explicit
 github.com/Masterminds/semver
-# github.com/Microsoft/go-winio v0.4.14
+# github.com/Microsoft/go-winio v0.5.0
+## explicit
 github.com/Microsoft/go-winio
 github.com/Microsoft/go-winio/pkg/guid
 # github.com/ZiCog/shiny-thing v0.0.0-20121130081921-e9e19444ccf5
@@ -23,13 +24,14 @@ github.com/cloudfoundry/libbuildpack/cutlass
 github.com/cloudfoundry/libbuildpack/cutlass/docker
 github.com/cloudfoundry/libbuildpack/cutlass/glow
 github.com/cloudfoundry/libbuildpack/packager
-# github.com/cloudfoundry/switchblade v0.0.1
+# github.com/cloudfoundry/switchblade v0.0.2
 ## explicit
 github.com/cloudfoundry/switchblade
 github.com/cloudfoundry/switchblade/internal/cloudfoundry
 github.com/cloudfoundry/switchblade/internal/docker
 github.com/cloudfoundry/switchblade/matchers
-# github.com/containerd/containerd v1.3.0
+# github.com/containerd/containerd v1.5.5
+## explicit
 github.com/containerd/containerd/errdefs
 github.com/containerd/containerd/log
 github.com/containerd/containerd/platforms
@@ -83,8 +85,6 @@ github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
-# github.com/konsorten/go-windows-terminal-sequences v1.0.3
-github.com/konsorten/go-windows-terminal-sequences
 # github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 ## explicit
 github.com/kr/go-heroku-example/message
@@ -134,7 +134,8 @@ github.com/opencontainers/go-digest
 # github.com/opencontainers/image-spec v1.0.1
 github.com/opencontainers/image-spec/specs-go
 github.com/opencontainers/image-spec/specs-go/v1
-# github.com/paketo-buildpacks/packit v0.14.3
+# github.com/paketo-buildpacks/packit v1.0.1
+## explicit
 github.com/paketo-buildpacks/packit/fs
 github.com/paketo-buildpacks/packit/pexec
 github.com/paketo-buildpacks/packit/vacation
@@ -144,7 +145,7 @@ github.com/pkg/errors
 ## explicit
 github.com/sclevine/spec
 github.com/sclevine/spec/report
-# github.com/sirupsen/logrus v1.6.0
+# github.com/sirupsen/logrus v1.8.1
 github.com/sirupsen/logrus
 # github.com/tidwall/gjson v1.7.5
 github.com/tidwall/gjson
@@ -160,13 +161,15 @@ github.com/ulikunitz/xz/lzma
 # github.com/vendorlib v0.0.0-00010101000000-000000000000 => ./fixtures/default/install_package_spec/vendored/vendor/github.com/vendorlib
 ## explicit
 github.com/vendorlib
-# golang.org/x/net v0.0.0-20210505024714-0287a6fb4125
+# golang.org/x/net v0.0.0-20210916014120-12bc252f5db8
+## explicit
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sys v0.0.0-20210616094352-59db8d763f22
+# golang.org/x/sys v0.0.0-20210915083310-ed5796bab164
+## explicit
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
@@ -188,13 +191,14 @@ golang.org/x/text/internal/utf8internal
 golang.org/x/text/language
 golang.org/x/text/runes
 golang.org/x/text/transform
-# google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c
+# google.golang.org/genproto v0.0.0-20210916144049-3192f974c780
+## explicit
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.38.0
+# google.golang.org/grpc v1.40.0
 google.golang.org/grpc/codes
 google.golang.org/grpc/internal/status
 google.golang.org/grpc/status
-# google.golang.org/protobuf v1.26.0
+# google.golang.org/protobuf v1.27.1
 google.golang.org/protobuf/encoding/prototext
 google.golang.org/protobuf/encoding/protowire
 google.golang.org/protobuf/internal/descfmt
