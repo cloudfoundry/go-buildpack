@@ -24,7 +24,7 @@ github.com/cloudfoundry/libbuildpack/cutlass
 github.com/cloudfoundry/libbuildpack/cutlass/docker
 github.com/cloudfoundry/libbuildpack/cutlass/glow
 github.com/cloudfoundry/libbuildpack/packager
-# github.com/cloudfoundry/switchblade v0.0.2
+# github.com/cloudfoundry/switchblade v0.0.3
 ## explicit
 github.com/cloudfoundry/switchblade
 github.com/cloudfoundry/switchblade/internal/cloudfoundry
@@ -94,8 +94,6 @@ github.com/nxadm/tail/ratelimiter
 github.com/nxadm/tail/util
 github.com/nxadm/tail/watch
 github.com/nxadm/tail/winfile
-# github.com/oklog/ulid v1.3.1
-github.com/oklog/ulid
 # github.com/onsi/ginkgo v1.16.4
 ## explicit
 github.com/onsi/ginkgo
@@ -147,6 +145,8 @@ github.com/sclevine/spec
 github.com/sclevine/spec/report
 # github.com/sirupsen/logrus v1.8.1
 github.com/sirupsen/logrus
+# github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125
+github.com/teris-io/shortid
 # github.com/tidwall/gjson v1.7.5
 github.com/tidwall/gjson
 # github.com/tidwall/match v1.0.3

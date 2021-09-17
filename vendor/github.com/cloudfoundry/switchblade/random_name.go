@@ -1,23 +1,17 @@
 package switchblade
 
 import (
-	"crypto/rand"
 	"fmt"
 	"strings"
-	"time"
 
-	"github.com/oklog/ulid"
+	"github.com/teris-io/shortid"
 )
 
 func RandomName() (string, error) {
-	now := time.Now()
-	timestamp := ulid.Timestamp(now)
-	entropy := ulid.Monotonic(rand.Reader, 0)
-
-	guid, err := ulid.New(timestamp, entropy)
+	id, err := shortid.Generate()
 	if err != nil {
 		return "", err
 	}
 
-	return strings.ToLower(fmt.Sprintf("switchblade-%s", guid)), nil
+	return strings.ToLower(fmt.Sprintf("switchblade-%s", id)), nil
 }
