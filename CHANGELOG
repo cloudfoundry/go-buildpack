@@ -1,3 +1,17 @@
+v1.9.36 Sep 29, 2021
+=====================
+
+* Add go 1.16.8, remove go 1.16.6
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/179528921)
+
+* Add go 1.17.1
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/179528920)
+
+* Bump libbuildpack-dynatrace to v1.4.1
+
+
 v1.9.35 Aug 23, 2021
 =====================
 
