@@ -138,8 +138,8 @@ github.com/cilium/ebpf v0.4.0/go.mod h1:4tRaxcgiL706VnOzHOdBlY8IEAIdxINsQBcU4xJJ
 github.com/cilium/ebpf v0.6.2/go.mod h1:4tRaxcgiL706VnOzHOdBlY8IEAIdxINsQBcU4xJJXRs=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cloudfoundry/libbuildpack v0.0.0-20181224210246-78d931650f60/go.mod h1:KeoPc96Iq+nQVhfgjoVN3tNHT0P2NjGCYzCezJi5OW4=
-github.com/cloudfoundry/libbuildpack v0.0.0-20210726164432-80929621d448 h1:auWk6l6v4EHJUEMYnO1sdcpU0IpdQTtbMrJUVeLfBc4=
-github.com/cloudfoundry/libbuildpack v0.0.0-20210726164432-80929621d448/go.mod h1:wKLvkl7/DtlHpl1nLl8ePzOIKFtR+Qm3fnpHug5MYgo=
+github.com/cloudfoundry/libbuildpack v0.0.0-20211012151659-ed6fb71f47bf h1:KL/s0HRYYRmTvFl9aAXhGA/AyRlG4S9txQNsNDeMOPs=
+github.com/cloudfoundry/libbuildpack v0.0.0-20211012151659-ed6fb71f47bf/go.mod h1:SjbBYrd7B+LDwapO4O4ysKGilmOye6JqWb6KbmEYnlY=
 github.com/cloudfoundry/switchblade v0.0.3 h1:0GgimwTVlK3r5lQX0+5/wQ4ZEbSt02x0gBVc6bQxlKs=
 github.com/cloudfoundry/switchblade v0.0.3/go.mod h1:+O6YMcy7x30CytjOM1By6VFuQMbARG0vVlJkCWjGazI=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
