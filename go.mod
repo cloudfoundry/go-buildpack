@@ -7,7 +7,7 @@ require (
 	github.com/Masterminds/semver v1.5.0
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/ZiCog/shiny-thing v0.0.0-20121130081921-e9e19444ccf5
-	github.com/cloudfoundry/libbuildpack v0.0.0-20211012162643-50422fd4ebac
+	github.com/cloudfoundry/libbuildpack v0.0.0-20211130212435-04f27cac65ac
 	github.com/cloudfoundry/switchblade v0.0.3
 	github.com/containerd/containerd v1.5.5 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect

@@ -15,7 +15,7 @@ github.com/Microsoft/go-winio/pkg/guid
 github.com/ZiCog/shiny-thing/foo
 # github.com/blang/semver v3.5.1+incompatible
 github.com/blang/semver
-# github.com/cloudfoundry/libbuildpack v0.0.0-20211012162643-50422fd4ebac
+# github.com/cloudfoundry/libbuildpack v0.0.0-20211130212435-04f27cac65ac
 ## explicit
 github.com/cloudfoundry/libbuildpack
 github.com/cloudfoundry/libbuildpack/ansicleaner
@@ -148,11 +148,11 @@ github.com/sclevine/spec/report
 github.com/sirupsen/logrus
 # github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125
 github.com/teris-io/shortid
-# github.com/tidwall/gjson v1.7.5
+# github.com/tidwall/gjson v1.12.0
 github.com/tidwall/gjson
-# github.com/tidwall/match v1.0.3
+# github.com/tidwall/match v1.1.1
 github.com/tidwall/match
-# github.com/tidwall/pretty v1.1.0
+# github.com/tidwall/pretty v1.2.0
 github.com/tidwall/pretty
 # github.com/ulikunitz/xz v0.5.10
 github.com/ulikunitz/xz
