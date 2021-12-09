@@ -59,10 +59,6 @@ Join the #buildpacks channel in our [Slack community](http://slack.cloudfoundry.
 
 Please fill out the issue template fully if you'd like to start an issue for the buildpack.
 
-### Active Development
-
-The project backlog is on [Pivotal Tracker](https://www.pivotaltracker.com/projects/1042066)
-
 ### Acknowledgements
 
 Inspired by the [Heroku buildpack](https://github.com/heroku/heroku-buildpack-go).
