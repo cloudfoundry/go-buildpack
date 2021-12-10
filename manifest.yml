@@ -26,13 +26,13 @@ dependencies:
   source: https://github.com/Masterminds/glide/archive/v0.13.3.tar.gz
   source_sha256: 817dad2f25303d835789c889bf2fac5e141ad2442b9f75da7b164650f0de3fee
 - name: go
-  version: 1.16.9
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.16.9_linux_x64_cflinuxfs3_30f3df4e.tgz
-  sha256: 30f3df4ecebcf470fc33cdf236ecae17d8aef7ccc87e416a0e1b620330d4f0cd
+  version: 1.16.11
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.16.11_linux_x64_cflinuxfs3_f3b33ebb.tgz
+  sha256: f3b33ebba56664f68fb16cbd157fe94b907a93c10214fa5e6f820739ac10a710
   cf_stacks:
   - cflinuxfs3
-  source: https://dl.google.com/go/go1.16.9.src.tar.gz
-  source_sha256: 0a1cc7fd7bd20448f71ebed64d846138850d5099b18cf5cc10a4fc45160d8c3d
+  source: https://dl.google.com/go/go1.16.11.src.tar.gz
+  source_sha256: 58041edcd81463b4cf1bc28b86dc0c17f4d9568d63c5afc85367dd8fae7befe7
 - name: go
   version: 1.16.12
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.16.12_linux_x64_cflinuxfs3_974ad63a.tgz
@@ -42,13 +42,13 @@ dependencies:
   source: https://dl.google.com/go/go1.16.12.src.tar.gz
   source_sha256: 2afd839dcb76d2bb082c502c01a0a5cdbfc09fd630757835363c4fde8e2fbfe8
 - name: go
-  version: 1.17.2
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.17.2_linux_x64_cflinuxfs3_f25fef22.tgz
-  sha256: f25fef22da5f07a57c5cb0ce1a91dac6d8b656a4e3e6405b36ada796a40e9a27
+  version: 1.17.4
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.17.4_linux_x64_cflinuxfs3_c2697590.tgz
+  sha256: c2697590b36035928809674a54a90806fe08876674ba845f3de5bcb58013446e
   cf_stacks:
   - cflinuxfs3
-  source: https://dl.google.com/go/go1.17.2.src.tar.gz
-  source_sha256: 2255eb3e4e824dd7d5fcdc2e7f84534371c186312e546fb1086a34c17752f431
+  source: https://dl.google.com/go/go1.17.4.src.tar.gz
+  source_sha256: 4bef3699381ef09e075628504187416565d710660fec65b057edf1ceb187fc4b
 - name: go
   version: 1.17.5
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.17.5_linux_x64_cflinuxfs3_e005a133.tgz
