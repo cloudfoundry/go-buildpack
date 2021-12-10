@@ -1,3 +1,37 @@
+v1.9.38 Dec 10, 2021
+=====================
+
+* Bump nltk from 3.2.2 to 3.6.5 in /fixtures/multibuildpack/nltk
+  Bumps [nltk](https://github.com/nltk/nltk) from 3.2.2 to 3.6.5.
+  - [Release notes](https://github.com/nltk/nltk/releases)
+  - [Changelog](https://github.com/nltk/nltk/blob/develop/ChangeLog)
+  - [Commits](https://github.com/nltk/nltk/compare/3.2.2...3.6.5)
+
+  ---
+  updated-dependencies:
+  - dependency-name: nltk
+    dependency-type: direct:production
+  ...
+
+* bumped libbuildpack-dynatrace to v1.4.2 to make use of the bugfix for the networkzones parameter (#228)
+
+* Add go 1.16.12, remove go 1.16.9
+  for stack(s) cflinuxfs3
+
+* Add go 1.16.11, remove go 1.16.8
+  for stack(s) cflinuxfs3
+
+* Add go 1.17.5, remove go 1.17.2
+  for stack(s) cflinuxfs3
+
+* Add go 1.17.4, remove go 1.17.1
+  for stack(s) cflinuxfs3
+
+* Update libbuildpack
+
+* Removes Tracker reference in README
+
+
 v1.9.37 Oct 18, 2021
 =====================
 
