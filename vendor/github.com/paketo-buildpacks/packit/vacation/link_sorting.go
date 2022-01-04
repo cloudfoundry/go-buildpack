@@ -6,12 +6,12 @@ import (
 	"strings"
 )
 
-type symlink struct {
+type link struct {
 	name string
 	path string
 }
 
-func sortSymlinks(symlinks []symlink) ([]symlink, error) {
+func sortLinks(symlinks []link) ([]link, error) {
 	// Create a map of all of the symlink names and where they are pointing to to
 	// act as a quasi-graph
 	index := map[string]string{}
@@ -40,7 +40,7 @@ func sortSymlinks(symlinks []symlink) ([]symlink, error) {
 	// Iterate over the symlink map for every link that is found this ensures
 	// that all symlinks that can be created will be created and any that are
 	// left over are cyclically dependent
-	var links []symlink
+	var links []link
 	maxIterations := len(index)
 	for i := 0; i < maxIterations; i++ {
 		for path, name := range index {
@@ -50,7 +50,7 @@ func sortSymlinks(symlinks []symlink) ([]symlink, error) {
 				continue
 			}
 
-			links = append(links, symlink{
+			links = append(links, link{
 				name: name,
 				path: path,
 			})
@@ -65,7 +65,7 @@ func sortSymlinks(symlinks []symlink) ([]symlink, error) {
 	// Check to see if there are any symlinks left in the map which would
 	// indicate a cyclical dependency
 	if len(index) > 0 {
-		return nil, fmt.Errorf("failed: max iterations reached: this symlink graph contains a cycle")
+		return nil, fmt.Errorf("failed: max iterations reached: this link graph contains a cycle")
 	}
 
 	return links, nil

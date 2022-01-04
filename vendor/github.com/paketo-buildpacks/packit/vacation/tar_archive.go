@@ -30,7 +30,8 @@ func (ta TarArchive) Decompress(destination string) error {
 	// metadata.
 	directories := map[string]interface{}{}
 
-	var symlinks []symlink
+	var symlinks []link
+	var links []link
 
 	tarReader := tar.NewReader(ta.reader)
 	for {
@@ -106,17 +107,25 @@ func (ta TarArchive) Decompress(destination string) error {
 				return err
 			}
 
+		case tar.TypeLink:
+			// Collect all of the headers for links so that they can be verified
+			// after all other files are written
+			links = append(links, link{
+				name: hdr.Linkname,
+				path: path,
+			})
+
 		case tar.TypeSymlink:
 			// Collect all of the headers for symlinks so that they can be verified
 			// after all other files are written
-			symlinks = append(symlinks, symlink{
+			symlinks = append(symlinks, link{
 				name: hdr.Linkname,
 				path: path,
 			})
 		}
 	}
 
-	symlinks, err := sortSymlinks(symlinks)
+	symlinks, err := sortLinks(symlinks)
 	if err != nil {
 		return err
 	}
@@ -131,6 +140,18 @@ func (ta TarArchive) Decompress(destination string) error {
 		err = os.Symlink(link.name, link.path)
 		if err != nil {
 			return fmt.Errorf("failed to extract symlink: %s", err)
+		}
+	}
+
+	links, err = sortLinks(links)
+	if err != nil {
+		return err
+	}
+
+	for _, link := range links {
+		err := os.Link(filepath.Join(destination, link.name), link.path)
+		if err != nil {
+			return fmt.Errorf("failed to extract link: %s", err)
 		}
 	}
 

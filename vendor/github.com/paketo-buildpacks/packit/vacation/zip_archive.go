@@ -43,7 +43,7 @@ func (z ZipArchive) Decompress(destination string) error {
 		return fmt.Errorf("failed to create zip reader: %w", err)
 	}
 
-	var symlinks []symlink
+	var symlinks []link
 	for _, f := range zr.File {
 		// Clean the name in the header to prevent './filename' being stripped to
 		// 'filename' also to skip if the destination it the destination directory
@@ -87,7 +87,7 @@ func (z ZipArchive) Decompress(destination string) error {
 
 			// Collect all of the headers for symlinks so that they can be verified
 			// after all other files are written
-			symlinks = append(symlinks, symlink{
+			symlinks = append(symlinks, link{
 				name: string(linkname),
 				path: path,
 			})
@@ -123,7 +123,7 @@ func (z ZipArchive) Decompress(destination string) error {
 		}
 	}
 
-	symlinks, err = sortSymlinks(symlinks)
+	symlinks, err = sortLinks(symlinks)
 	if err != nil {
 		return err
 	}
