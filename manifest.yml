@@ -26,14 +26,6 @@ dependencies:
   source: https://github.com/Masterminds/glide/archive/v0.13.3.tar.gz
   source_sha256: 817dad2f25303d835789c889bf2fac5e141ad2442b9f75da7b164650f0de3fee
 - name: go
-  version: 1.16.13
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.16.13_linux_x64_cflinuxfs3_dff0db00.tgz
-  sha256: dff0db005ca27f4a67b375f1f43557e4d595baf187775659d228c50d5d54838b
-  cf_stacks:
-  - cflinuxfs3
-  source: https://dl.google.com/go/go1.16.13.src.tar.gz
-  source_sha256: b0926654eaeb01ef43816638f42d7b1681f2d3f41b9559f07735522b7afad41a
-- name: go
   version: 1.16.14
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.16.14_linux_x64_cflinuxfs3_8f0f8df5.tgz
   sha256: 8f0f8df599a564a90324dd912dc48a8eb5605383a7affd5bbefdd14e5dff08ff
@@ -41,6 +33,14 @@ dependencies:
   - cflinuxfs3
   source: https://dl.google.com/go/go1.16.14.src.tar.gz
   source_sha256: 467898cd3a216de54dcb9014f541efe77e9b79a7154dbc1fd2dd778b0c63fb56
+- name: go
+  version: 1.16.15
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.16.15_linux_x64_cflinuxfs3_dc90d19f.tgz
+  sha256: dc90d19f0fd8ed7bc7c8de33be4051793d9bade3eae4fadfa4fac7bb8eaac05e
+  cf_stacks:
+  - cflinuxfs3
+  source: https://dl.google.com/go/go1.16.15.src.tar.gz
+  source_sha256: 90a08c689279e35f3865ba510998c33a63255c36089b3ec206c912fc0568c3d3
 - name: go
   version: 1.17.7
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.17.7_linux_x64_cflinuxfs3_e8cf2ae0.tgz
