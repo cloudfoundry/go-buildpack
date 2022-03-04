@@ -3,10 +3,11 @@ package hooks
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cloudfoundry/libbuildpack"
 	"io"
 	"os"
 	"sort"
+
+	"github.com/cloudfoundry/libbuildpack"
 )
 
 type Command interface {
@@ -71,10 +72,6 @@ func (h AppdynamicsHook) BeforeCompile(stager *libbuildpack.Stager) error {
 		return nil
 	}
 
-	h.Log.Warning("[DEPRECATION WARNING]:")
-	h.Log.Warning("Please use AppDynamics extension buildpack for Golang Application instrumentation")
-	h.Log.Warning("for more details: https://docs.pivotal.io/partners/appdynamics/multibuildpack.html")
-
 	vcapServices := os.Getenv("VCAP_SERVICES")
 	services := make(map[string][]Plan)
 
@@ -85,6 +82,10 @@ func (h AppdynamicsHook) BeforeCompile(stager *libbuildpack.Stager) error {
 	}
 
 	if val, ok := services["appdynamics"]; ok { // carry the procedure only when Appdynamics service is bound.
+		h.Log.Warning("[DEPRECATION WARNING]:")
+		h.Log.Warning("Please use AppDynamics extension buildpack for Golang Application instrumentation")
+		h.Log.Warning("for more details: https://docs.pivotal.io/partners/appdynamics/multibuildpack.html")
+
 		h.Log.BeginStep("Setting up Appdynamics")
 
 		appdynamicsPlan := val[0].Credentials
