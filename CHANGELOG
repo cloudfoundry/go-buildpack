@@ -1,3 +1,17 @@
+v1.9.41 Mar 07, 2022
+=====================
+
+* Show AppDynamics deprecation warning only when AppDynamics is bound (#242)
+
+* Add go 1.16.15, remove go 1.16.13
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/181452828)
+
+* Add go 1.17.8, remove go 1.17.6
+  for stack(s) cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/181452524)
+
+
 v1.9.40 Feb 17, 2022
 =====================
 
