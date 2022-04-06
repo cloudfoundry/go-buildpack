@@ -128,7 +128,7 @@ func testOffline(platform switchblade.Platform, fixtures string) func(*testing.T
 				deployment, logs, err := platform.Deploy.
 					WithEnv(map[string]string{
 						"GO_INSTALL_PACKAGE_SPEC": "github.com/full/path/cmd/app",
-						"GOVERSION":               "go1.16",
+						"GOVERSION":               "go1.17",
 					}).
 					WithoutInternetAccess().
 					Execute(name, filepath.Join(fixtures, "mod", "install_package_spec", "vendored"))
