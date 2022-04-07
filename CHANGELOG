@@ -1,3 +1,11 @@
+v1.9.42 Apr 07, 2022
+=====================
+
+* Remove Go 1.16 (EOL). Update fixtures (#246)
+
+* Add go 1.18 for stack(s) cflinuxfs3
+
+
 v1.9.41 Mar 07, 2022
 =====================
 
