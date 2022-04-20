@@ -208,7 +208,6 @@ func (gs *Supplier) SelectGoVersion() error {
 	}
 
 	gs.GoVersion = parsed
-
 	if gs.VendorTool == "gomod" {
 		goVersion, err := semver.NewVersion(gs.GoVersion)
 		if err != nil {
