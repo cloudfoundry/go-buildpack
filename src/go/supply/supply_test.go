@@ -213,7 +213,10 @@ var _ = Describe("Supply", func() {
 				localSupplier := *gs
 				mockStager := NewMockStager(mockCtrl)
 				localSupplier.Stager = mockStager
+
+				mockStager.EXPECT().BuildDir().Return(gs.Stager.BuildDir()).AnyTimes()
 				Expect(localSupplier.SelectVendorTool()).To(Succeed())
+				Expect(localSupplier.InstallVendorTools()).To(Succeed())
 				Expect(localSupplier.SelectGoVersion()).To(Succeed())
 				Expect(localSupplier.GoVersion).To(Equal("1.18"))
 			})
