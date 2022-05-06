@@ -101,7 +101,9 @@ func (gs *Supplier) SelectVendorTool() error {
 	}
 	if isGoMod {
 		gs.Log.BeginStep("Checking go.mod file")
-		gs.GoMod.Load(filepath.Join(gs.Stager.BuildDir(), "go.mod"))
+		if err := gs.GoMod.Load(filepath.Join(gs.Stager.BuildDir(), "go.mod")); err != nil {
+			gs.Log.Error("Unable to load go version from go.mod: %s", err)
+		}
 		gs.Stager.WriteEnvFile("GO111MODULE", "on")
 		gs.VendorTool = "gomod"
 		return nil

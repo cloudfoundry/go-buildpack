@@ -2,7 +2,7 @@ package gomod
 
 import (
 	"bufio"
-	"log"
+	"fmt"
 	"os"
 	"strings"
 )
@@ -12,10 +12,10 @@ type GoMod struct {
 }
 
 // TODO: Replace with https://pkg.go.dev/golang.org/x/mod/modfile when it is available
-func (g *GoMod) Load(path string) {
+func (g *GoMod) Load(path string) error {
 	f, err := os.Open(path)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("failed to open go.mod: %s", err)
 	}
 
 	defer f.Close()
@@ -32,6 +32,8 @@ func (g *GoMod) Load(path string) {
 	}
 
 	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("failed to scan go.mod: %s", err)
 	}
+
+	return nil
 }
