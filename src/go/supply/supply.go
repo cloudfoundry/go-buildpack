@@ -100,12 +100,21 @@ func (gs *Supplier) SelectVendorTool() error {
 		return err
 	}
 	if isGoMod {
-		gs.Log.BeginStep("Checking go.mod file")
+		gs.Stager.WriteEnvFile("GO111MODULE", "on")
+		gs.VendorTool = "gomod"
+
+		// Check if the go.mod file contains a Go version
+		gs.Log.BeginStep("Checking Go version in go.mod file")
 		if err := gs.GoMod.Load(filepath.Join(gs.Stager.BuildDir(), "go.mod")); err != nil {
 			gs.Log.Error("Unable to load go version from go.mod: %s", err)
 		}
-		gs.Stager.WriteEnvFile("GO111MODULE", "on")
-		gs.VendorTool = "gomod"
+
+		if gs.GoMod.GoVersion != "" {
+			gs.Log.Info("Go version found in go.mod")
+		} else {
+			gs.Log.Info("No Go version found in go.mod")
+		}
+
 		return nil
 	}
 
@@ -182,26 +191,9 @@ func (gs *Supplier) InstallVendorTools() error {
 }
 
 func (gs *Supplier) SelectGoVersion() error {
-	goVersion := os.Getenv("GOVERSION")
-	if gs.VendorTool == "godep" || gs.VendorTool == "gomod" {
-		if goVersion != "" {
-			gs.Log.Warning(warnings.GoVersionOverride(goVersion))
-		} else {
-			switch gs.VendorTool {
-			case "godep":
-				goVersion = gs.Godep.GoVersion
-			case "gomod":
-				goVersion = gs.GoMod.GoVersion
-			}
-		}
-	} else {
-		if goVersion == "" {
-			defaultGo, err := gs.Manifest.DefaultVersion("go")
-			if err != nil {
-				return err
-			}
-			goVersion = fmt.Sprintf("go%s", defaultGo.Version)
-		}
+	goVersion, err := resolveGoVersion(gs)
+	if err != nil {
+		return err
 	}
 
 	parsed, err := gs.parseGoVersion(goVersion)
@@ -233,6 +225,31 @@ func (gs *Supplier) SelectGoVersion() error {
 	}
 
 	return nil
+}
+
+func resolveGoVersion(gs *Supplier) (string, error) {
+	goVersion := os.Getenv("GOVERSION")
+
+	if goVersion != "" {
+		gs.Log.Warning(warnings.GoVersionOverride(goVersion))
+		return goVersion, nil
+	}
+
+	if gs.VendorTool == "godep" {
+		return gs.Godep.GoVersion, nil
+	}
+
+	if gs.VendorTool == "gomod" && gs.GoMod.GoVersion != "" {
+		return gs.GoMod.GoVersion, nil
+	}
+
+	defaultGo, err := gs.Manifest.DefaultVersion("go")
+	if err != nil {
+		return "", err
+	}
+	goVersion = fmt.Sprintf("go%s", defaultGo.Version)
+
+	return goVersion, nil
 }
 
 func (gs *Supplier) InstallGo() error {
