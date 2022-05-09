@@ -30,16 +30,43 @@ func testModules(platform switchblade.Platform, fixtures string) func(*testing.T
 			Expect(platform.Delete.Execute(name)).To(Succeed())
 		})
 
-		it("builds the app with modules", func() {
-			deployment, logs, err := platform.Deploy.
-				WithEnv(map[string]string{
-					"GOVERSION": "go1.17",
-				}).
-				Execute(name, filepath.Join(fixtures, "mod", "simple"))
-			Expect(err).NotTo(HaveOccurred())
+		context("when the version is obtained from the go.mod file", func() {
+			context("when the go.mod file contains a go version", func() {
+				it("builds the app with modules", func() {
+					deployment, logs, err := platform.Deploy.
+						Execute(name, filepath.Join(fixtures, "mod", "simple"))
+					Expect(err).NotTo(HaveOccurred())
 
-			Expect(logs).To(ContainLines(ContainSubstring("go: downloading github.com/BurntSushi/toml")))
-			Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+					Expect(logs).To(ContainLines(ContainSubstring("Go version found in go.mod")))
+					Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+				})
+			})
+
+			context("when the go.mod file does not contains a go version", func() {
+				it("builds the app with modules", func() {
+					deployment, logs, err := platform.Deploy.
+						Execute(name, filepath.Join(fixtures, "mod", "simple_without_version_in_gomod"))
+					Expect(err).NotTo(HaveOccurred())
+
+					Expect(logs).To(ContainLines(ContainSubstring("No Go version found in go.mod")))
+					Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+				})
+			})
+		})
+
+		context("when the version is obtained from the GOVERSION env variable", func() {
+			it("builds the app with modules", func() {
+				deployment, logs, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"GOVERSION": "go1.18",
+					}).
+					Execute(name, filepath.Join(fixtures, "mod", "simple"))
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(logs).To(ContainLines(ContainSubstring("Using $GOVERSION override.")))
+				Expect(logs).To(ContainLines(ContainSubstring("Installing go 1.18")))
+				Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+			})
 		})
 
 		context("when given a custom package spec", func() {
