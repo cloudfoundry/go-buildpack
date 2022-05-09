@@ -1,12 +1,12 @@
 # code.cloudfoundry.org/lager v2.0.0+incompatible
 code.cloudfoundry.org/lager
-# github.com/Dynatrace/libbuildpack-dynatrace v1.4.2
+# github.com/Dynatrace/libbuildpack-dynatrace v1.5.0
 ## explicit
 github.com/Dynatrace/libbuildpack-dynatrace
 # github.com/Masterminds/semver v1.5.0
 ## explicit
 github.com/Masterminds/semver
-# github.com/Microsoft/go-winio v0.5.0
+# github.com/Microsoft/go-winio v0.5.2
 ## explicit
 github.com/Microsoft/go-winio
 github.com/Microsoft/go-winio/pkg/guid
@@ -30,16 +30,14 @@ github.com/cloudfoundry/switchblade
 github.com/cloudfoundry/switchblade/internal/cloudfoundry
 github.com/cloudfoundry/switchblade/internal/docker
 github.com/cloudfoundry/switchblade/matchers
-# github.com/containerd/containerd v1.5.5
+# github.com/containerd/containerd v1.6.4
 ## explicit
-github.com/containerd/containerd/errdefs
-github.com/containerd/containerd/log
-github.com/containerd/containerd/platforms
-# github.com/docker/distribution v2.7.1+incompatible
+# github.com/docker/distribution v2.8.1+incompatible
+## explicit
 github.com/docker/distribution/digestset
 github.com/docker/distribution/reference
-github.com/docker/distribution/registry/api/errcode
-# github.com/docker/docker v20.10.8+incompatible
+# github.com/docker/docker v20.10.15+incompatible
+## explicit
 github.com/docker/docker/api
 github.com/docker/docker/api/types
 github.com/docker/docker/api/types/blkiodev
@@ -65,9 +63,10 @@ github.com/docker/go-connections/sockets
 github.com/docker/go-connections/tlsconfig
 # github.com/docker/go-units v0.4.0
 github.com/docker/go-units
-# github.com/elazarl/goproxy v0.0.0-20190911111923-ecfe977594f1
+# github.com/elazarl/goproxy v0.0.0-20220417044921-416226498f94
+## explicit
 github.com/elazarl/goproxy
-# github.com/fsnotify/fsnotify v1.5.1
+# github.com/fsnotify/fsnotify v1.5.4
 ## explicit
 github.com/fsnotify/fsnotify
 # github.com/gabriel-vasile/mimetype v1.4.0
@@ -80,12 +79,6 @@ github.com/gogo/protobuf/proto
 # github.com/golang/mock v1.6.0
 ## explicit
 github.com/golang/mock/gomock
-# github.com/golang/protobuf v1.5.2
-github.com/golang/protobuf/proto
-github.com/golang/protobuf/ptypes
-github.com/golang/protobuf/ptypes/any
-github.com/golang/protobuf/ptypes/duration
-github.com/golang/protobuf/ptypes/timestamp
 # github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 ## explicit
 github.com/kr/go-heroku-example/message
@@ -131,7 +124,7 @@ github.com/onsi/gomega/matchers/support/goraph/util
 github.com/onsi/gomega/types
 # github.com/opencontainers/go-digest v1.0.0
 github.com/opencontainers/go-digest
-# github.com/opencontainers/image-spec v1.0.1
+# github.com/opencontainers/image-spec v1.0.3-0.20211202183452-c5a74bcca799
 github.com/opencontainers/image-spec/specs-go
 github.com/opencontainers/image-spec/specs-go/v1
 # github.com/paketo-buildpacks/packit v1.3.1
@@ -148,7 +141,8 @@ github.com/sclevine/spec/report
 github.com/sirupsen/logrus
 # github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125
 github.com/teris-io/shortid
-# github.com/tidwall/gjson v1.12.0
+# github.com/tidwall/gjson v1.14.1
+## explicit
 github.com/tidwall/gjson
 # github.com/tidwall/match v1.1.1
 github.com/tidwall/match
@@ -162,13 +156,14 @@ github.com/ulikunitz/xz/lzma
 # github.com/vendorlib v0.0.0-00010101000000-000000000000 => ./fixtures/default/install_package_spec/vendored/vendor/github.com/vendorlib
 ## explicit
 github.com/vendorlib
-# golang.org/x/net v0.0.0-20220225172249-27dd8689420f
+# golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4
+## explicit
 golang.org/x/net/html
 golang.org/x/net/html/atom
 golang.org/x/net/html/charset
 golang.org/x/net/internal/socks
 golang.org/x/net/proxy
-# golang.org/x/sys v0.0.0-20220329152356-43be30ef3008
+# golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6
 ## explicit
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
@@ -191,44 +186,8 @@ golang.org/x/text/internal/utf8internal
 golang.org/x/text/language
 golang.org/x/text/runes
 golang.org/x/text/transform
-# google.golang.org/genproto v0.0.0-20210916144049-3192f974c780
+# google.golang.org/genproto v0.0.0-20220505152158-f39f71e6c8f3
 ## explicit
-google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.40.0
-google.golang.org/grpc/codes
-google.golang.org/grpc/internal/status
-google.golang.org/grpc/status
-# google.golang.org/protobuf v1.27.1
-google.golang.org/protobuf/encoding/prototext
-google.golang.org/protobuf/encoding/protowire
-google.golang.org/protobuf/internal/descfmt
-google.golang.org/protobuf/internal/descopts
-google.golang.org/protobuf/internal/detrand
-google.golang.org/protobuf/internal/encoding/defval
-google.golang.org/protobuf/internal/encoding/messageset
-google.golang.org/protobuf/internal/encoding/tag
-google.golang.org/protobuf/internal/encoding/text
-google.golang.org/protobuf/internal/errors
-google.golang.org/protobuf/internal/filedesc
-google.golang.org/protobuf/internal/filetype
-google.golang.org/protobuf/internal/flags
-google.golang.org/protobuf/internal/genid
-google.golang.org/protobuf/internal/impl
-google.golang.org/protobuf/internal/order
-google.golang.org/protobuf/internal/pragma
-google.golang.org/protobuf/internal/set
-google.golang.org/protobuf/internal/strs
-google.golang.org/protobuf/internal/version
-google.golang.org/protobuf/proto
-google.golang.org/protobuf/reflect/protodesc
-google.golang.org/protobuf/reflect/protoreflect
-google.golang.org/protobuf/reflect/protoregistry
-google.golang.org/protobuf/runtime/protoiface
-google.golang.org/protobuf/runtime/protoimpl
-google.golang.org/protobuf/types/descriptorpb
-google.golang.org/protobuf/types/known/anypb
-google.golang.org/protobuf/types/known/durationpb
-google.golang.org/protobuf/types/known/timestamppb
 # gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
 gopkg.in/tomb.v1
 # gopkg.in/yaml.v2 v2.4.0
