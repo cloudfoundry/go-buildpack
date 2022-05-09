@@ -1,3 +1,9 @@
+v1.9.45 May 09, 2022
+=====================
+
+* Fix error when trying to obtain version from go.mod file (#254)
+
+
 v1.9.44 May 06, 2022
 =====================
 
