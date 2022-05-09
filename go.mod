@@ -7,19 +7,17 @@ require (
 	github.com/Masterminds/semver v1.5.0
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/ZiCog/shiny-thing v0.0.0-20121130081921-e9e19444ccf5
-	github.com/cloudfoundry/libbuildpack v0.0.0-20220329192604-c8ccbfd4cb8d
+	github.com/cloudfoundry/libbuildpack v0.0.0-20220509111721-05ef1d6ca1f1
 	github.com/cloudfoundry/switchblade v0.0.3
 	github.com/containerd/containerd v1.5.5 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/golang/mock v1.6.0
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.17.0
+	github.com/onsi/gomega v1.19.0
 	github.com/sclevine/spec v1.4.0
 	github.com/vendorlib v0.0.0-00010101000000-000000000000
-	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
 	golang.org/x/sys v0.0.0-20220329152356-43be30ef3008 // indirect
-	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20210916144049-3192f974c780 // indirect
 )
 
