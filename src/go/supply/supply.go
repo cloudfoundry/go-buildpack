@@ -12,7 +12,6 @@ import (
 	"github.com/Masterminds/semver"
 	"github.com/cloudfoundry/go-buildpack/src/go/data"
 	"github.com/cloudfoundry/go-buildpack/src/go/godep"
-	"github.com/cloudfoundry/go-buildpack/src/go/gomod"
 	"github.com/cloudfoundry/go-buildpack/src/go/warnings"
 	"github.com/cloudfoundry/libbuildpack"
 )
@@ -45,7 +44,6 @@ type Supplier struct {
 	VendorTool string
 	GoVersion  string
 	Godep      godep.Godep
-	GoMod      gomod.GoMod
 }
 
 func Run(gs *Supplier) error {
@@ -95,26 +93,11 @@ func (gs *Supplier) SelectVendorTool() error {
 		return errors.New(".godir deprecated")
 	}
 
-	isGoMod, err := libbuildpack.FileExists(filepath.Join(gs.Stager.BuildDir(), "go.mod"))
-	if err != nil {
+	if exists, err := libbuildpack.FileExists(filepath.Join(gs.Stager.BuildDir(), "go.mod")); err != nil {
 		return err
-	}
-	if isGoMod {
+	} else if exists {
 		gs.Stager.WriteEnvFile("GO111MODULE", "on")
 		gs.VendorTool = "gomod"
-
-		// Check if the go.mod file contains a Go version
-		gs.Log.BeginStep("Checking Go version in go.mod file")
-		if err := gs.GoMod.Load(filepath.Join(gs.Stager.BuildDir(), "go.mod")); err != nil {
-			gs.Log.Error("Unable to load go version from go.mod: %s", err)
-		}
-
-		if gs.GoMod.GoVersion != "" {
-			gs.Log.Info("Go version found in go.mod")
-		} else {
-			gs.Log.Info("No Go version found in go.mod")
-		}
-
 		return nil
 	}
 
@@ -191,9 +174,22 @@ func (gs *Supplier) InstallVendorTools() error {
 }
 
 func (gs *Supplier) SelectGoVersion() error {
-	goVersion, err := resolveGoVersion(gs)
-	if err != nil {
-		return err
+	goVersion := os.Getenv("GOVERSION")
+
+	if gs.VendorTool == "godep" {
+		if goVersion != "" {
+			gs.Log.Warning(warnings.GoVersionOverride(goVersion))
+		} else {
+			goVersion = gs.Godep.GoVersion
+		}
+	} else {
+		if goVersion == "" {
+			defaultGo, err := gs.Manifest.DefaultVersion("go")
+			if err != nil {
+				return err
+			}
+			goVersion = fmt.Sprintf("go%s", defaultGo.Version)
+		}
 	}
 
 	parsed, err := gs.parseGoVersion(goVersion)
@@ -225,31 +221,6 @@ func (gs *Supplier) SelectGoVersion() error {
 	}
 
 	return nil
-}
-
-func resolveGoVersion(gs *Supplier) (string, error) {
-	goVersion := os.Getenv("GOVERSION")
-
-	if goVersion != "" {
-		gs.Log.Warning(warnings.GoVersionOverride(goVersion))
-		return goVersion, nil
-	}
-
-	if gs.VendorTool == "godep" {
-		return gs.Godep.GoVersion, nil
-	}
-
-	if gs.VendorTool == "gomod" && gs.GoMod.GoVersion != "" {
-		return gs.GoMod.GoVersion, nil
-	}
-
-	defaultGo, err := gs.Manifest.DefaultVersion("go")
-	if err != nil {
-		return "", err
-	}
-	goVersion = fmt.Sprintf("go%s", defaultGo.Version)
-
-	return goVersion, nil
 }
 
 func (gs *Supplier) InstallGo() error {
