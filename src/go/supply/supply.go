@@ -12,7 +12,6 @@ import (
 	"github.com/Masterminds/semver"
 	"github.com/cloudfoundry/go-buildpack/src/go/data"
 	"github.com/cloudfoundry/go-buildpack/src/go/godep"
-	"github.com/cloudfoundry/go-buildpack/src/go/gomod"
 	"github.com/cloudfoundry/go-buildpack/src/go/warnings"
 	"github.com/cloudfoundry/libbuildpack"
 )
@@ -45,7 +44,6 @@ type Supplier struct {
 	VendorTool string
 	GoVersion  string
 	Godep      godep.Godep
-	GoMod      gomod.GoMod
 }
 
 func Run(gs *Supplier) error {
@@ -95,15 +93,9 @@ func (gs *Supplier) SelectVendorTool() error {
 		return errors.New(".godir deprecated")
 	}
 
-	isGoMod, err := libbuildpack.FileExists(filepath.Join(gs.Stager.BuildDir(), "go.mod"))
-	if err != nil {
+	if exists, err := libbuildpack.FileExists(filepath.Join(gs.Stager.BuildDir(), "go.mod")); err != nil {
 		return err
-	}
-	if isGoMod {
-		gs.Log.BeginStep("Checking go.mod file")
-		if err := gs.GoMod.Load(filepath.Join(gs.Stager.BuildDir(), "go.mod")); err != nil {
-			gs.Log.Error("Unable to load go version from go.mod: %s", err)
-		}
+	} else if exists {
 		gs.Stager.WriteEnvFile("GO111MODULE", "on")
 		gs.VendorTool = "gomod"
 		return nil
@@ -183,16 +175,12 @@ func (gs *Supplier) InstallVendorTools() error {
 
 func (gs *Supplier) SelectGoVersion() error {
 	goVersion := os.Getenv("GOVERSION")
-	if gs.VendorTool == "godep" || gs.VendorTool == "gomod" {
+
+	if gs.VendorTool == "godep" {
 		if goVersion != "" {
 			gs.Log.Warning(warnings.GoVersionOverride(goVersion))
 		} else {
-			switch gs.VendorTool {
-			case "godep":
-				goVersion = gs.Godep.GoVersion
-			case "gomod":
-				goVersion = gs.GoMod.GoVersion
-			}
+			goVersion = gs.Godep.GoVersion
 		}
 	} else {
 		if goVersion == "" {
