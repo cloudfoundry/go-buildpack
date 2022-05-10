@@ -239,8 +239,12 @@ func resolveGoVersion(gs *Supplier) (string, error) {
 		return gs.Godep.GoVersion, nil
 	}
 
-	if gs.VendorTool == "gomod" && gs.GoMod.GoVersion != "" {
-		return gs.GoMod.GoVersion, nil
+	if gs.VendorTool == "gomod" {
+		allVersions := gs.Manifest.AllDependencyVersions("go")
+		if gs.GoMod.GoVersionIsSupported(allVersions) {
+			return gs.GoMod.GoVersion, nil
+		}
+		gs.Log.Info("Go version found in go.mod not supported by the Buildpack.")
 	}
 
 	defaultGo, err := gs.Manifest.DefaultVersion("go")

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/cloudfoundry/libbuildpack"
 )
 
 type GoMod struct {
@@ -36,4 +38,13 @@ func (g *GoMod) Load(path string) error {
 	}
 
 	return nil
+}
+
+func (g *GoMod) GoVersionIsSupported(allVersions []string) bool {
+	_, err := libbuildpack.FindMatchingVersion(fmt.Sprintf("%s.x", g.GoVersion), allVersions)
+	if err != nil {
+		return false
+	}
+
+	return true
 }

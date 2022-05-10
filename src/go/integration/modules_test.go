@@ -42,6 +42,18 @@ func testModules(platform switchblade.Platform, fixtures string) func(*testing.T
 				})
 			})
 
+			context("when the go.mod file contains a non supported go version", func() {
+				it("builds the app with modules", func() {
+					deployment, logs, err := platform.Deploy.
+						Execute(name, filepath.Join(fixtures, "mod", "simple_with_old_gomod_go_version"))
+					Expect(err).NotTo(HaveOccurred())
+
+					Expect(logs).To(ContainLines(ContainSubstring("Go version found in go.mod")))
+					Expect(logs).To(ContainLines(ContainSubstring("Go version found in go.mod not supported by the Buildpack.")))
+					Eventually(deployment).Should(Serve(ContainSubstring("go, world")))
+				})
+			})
+
 			context("when the go.mod file does not contains a go version", func() {
 				it("builds the app with modules", func() {
 					deployment, logs, err := platform.Deploy.
