@@ -190,7 +190,7 @@ var _ = Describe("Supply", func() {
 
 		Context("there is a go.mod file", func() {
 			BeforeEach(func() {
-				Expect(ioutil.WriteFile(filepath.Join(buildDir, "go.mod"), []byte("go 1.18\n"), 0666)).To(Succeed())
+				Expect(ioutil.WriteFile(filepath.Join(buildDir, "go.mod"), []byte("xxx"), 0666)).To(Succeed())
 			})
 
 			AfterEach(func() {
@@ -207,21 +207,6 @@ var _ = Describe("Supply", func() {
 				mockStager.EXPECT().WriteEnvFile("GO111MODULE", "on")
 				Expect(localSupplier.SelectVendorTool()).To(Succeed())
 				Expect(localSupplier.VendorTool).To(Equal("gomod"))
-			})
-
-			It("The Stager selects the go version from the go.mod file", func() {
-				versions := []string{"1.18"}
-				mockManifest.EXPECT().AllDependencyVersions("go").Return(versions)
-
-				localSupplier := *gs
-				mockStager := NewMockStager(mockCtrl)
-				localSupplier.Stager = mockStager
-
-				mockStager.EXPECT().BuildDir().Return(gs.Stager.BuildDir()).AnyTimes()
-				mockStager.EXPECT().WriteEnvFile("GO111MODULE", "on")
-				Expect(localSupplier.SelectVendorTool()).To(Succeed())
-				Expect(localSupplier.SelectGoVersion()).To(Succeed())
-				Expect(localSupplier.GoVersion).To(Equal("1.18"))
 			})
 
 		})
