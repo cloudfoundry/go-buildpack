@@ -1,3 +1,9 @@
+v1.9.46 May 10, 2022
+=====================
+
+* Revert "Select Go version from go.mod" changes that were causing problems
+
+
 v1.9.45 May 09, 2022
 =====================
 
