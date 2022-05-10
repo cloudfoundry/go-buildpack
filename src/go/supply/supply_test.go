@@ -211,7 +211,7 @@ var _ = Describe("Supply", func() {
 
 			It("The Stager selects the go version from the go.mod file", func() {
 				versions := []string{"1.18"}
-				mockManifest.EXPECT().AllDependencyVersions("go").Return(versions)
+				mockManifest.EXPECT().AllDependencyVersions("go").Return(versions).Times(2)
 
 				localSupplier := *gs
 				mockStager := NewMockStager(mockCtrl)
