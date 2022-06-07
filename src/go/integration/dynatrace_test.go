@@ -178,7 +178,7 @@ func testDynatrace(platform switchblade.Platform, fixtures, uri string) func(*te
 			})
 		})
 
-		context("deployingwith Dynatrace agent with failing agent download and checking retry", func() {
+		context("deploying Dynatrace agent with failing agent download and checking retry", func() {
 			it("checks if retrying downloads works", func() {
 				_, logs, err := platform.Deploy.
 					WithEnv(map[string]string{
@@ -201,7 +201,7 @@ func testDynatrace(platform switchblade.Platform, fixtures, uri string) func(*te
 			})
 		})
 
-		context("deploying with Dynatrace agent with single credentials service and a redis service", func() {
+		context("deploying Dynatrace agent with single credentials service and a redis service", func() {
 			it("checks if Dynatrace injection was successful", func() {
 				_, logs, err := platform.Deploy.
 					WithEnv(map[string]string{
@@ -233,6 +233,27 @@ func testDynatrace(platform switchblade.Platform, fixtures, uri string) func(*te
 				Expect(logs).To(ContainLines(ContainSubstring("Copy dynatrace-env.sh")))
 				Expect(logs).To(ContainLines(ContainSubstring("Dynatrace OneAgent installed.")))
 				Expect(logs).To(ContainLines(ContainSubstring("Dynatrace OneAgent injection is set up.")))
+			})
+		})
+
+		context("deploying Dynatrace agent with single credentials service", func() {
+			it("checks if agent config update via API was successful", func() {
+				_, logs, err := platform.Deploy.
+					WithEnv(map[string]string{
+						"BP_DEBUG": "true",
+					}).
+					WithServices(map[string]switchblade.Service{
+						"some-dynatrace": {
+							"apitoken":      "secretpaastoken",
+							"apiurl":        uri,
+							"environmentid": "envid",
+						},
+					}).
+					Execute(name, filepath.Join(fixtures, "default", "simple"))
+				Expect(err).NotTo(HaveOccurred())
+
+			Expect(logs).To(ContainLines(ContainSubstring("Fetching updated OneAgent configuration from tenant...")))
+			Expect(logs).To(ContainLines(ContainSubstring("Finished writing updated OneAgent config back to")))
 			})
 		})
 	}
