@@ -12,8 +12,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/paketo-buildpacks/packit/fs"
-	"github.com/paketo-buildpacks/packit/pexec"
+	"github.com/paketo-buildpacks/packit/v2/fs"
+	"github.com/paketo-buildpacks/packit/v2/pexec"
 )
 
 type SetupPhase interface {
