@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -47,6 +48,23 @@ type Supplier struct {
 }
 
 func Run(gs *Supplier) error {
+
+	gs.Log.Info("*** Starting cflinuxfs4 stack test logs***")
+	cmd := exec.Command("lsb_release", "-a")
+	data, err := cmd.CombinedOutput()
+	if err != nil {
+		gs.Log.Error("failed to run lsb_release: %s", err.Error())
+	}
+	gs.Log.Info("Ubuntu Version Info: %s", data)
+
+	cmd = exec.Command("apt", "list", "--installed")
+	data, err = cmd.CombinedOutput()
+	if err != nil {
+		gs.Log.Error("failed to run apt list --installed: %s", err.Error())
+	}
+	gs.Log.Info("Packages installed: %s", data)
+	gs.Log.Info("*** Ending cflinuxfs4 stack test logs***")
+
 	if err := gs.SelectVendorTool(); err != nil {
 		gs.Log.Error("Unable to select Go vendor tool: %s", err.Error())
 		return err

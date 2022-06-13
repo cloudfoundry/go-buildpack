@@ -1,5 +1,25 @@
 # Cloud Foundry Go(Lang) Buildpack
 
+
+## use on cflinuxfs4
+
+```sh
+git checkout hacky-cflinuxfs4
+./scripts/package.sh --stack cflinuxfs4 --version 4.4.4
+cf create-buildpack go_c4 ./build/buildpack.zip 1
+
+cf buildpacks | grep -i go-c4
+#buildpack               position   enabled   locked   filename                                       stack
+#go-c4                   1          true      false    buildpack.zip                                  cflinuxfs4
+
+cd fixtures/mod/simple
+cf push gomodapp -b go_c4 -s cflinuxfs4
+# You'll see in logs Ubuntu Jammy and all installed packages.
+
+curl gomodapp.indiagreen.cf-app.com
+go, world
+```
+
 [![CF Slack](https://www.google.com/s2/favicons?domain=www.slack.com) Join us on Slack](https://cloudfoundry.slack.com/messages/buildpacks/)
 
 A Cloud Foundry [buildpack](http://docs.cloudfoundry.org/buildpacks/) for Go(lang) based apps.
