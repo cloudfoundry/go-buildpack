@@ -30,7 +30,7 @@ func testMultiBuildpack(platform switchblade.Platform, fixtures string) func(*te
 			Expect(platform.Delete.Execute(name)).To(Succeed())
 		})
 
-		context("when supplied with dotnet-core", func() {
+		context.Pend("when supplied with dotnet-core", func() {
 			it("finds the supplied dependency in the runtime container", func() {
 				deployment, logs, err := platform.Deploy.
 					WithBuildpacks(
@@ -48,7 +48,7 @@ func testMultiBuildpack(platform switchblade.Platform, fixtures string) func(*te
 			})
 		})
 
-		context("when supplied with nodejs", func() {
+		context.Pend("when supplied with nodejs", func() {
 			it("finds the supplied dependency in the runtime container", func() {
 				deployment, logs, err := platform.Deploy.
 					WithBuildpacks(
@@ -66,7 +66,7 @@ func testMultiBuildpack(platform switchblade.Platform, fixtures string) func(*te
 			})
 		})
 
-		context("when supplied with python", func() {
+		context.Pend("when supplied with python", func() {
 			it("an app is pushed which uses pip dependencies", func() {
 				deployment, logs, err := platform.Deploy.
 					WithBuildpacks(
@@ -116,7 +116,7 @@ func testMultiBuildpack(platform switchblade.Platform, fixtures string) func(*te
 			})
 		})
 
-		context("when supplied with ruby", func() {
+		context.Pend("when supplied with ruby", func() {
 			it("finds the supplied dependency in the runtime container", func() {
 				deployment, logs, err := platform.Deploy.
 					WithBuildpacks(
