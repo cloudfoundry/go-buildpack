@@ -13,7 +13,6 @@ import (
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/pkg/stdcopy"
-	"github.com/paketo-buildpacks/packit/vacation"
 )
 
 type StagePhase interface {
@@ -110,7 +109,7 @@ func (s Stage) Run(ctx context.Context, logs io.Writer, containerID, name string
 		}
 
 		if hdr.Name == "droplet" {
-			_, err = io.Copy(dropletFile, tr)
+			_, err = io.CopyN(dropletFile, tr, hdr.Size)
 			if err != nil {
 				return "", fmt.Errorf("failed to copy droplet from tarball: %w", err)
 			}
@@ -140,9 +139,14 @@ func (s Stage) Run(ctx context.Context, logs io.Writer, containerID, name string
 
 		if hdr.Name == "output-cache" {
 			cachePath := filepath.Join(s.workspace, "build-cache", name)
-			err = vacation.NewTarGzipArchive(tr).Decompress(cachePath)
+			outputFile, err := os.Create(cachePath)
 			if err != nil {
-				return "", fmt.Errorf("failed to decompress build cache: %w", err)
+				return "", fmt.Errorf("failed to create build-cache path: %w", err)
+			}
+
+			_, err = io.CopyN(outputFile, tr, hdr.Size)
+			if err != nil {
+				return "", fmt.Errorf("failed to copy build cache: %w", err)
 			}
 			defer os.RemoveAll(cachePath)
 
@@ -172,7 +176,7 @@ func (s Stage) Run(ctx context.Context, logs io.Writer, containerID, name string
 		}
 
 		if hdr.Name == "result.json" {
-			_, err = io.Copy(buffer, tr)
+			_, err = io.CopyN(buffer, tr, hdr.Size)
 			if err != nil {
 				return "", fmt.Errorf("failed to copy result.json from tarball: %w", err)
 			}
