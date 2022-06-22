@@ -8,7 +8,7 @@ import (
 	"github.com/cloudfoundry/switchblade/internal/cloudfoundry"
 	"github.com/cloudfoundry/switchblade/internal/docker"
 	"github.com/docker/docker/client"
-	"github.com/paketo-buildpacks/packit/pexec"
+	"github.com/paketo-buildpacks/packit/v2/pexec"
 )
 
 type Buildpack struct {
