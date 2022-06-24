@@ -63,8 +63,8 @@ dependencies:
   source_sha256: '0012386ddcbb5f3350e407c679923811dbd283fcdc421724931614a842ecbc2d'
 - name: godep
   version: '80'
-  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep-v80-linux-x64-cflinuxfs3-b60ac947.tgz
-  sha256: b60ac947eb80b5961285546d2a3fecd29fc4d263e02c7f2fb7a97db7e938ff9e
+  uri: https://buildpacks.cloudfoundry.org/dependencies/godep/godep_80_linux_x64_cflinuxfs3_08722ddc.tgz
+  sha256: '08722ddc1bbdfe0d8e9e989854317cb4cc5c8f9e88854401511a060c96831730'
   cf_stacks:
   - cflinuxfs3
   source: https://github.com/tools/godep/archive/v80.tar.gz
