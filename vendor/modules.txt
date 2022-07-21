@@ -83,8 +83,6 @@ github.com/gogo/protobuf/proto
 # github.com/golang/mock v1.6.0
 ## explicit; go 1.11
 github.com/golang/mock/gomock
-# github.com/google/go-cmp v0.5.8
-## explicit; go 1.13
 # github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 ## explicit
 github.com/kr/go-heroku-example/message
@@ -206,8 +204,6 @@ golang.org/x/text/internal/utf8internal
 golang.org/x/text/language
 golang.org/x/text/runes
 golang.org/x/text/transform
-# golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11
-## explicit
 # google.golang.org/protobuf v1.28.0
 ## explicit; go 1.11
 # gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7
