@@ -37,6 +37,7 @@ func testProxy(platform switchblade.Platform, fixtures, uri string) func(*testin
 						"HTTP_PROXY":  uri,
 						"HTTPS_PROXY": uri,
 					}).
+					WithoutInternetAccess().
 					Execute(name, filepath.Join(fixtures, "glide", "simple"))
 				Expect(err).NotTo(HaveOccurred())
 
@@ -50,6 +51,7 @@ func testProxy(platform switchblade.Platform, fixtures, uri string) func(*testin
 							"HTTP_PROXY":  uri,
 							"HTTPS_PROXY": uri,
 						}).
+						WithoutInternetAccess().
 						Execute(name, filepath.Join(fixtures, "glide", "vendored"))
 					Expect(err).NotTo(HaveOccurred())
 
@@ -68,6 +70,7 @@ func testProxy(platform switchblade.Platform, fixtures, uri string) func(*testin
 						"HTTP_PROXY":  uri,
 						"HTTPS_PROXY": uri,
 					}).
+					WithoutInternetAccess().
 					Execute(name, filepath.Join(fixtures, "godep", "vendored"))
 				Expect(err).NotTo(HaveOccurred())
 
