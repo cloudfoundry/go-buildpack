@@ -6,8 +6,8 @@ default_versions:
 dependency_deprecation_dates:
 - version_line: 1.17.x
   name: go
-  date: 2022-09-15
-  link: https://go.dev/doc/devel/release
+  date: 2022-09-10
+  link: https://golang.org/doc/devel/release.html
 - version_line: 1.18.x
   name: go
   date: 2023-03-15
@@ -39,8 +39,8 @@ dependencies:
   source_sha256: 0d51b5b3f280c0f01f534598c0219db5878f337da6137a9ee698777413607209
 - name: go
   version: 1.17.13
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.17.13_linux_x64_cflinuxfs3_1cb163d7.tgz
-  sha256: 1cb163d73ce1ae87a641532cdb6651347f881f37bd37ef05ae3426982ba4730c
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.17.13_linux_x64_cflinuxfs3_773f1266.tgz
+  sha256: 773f12667861451dd4dc578be8a251b16ed2675717678bc5870d3912d2bd7146
   cf_stacks:
   - cflinuxfs3
   source: https://dl.google.com/go/go1.17.13.src.tar.gz
