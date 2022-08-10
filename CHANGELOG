@@ -1,3 +1,21 @@
+v1.9.49 Aug 10, 2022
+=====================
+
+* ### **_NOTE:_**  Go 1.17.x reached end of life. It will be removed from the Buildpack in the next release (v1.9.50).
+
+* Update default Go version from 17.x to 18.x
+
+* Add go 1.19 for stack(s) cflinuxfs3
+
+* Add go 1.17.12, remove go 1.17.9 for stack(s) cflinuxfs3
+
+* Add go 1.17.13, remove go 1.17.11 for stack(s) cflinuxfs3
+
+* Add go 1.18.5, remove go 1.18.3 for stack(s) cflinuxfs3
+
+* Add go 1.18.4, remove go 1.18.1 for stack(s) cflinuxfs3
+
+
 v1.9.48 Jul 08, 2022
 =====================
 
