@@ -252,8 +252,8 @@ func testDynatrace(platform switchblade.Platform, fixtures, uri string) func(*te
 					Execute(name, filepath.Join(fixtures, "default", "simple"))
 				Expect(err).NotTo(HaveOccurred())
 
-			Expect(logs).To(ContainLines(ContainSubstring("Fetching updated OneAgent configuration from tenant...")))
-			Expect(logs).To(ContainLines(ContainSubstring("Finished writing updated OneAgent config back to")))
+				Expect(logs).To(ContainLines(ContainSubstring("Fetching updated OneAgent configuration from tenant...")))
+				Expect(logs).To(ContainLines(ContainSubstring("Finished writing updated OneAgent config back to")))
 			})
 		})
 	}
