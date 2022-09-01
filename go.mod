@@ -6,12 +6,12 @@ require (
 	github.com/Dynatrace/libbuildpack-dynatrace v1.5.0
 	github.com/Masterminds/semver v1.5.0
 	github.com/ZiCog/shiny-thing v0.0.0-20121130081921-e9e19444ccf5
-	github.com/cloudfoundry/libbuildpack v0.0.0-20220804222252-e1c63184ec31
+	github.com/cloudfoundry/libbuildpack v0.0.0-20220829111556-28a205221ec0
 	github.com/cloudfoundry/switchblade v0.0.5
 	github.com/golang/mock v1.6.0
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.20.0
+	github.com/onsi/gomega v1.20.1
 	github.com/sclevine/spec v1.4.0
 	github.com/vendorlib v0.0.0-00010101000000-000000000000
 )
