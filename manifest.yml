@@ -15,10 +15,18 @@ dependency_deprecation_dates:
 dependencies:
 - name: dep
   version: 0.5.4
-  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep-v0.5.4-linux-x64-cflinuxfs3-79b3ab9e.tgz
-  sha256: 79b3ab9e67bf51bae787faaa5c78782752d0e39ea7b0d99e485a181b63a49559
+  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep_0.5.4_linux_x64_cflinuxfs3_4bd27eb9.tgz
+  sha256: 4bd27eb9db0a7b6b159973fca906908233ff9fd2e57d86c453b56641075ac2c6
   cf_stacks:
   - cflinuxfs3
+  source: https://github.com/golang/dep/archive/v0.5.4.tar.gz
+  source_sha256: 929c8f759838f98323211ba408a831ea80d93b75beda8584b6d950f393a3298a
+- name: dep
+  version: 0.5.4
+  uri: https://buildpacks.cloudfoundry.org/dependencies/dep/dep_0.5.4_linux_x64_cflinuxfs4_a4d7f7ea.tgz
+  sha256: a4d7f7ea6df68200023b0e342579cf29d71a61632da6e444c9953482255269f2
+  cf_stacks:
+  - cflinuxfs4
   source: https://github.com/golang/dep/archive/v0.5.4.tar.gz
   source_sha256: 929c8f759838f98323211ba408a831ea80d93b75beda8584b6d950f393a3298a
 - name: glide
