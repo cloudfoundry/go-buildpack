@@ -1,6 +1,7 @@
 package integration_test
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -118,15 +119,21 @@ func testMultiBuildpack(platform switchblade.Platform, fixtures string) func(*te
 
 		context("when supplied with ruby", func() {
 			it("finds the supplied dependency in the runtime container", func() {
-				deployment, logs, err := platform.Deploy.
+				deploymentProcess := platform.Deploy.
 					WithBuildpacks(
 						"https://github.com/cloudfoundry/ruby-buildpack#master",
 						"go_buildpack",
 					).
 					WithEnv(map[string]string{
 						"GOPACKAGENAME": "go-online",
-					}).
-					Execute(name, filepath.Join(fixtures, "multibuildpack", "ruby"))
+					})
+				// TODO: remove this once ruby-buildpack runs on cflinuxfs4
+				// This is done to have the sample app written in ruby up and running
+				if os.Getenv("CF_STACK") == "cflinuxfs4" {
+					deploymentProcess = deploymentProcess.WithStack("cflinuxfs3")
+				}
+
+				deployment, logs, err := deploymentProcess.Execute(name, filepath.Join(fixtures, "multibuildpack", "ruby"))
 				Expect(err).NotTo(HaveOccurred())
 
 				Expect(logs).To(ContainLines(MatchRegexp("Installing ruby \\d+\\.\\d+\\.\\d+")))
