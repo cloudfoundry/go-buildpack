@@ -23,10 +23,18 @@ dependencies:
   source_sha256: 929c8f759838f98323211ba408a831ea80d93b75beda8584b6d950f393a3298a
 - name: glide
   version: 0.13.3
-  uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide-v0.13.3-linux-x64-cflinuxfs3-ef07acb5.tgz
-  sha256: ef07acb5d9370cba15e8d670407c9921d2e0de18e309c07286d2ef3b4ee79857
+  uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide_0.13.3_linux_x64_cflinuxfs3_c49a3bbd.tgz
+  sha256: c49a3bbd29e0377fb566f4726d9d6833682084e5a1c1081800330182071dd908
   cf_stacks:
   - cflinuxfs3
+  source: https://github.com/Masterminds/glide/archive/v0.13.3.tar.gz
+  source_sha256: 817dad2f25303d835789c889bf2fac5e141ad2442b9f75da7b164650f0de3fee
+- name: glide
+  version: 0.13.3
+  uri: https://buildpacks.cloudfoundry.org/dependencies/glide/glide_0.13.3_linux_x64_cflinuxfs4_be64c2ea.tgz
+  sha256: be64c2eab9af6a4d0596092f055175f930045ca8208e6aa8adcfe33e46c921d7
+  cf_stacks:
+  - cflinuxfs4
   source: https://github.com/Masterminds/glide/archive/v0.13.3.tar.gz
   source_sha256: 817dad2f25303d835789c889bf2fac5e141ad2442b9f75da7b164650f0de3fee
 - name: go
