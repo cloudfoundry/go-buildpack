@@ -27,9 +27,6 @@ var _ = Describe("Go buildpack", func() {
 	bratshelper.StagingWithBuildpackThatSetsEOL(DEP, func(_ string) *cutlass.App {
 		return CopyBrats(GetOldestVersion(DEP, bpDir))
 	})
-	bratshelper.StagingWithADepThatIsNotTheLatest(DEP, func(_ string) *cutlass.App {
-		return CopyBrats(GetOldestVersion(DEP, bpDir))
-	})
 
 	bratshelper.StagingWithCustomBuildpackWithCredentialsInDependencies(CopyBrats)
 	bratshelper.DeployAppWithExecutableProfileScript(DEP, CopyBrats)
