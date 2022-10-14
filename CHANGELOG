@@ -1,3 +1,13 @@
+v1.10.0 Oct 14, 2022
+=====================
+
+* Add support for cflinuxfs4 stack
+
+* Add go 1.19.2, remove go 1.19 for stack(s) cflinuxfs4, cflinuxfs3
+
+* Update Go Buildpack dependencies to only keep 1 of each patch version (latest)
+
+
 v1.9.50 Sep 16, 2022
 =====================
 
