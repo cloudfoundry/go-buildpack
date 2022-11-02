@@ -13,7 +13,7 @@ Official buildpack documentation can be found at [go buildpack docs](http://docs
 To build this buildpack, run the following command from the buildpack's directory:
 
 ```bash
-./scripts/package.sh --stack cflinuxfs3 --version <version>
+./scripts/package.sh --stack [cflinuxfs3 | cflinuxfs4] --version <version>
 ```
 
 You can then find the built artifact in `./build/buildpack.zip`.
