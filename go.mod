@@ -11,7 +11,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.25.0
+	github.com/onsi/gomega v1.26.0
 	github.com/sclevine/spec v1.4.0
 	github.com/vendorlib v0.0.0-00010101000000-000000000000
 )
