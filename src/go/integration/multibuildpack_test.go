@@ -1,7 +1,6 @@
 package integration_test
 
 import (
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -127,11 +126,6 @@ func testMultiBuildpack(platform switchblade.Platform, fixtures string) func(*te
 					WithEnv(map[string]string{
 						"GOPACKAGENAME": "go-online",
 					})
-				// TODO: remove this once ruby-buildpack runs on cflinuxfs4
-				// This is done to have the sample app written in ruby up and running
-				if os.Getenv("CF_STACK") == "cflinuxfs4" {
-					deploymentProcess = deploymentProcess.WithStack("cflinuxfs3")
-				}
 
 				deployment, logs, err := deploymentProcess.Execute(name, filepath.Join(fixtures, "multibuildpack", "ruby"))
 				Expect(err).NotTo(HaveOccurred())
