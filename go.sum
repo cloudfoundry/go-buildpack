@@ -186,6 +186,8 @@ github.com/DataDog/zstd v1.4.5/go.mod h1:1jcaCB/ufaK+sKp1NBhlGmpz41jOoPQ35bpF36t
 github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24/go.mod h1:4UJr5HIiMZrwgkSPdsjy2uOQExX/WEILpIrO9UPGuXs=
 github.com/Dynatrace/libbuildpack-dynatrace v1.5.1 h1:t9HX2uNILKdLsU0D8qCTcVjnQiX6xnQfVOCo5BO38JY=
 github.com/Dynatrace/libbuildpack-dynatrace v1.5.1/go.mod h1:YsiN8yLiXmv0PzBe+Fo17gWxrA2HF6vMUTv49WuoY6o=
+github.com/Dynatrace/libbuildpack-dynatrace v1.5.2 h1:yiF8yuJ4762ocmZEM+/K8auciKFQ3XfQb/0Qt7VL+rU=
+github.com/Dynatrace/libbuildpack-dynatrace v1.5.2/go.mod h1:Uu9aa5UFAk1Ua+zZXnvzo+avDXuEi+GtegeOyja9xg4=
 github.com/GoogleCloudPlatform/cloudsql-proxy v0.0.0-20191009163259-e802c2cb94ae/go.mod h1:mjwGPas4yKduTyubHvD1Atl9r1rUq8DfVy+gkVvZ+oo=
 github.com/GoogleCloudPlatform/cloudsql-proxy v1.27.0/go.mod h1:bn9iHmAjogMoIPkqBGyJ9R1m9cXGCjBE/cuhBs3oEsQ=
 github.com/GoogleCloudPlatform/docker-credential-gcr v2.0.5+incompatible/go.mod h1:BB1eHdMLYEFuFdBlRMb0N7YGVdM5s6Pt0njxgvfbGGs=
