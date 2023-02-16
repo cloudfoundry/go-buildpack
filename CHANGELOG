@@ -1,3 +1,12 @@
+v1.10.5 Feb 16, 2023
+=====================
+
+* Add go 1.19.6, remove go 1.19.5
+  for stack(s) cflinuxfs4, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/184477448)
+
+* Bump github.com/Dynatrace/libbuildpack-dynatrace from 1.5.1 to 1.5.2
+
 v1.10.4 Feb 08, 2023
 =====================
 
