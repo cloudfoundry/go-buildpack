@@ -1,3 +1,11 @@
+v1.10.6 Mar 01, 2023
+=====================
+
+* Add go 1.20.1
+  for stack(s) cflinuxfs3, cflinuxfs4
+  (https://www.pivotaltracker.com/story/show/184573596)
+
+
 v1.10.5 Feb 16, 2023
 =====================
 
