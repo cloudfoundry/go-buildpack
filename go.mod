@@ -7,7 +7,7 @@ require (
 	github.com/Masterminds/semver v1.5.0
 	github.com/ZiCog/shiny-thing v0.0.0-20121130081921-e9e19444ccf5
 	github.com/cloudfoundry/libbuildpack v0.0.0-20230209225346-0e58f7be61d4
-	github.com/cloudfoundry/switchblade v0.1.3
+	github.com/cloudfoundry/switchblade v0.2.0
 	github.com/golang/mock v1.6.0
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
 	github.com/onsi/ginkgo v1.16.5
@@ -33,7 +33,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc2 // indirect
 	github.com/paketo-buildpacks/packit v1.3.1 // indirect
-	github.com/paketo-buildpacks/packit/v2 v2.8.1 // indirect
+	github.com/paketo-buildpacks/packit/v2 v2.8.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569 // indirect
 	github.com/tidwall/gjson v1.14.3 // indirect
