@@ -50,10 +50,10 @@ type Supplier struct {
 func Run(gs *Supplier) error {
 
 	gs.Log.Info("*** Starting cflinuxfs4 stack test logs***")
-	cmd := exec.Command("lsb_release", "-a")
+	cmd := exec.Command("cat", "/etc/os-release")
 	data, err := cmd.CombinedOutput()
 	if err != nil {
-		gs.Log.Error("failed to run lsb_release: %s", err.Error())
+		gs.Log.Error("failed to run cat /etc/os-release: %s", err.Error())
 	}
 	gs.Log.Info("Ubuntu Version Info: %s", data)
 
