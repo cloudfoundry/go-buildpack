@@ -1,3 +1,17 @@
+v1.10.7 Apr 03, 2023
+=====================
+
+* Deprecate go1.18
+
+* Add go 1.20.2, remove go 1.20.1
+  for stack(s) cflinuxfs4, cflinuxfs3
+  (https://www.pivotaltracker.com/story/show/184641885)
+
+* Add go 1.19.7, remove go 1.19.6
+  for stack(s) cflinuxfs3, cflinuxfs4
+  (https://www.pivotaltracker.com/story/show/184641843)
+
+
 v1.10.6 Mar 01, 2023
 =====================
 
