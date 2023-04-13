@@ -1,3 +1,18 @@
+v1.10.8 Apr 13, 2023
+=====================
+
+* Bump github.com/cloudfoundry/switchblade from 0.2.0 to 0.3.0
+
+* Add go 1.19.8, remove go 1.19.7
+  for stack(s) cflinuxfs4, cflinuxfs3
+
+* Add go 1.20.3, remove go 1.20.2
+  for stack(s) cflinuxfs3, cflinuxfs4
+
+* Bump libbuildpack
+  - to pull in retry with exponential backoff.
+
+
 v1.10.7 Apr 03, 2023
 =====================
 
