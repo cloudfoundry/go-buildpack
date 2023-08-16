@@ -33,7 +33,7 @@ func testModules(platform switchblade.Platform, fixtures string) func(*testing.T
 		it("builds the app with modules", func() {
 			deployment, logs, err := platform.Deploy.
 				WithEnv(map[string]string{
-					"GOVERSION": "go1.19",
+					"GOVERSION": "go1.20",
 				}).
 				Execute(name, filepath.Join(fixtures, "mod", "simple"))
 			Expect(err).NotTo(HaveOccurred())
@@ -47,7 +47,7 @@ func testModules(platform switchblade.Platform, fixtures string) func(*testing.T
 				deployment, logs, err := platform.Deploy.
 					WithEnv(map[string]string{
 						"GO_INSTALL_PACKAGE_SPEC": "github.com/full/path/cmd/app",
-						"GOVERSION":               "go1.19",
+						"GOVERSION":               "go1.20",
 					}).
 					Execute(name, filepath.Join(fixtures, "mod", "install_package_spec", "absolute"))
 				Expect(err).NotTo(HaveOccurred())
@@ -61,7 +61,7 @@ func testModules(platform switchblade.Platform, fixtures string) func(*testing.T
 					deployment, logs, err := platform.Deploy.
 						WithEnv(map[string]string{
 							"GO_INSTALL_PACKAGE_SPEC": "./cmd/app",
-							"GOVERSION":               "go1.19",
+							"GOVERSION":               "go1.20",
 						}).
 						Execute(name, filepath.Join(fixtures, "mod", "install_package_spec", "relative"))
 					Expect(err).NotTo(HaveOccurred())
@@ -77,7 +77,7 @@ func testModules(platform switchblade.Platform, fixtures string) func(*testing.T
 				deployment, logs, err := platform.Deploy.
 					WithEnv(map[string]string{
 						"GOPACKAGENAME": "go-online",
-						"GOVERSION":     "go1.19",
+						"GOVERSION":     "go1.20",
 					}).
 					Execute(name, filepath.Join(fixtures, "mod", "vendored"))
 				Expect(err).NotTo(HaveOccurred())
@@ -91,7 +91,7 @@ func testModules(platform switchblade.Platform, fixtures string) func(*testing.T
 					deployment, logs, err := platform.Deploy.
 						WithEnv(map[string]string{
 							"GO_INSTALL_PACKAGE_SPEC": "github.com/full/path/cmd/app",
-							"GOVERSION":               "go1.19",
+							"GOVERSION":               "go1.20",
 						}).
 						Execute(name, filepath.Join(fixtures, "mod", "install_package_spec", "vendored"))
 					Expect(err).NotTo(HaveOccurred())
