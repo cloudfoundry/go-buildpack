@@ -1,3 +1,13 @@
+v1.10.12 Sep 07, 2023
+======================
+
+* Add go 1.20.8, remove go 1.20.7 for stack(s) cflinuxfs4, cflinuxfs3
+
+* Add go 1.21.1 for stack(s) cflinuxfs4, cflinuxfs3
+
+* Deprecate Go 1.19.x (EOL)
+
+
 v1.10.11 Aug 15, 2023
 ======================
 
