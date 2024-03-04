@@ -4,10 +4,6 @@ default_versions:
 - name: go
   version: 1.21.x
 dependency_deprecation_dates:
-- version_line: 1.20.x
-  name: go
-  date: 2024-02-01
-  link: https://golang.org/doc/devel/release.html
 - version_line: 1.21.x
   name: go
   date: 2024-08-15
@@ -45,22 +41,6 @@ dependencies:
   - cflinuxfs4
   source: https://github.com/Masterminds/glide/archive/v0.13.3.tar.gz
   source_sha256: 817dad2f25303d835789c889bf2fac5e141ad2442b9f75da7b164650f0de3fee
-- name: go
-  version: 1.20.14
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.20.14_linux_x64_cflinuxfs3_b8087174.tgz
-  sha256: b80871743cdf21d68d5fc9c468a11339ed6a0fb76d69a1a72bf7518de7c67e18
-  cf_stacks:
-  - cflinuxfs3
-  source: https://dl.google.com/go/go1.20.14.src.tar.gz
-  source_sha256: 1aef321a0e3e38b7e91d2d7eb64040666cabdcc77d383de3c9522d0d69b67f4e
-- name: go
-  version: 1.20.14
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.20.14_linux_x64_cflinuxfs4_b011f31b.tgz
-  sha256: b011f31b59c5a937858796e25223df985d3cb48f45326077bd80e4cf84564da8
-  cf_stacks:
-  - cflinuxfs4
-  source: https://dl.google.com/go/go1.20.14.src.tar.gz
-  source_sha256: 1aef321a0e3e38b7e91d2d7eb64040666cabdcc77d383de3c9522d0d69b67f4e
 - name: go
   version: 1.21.7
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.21.7_linux_x64_cflinuxfs3_2f9beffc.tgz
