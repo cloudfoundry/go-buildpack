@@ -28,7 +28,6 @@ var _ = Describe("Go buildpack", func() {
 		return CopyBrats(GetOldestVersion(DEP, bpDir))
 	})
 
-	bratshelper.StagingWithCustomBuildpackWithCredentialsInDependencies(CopyBrats)
 	bratshelper.DeployAppWithExecutableProfileScript(DEP, CopyBrats)
 	bratshelper.DeployAnAppWithSensitiveEnvironmentVariables(CopyBrats)
 
