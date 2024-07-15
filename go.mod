@@ -1,6 +1,6 @@
 module github.com/cloudfoundry/go-buildpack
 
-go 1.22.5
+go 1.18
 
 require (
 	github.com/Dynatrace/libbuildpack-dynatrace v1.5.2
