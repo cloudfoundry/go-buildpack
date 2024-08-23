@@ -1,3 +1,13 @@
+v1.10.22 Aug 23, 2024
+======================
+
+* Add go 1.21.13, remove go 1.21.12
+  for stack(s) cflinuxfs4, cflinuxfs3
+
+* Add go 1.22.6, remove go 1.22.5
+  for stack(s) cflinuxfs3, cflinuxfs4
+
+
 v1.10.21 Jul 16, 2024
 ======================
 
