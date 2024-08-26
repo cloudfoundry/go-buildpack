@@ -6,7 +6,7 @@ require (
 	github.com/Dynatrace/libbuildpack-dynatrace v1.5.2
 	github.com/Masterminds/semver v1.5.0
 	github.com/ZiCog/shiny-thing v0.0.0-20121130081921-e9e19444ccf5
-	github.com/cloudfoundry/libbuildpack v0.0.0-20240716203800-e8e9729b7ef9
+	github.com/cloudfoundry/libbuildpack v0.0.0-20240717165421-f2ae8069fcba
 	github.com/cloudfoundry/switchblade v0.4.0
 	github.com/golang/mock v1.6.0
 	github.com/kr/go-heroku-example v0.0.0-20150601175414-712a6d2f98f1
