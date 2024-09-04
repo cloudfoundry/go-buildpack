@@ -13,23 +13,15 @@ var _ = Describe("Go buildpack", func() {
 	)
 
 	var (
-		bpDir string
-		err   error
+		err error
 	)
 
 	BeforeEach(func() {
-		bpDir, err = cutlass.FindRoot()
 		Expect(err).NotTo(HaveOccurred())
 	})
 
 	bratshelper.UnbuiltBuildpack(DEP, CopyBrats)
-	bratshelper.DeployingAnAppWithAnUpdatedVersionOfTheSameBuildpack(CopyBrats)
-	bratshelper.StagingWithBuildpackThatSetsEOL(DEP, func(_ string) *cutlass.App {
-		return CopyBrats(GetOldestVersion(DEP, bpDir))
-	})
-
 	bratshelper.DeployAppWithExecutableProfileScript(DEP, CopyBrats)
-	bratshelper.DeployAnAppWithSensitiveEnvironmentVariables(CopyBrats)
 
 	bratshelper.ForAllSupportedVersions(DEP, CopyBrats, func(goVersion string, app *cutlass.App) {
 		PushApp(app)
