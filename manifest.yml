@@ -37,21 +37,21 @@ dependencies:
   source: https://github.com/Masterminds/glide/archive/v0.13.3.tar.gz
   source_sha256: 817dad2f25303d835789c889bf2fac5e141ad2442b9f75da7b164650f0de3fee
 - name: go
-  version: 1.22.6
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.22.6_linux_x64_cflinuxfs3_e6cee51d.tgz
-  sha256: e6cee51da0af3a3b2d061392a9057ea21fb0566ac998433dbdc7514017a0f0a3
+  version: 1.22.7
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.22.7_linux_x64_cflinuxfs3_ddbd345d.tgz
+  sha256: ddbd345d2356cef0cd34f9e85d7dd9a5fc47b840838f2f3c36412cfd162deeec
   cf_stacks:
   - cflinuxfs3
-  source: https://dl.google.com/go/go1.22.6.src.tar.gz
-  source_sha256: 9e48d99d519882579917d8189c17e98c373ce25abaebb98772e2927088992a51
+  source: https://dl.google.com/go/go1.22.7.src.tar.gz
+  source_sha256: 66432d87d85e0cfac3edffe637d5930fc4ddf5793313fe11e4a0f333023c879f
 - name: go
-  version: 1.22.6
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.22.6_linux_x64_cflinuxfs4_29c6d824.tgz
-  sha256: 29c6d824eb015a96f9dba0c51bf83e8b29d4e9e39669612d3830a2627cddb55f
+  version: 1.22.7
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.22.7_linux_x64_cflinuxfs4_94082a63.tgz
+  sha256: 94082a63a127048a4a6764d4b6003fa7d28418d715b24ec144c861b8258307a3
   cf_stacks:
   - cflinuxfs4
-  source: https://dl.google.com/go/go1.22.6.src.tar.gz
-  source_sha256: 9e48d99d519882579917d8189c17e98c373ce25abaebb98772e2927088992a51
+  source: https://dl.google.com/go/go1.22.7.src.tar.gz
+  source_sha256: 66432d87d85e0cfac3edffe637d5930fc4ddf5793313fe11e4a0f333023c879f
 - name: go
   version: 1.23.1
   uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.23.1_linux_x64_cflinuxfs3_27044b34.tgz
