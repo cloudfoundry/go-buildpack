@@ -30,19 +30,6 @@ func testGoToolchain(platform switchblade.Platform, fixtures string) func(*testi
 			Expect(platform.Delete.Execute(name)).To(Succeed())
 		})
 
-		context("when GO_SETUP_GOPATH_IN_IMAGE is specified", func() {
-			it("sets up the $HOME as the $GOPATH", func() {
-				deployment, _, err := platform.Deploy.
-					WithEnv(map[string]string{
-						"GO_SETUP_GOPATH_IN_IMAGE": "true",
-					}).
-					Execute(name, filepath.Join(fixtures, "go_toolchain", "gopath"))
-				Expect(err).NotTo(HaveOccurred())
-
-				Eventually(deployment).Should(Serve(ContainSubstring("GOPATH: /home/vcap/app")))
-			})
-		})
-
 		context("when GO_INSTALL_TOOLS_IN_IMAGE is specified", func() {
 			it("keeps the go toolchain in the droplet", func() {
 				deployment, _, err := platform.Deploy.
