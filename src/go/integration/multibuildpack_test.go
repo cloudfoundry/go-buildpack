@@ -83,7 +83,7 @@ func testMultiBuildpack(platform switchblade.Platform, fixtures string) func(*te
 				Eventually(deployment).Should(Serve(ContainSubstring(`[{"hello":"world"}]`)))
 			})
 
-			it("an app is pushed which uses miniconda", func() {
+			it("an app is pushed which uses conda", func() {
 				deployment, logs, err := platform.Deploy.
 					WithBuildpacks(
 						"https://github.com/cloudfoundry/python-buildpack#master",
@@ -92,10 +92,10 @@ func testMultiBuildpack(platform switchblade.Platform, fixtures string) func(*te
 					WithEnv(map[string]string{
 						"GOPACKAGENAME": "go-online",
 					}).
-					Execute(name, filepath.Join(fixtures, "multibuildpack", "miniconda"))
+					Execute(name, filepath.Join(fixtures, "multibuildpack", "conda"))
 				Expect(err).NotTo(HaveOccurred())
 
-				Expect(logs).To(ContainLines(ContainSubstring("Installing Miniconda")))
+				Expect(logs).To(ContainLines(ContainSubstring("Installing Miniforge")))
 				Eventually(deployment).Should(Serve(ContainSubstring(`[{"hello":"world"}]`)))
 			})
 
