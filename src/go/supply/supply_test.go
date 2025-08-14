@@ -387,6 +387,29 @@ var _ = Describe("Supply", func() {
 					Expect(gs.GoVersion).To(Equal("34.34.0"))
 				})
 			})
+
+			Context("GOVERSION is 'latest'", func() {
+				var oldGOVERSION string
+
+				BeforeEach(func() {
+					oldGOVERSION = os.Getenv("GOVERSION")
+					err = os.Setenv("GOVERSION", "latest")
+					Expect(err).To(BeNil())
+					vendorTool = "go_nativevendoring"
+				})
+
+				AfterEach(func() {
+					err = os.Setenv("GOVERSION", oldGOVERSION)
+					Expect(err).To(BeNil())
+				})
+
+				It("sets the go version from GOVERSION", func() {
+					err = gs.SelectGoVersion()
+					Expect(err).To(BeNil())
+
+					Expect(gs.GoVersion).To(Equal("34.34.0"))
+				})
+			})
 		})
 	})
 
