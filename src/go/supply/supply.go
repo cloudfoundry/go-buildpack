@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/Masterminds/semver"
@@ -262,6 +263,13 @@ func (gs *Supplier) WriteConfigYml() error {
 
 func (gs *Supplier) parseGoVersion(partialGoVersion string) (string, error) {
 	existingVersions := gs.Manifest.AllDependencyVersions("go")
+
+	if partialGoVersion == "latest" {
+		slices.SortFunc(existingVersions, func(a, b string) int {
+			return semver.MustParse(b).Compare(semver.MustParse(a))
+		})
+		return existingVersions[0], nil
+	}
 
 	if len(strings.Split(partialGoVersion, ".")) < 3 {
 		partialGoVersion += ".x"
