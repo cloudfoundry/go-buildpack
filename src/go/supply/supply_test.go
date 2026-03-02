@@ -59,6 +59,12 @@ var _ = Describe("Supply", func() {
 		mockCtrl = gomock.NewController(GinkgoT())
 		mockManifest = NewMockManifest(mockCtrl)
 		mockInstaller = NewMockInstaller(mockCtrl)
+
+		DeferCleanup(func() {
+			Expect(os.RemoveAll(bpDir)).To(Succeed())
+			Expect(os.RemoveAll(buildDir)).To(Succeed())
+			Expect(os.RemoveAll(depsDir)).To(Succeed())
+		})
 	})
 
 	JustBeforeEach(func() {
@@ -76,14 +82,6 @@ var _ = Describe("Supply", func() {
 			VendorTool: vendorTool,
 			Godep:      godepConfig,
 		}
-	})
-
-	AfterEach(func() {
-		mockCtrl.Finish()
-
-		Expect(os.RemoveAll(bpDir)).To(Succeed())
-		Expect(os.RemoveAll(buildDir)).To(Succeed())
-		Expect(os.RemoveAll(depsDir)).To(Succeed())
 	})
 
 	Describe("SelectVendorTool", func() {
@@ -190,11 +188,10 @@ var _ = Describe("Supply", func() {
 		Context("there is a go.mod file", func() {
 			BeforeEach(func() {
 				Expect(os.WriteFile(filepath.Join(buildDir, "go.mod"), []byte("xxx"), 0666)).To(Succeed())
-			})
-
-			AfterEach(func() {
-				Expect(os.RemoveAll(filepath.Join(buildDir, "go.mod"))).To(Succeed())
-				os.Unsetenv("GOVERSION")
+				DeferCleanup(func() {
+					Expect(os.RemoveAll(filepath.Join(buildDir, "go.mod"))).To(Succeed())
+					os.Unsetenv("GOVERSION")
+				})
 			})
 
 			It("The Stager writes an environment variable file", func() {
@@ -328,11 +325,10 @@ var _ = Describe("Supply", func() {
 					oldGOVERSION = os.Getenv("GOVERSION")
 					err = os.Setenv("GOVERSION", "go34.34")
 					Expect(err).To(BeNil())
-				})
-
-				AfterEach(func() {
-					err = os.Setenv("GOVERSION", oldGOVERSION)
-					Expect(err).To(BeNil())
+					DeferCleanup(func() {
+						err = os.Setenv("GOVERSION", oldGOVERSION)
+						Expect(err).To(BeNil())
+					})
 				})
 
 				It("sets the go version from GOVERSION and logs a warning", func() {
@@ -372,11 +368,10 @@ var _ = Describe("Supply", func() {
 					err = os.Setenv("GOVERSION", "go34.34")
 					Expect(err).To(BeNil())
 					vendorTool = "go_nativevendoring"
-				})
-
-				AfterEach(func() {
-					err = os.Setenv("GOVERSION", oldGOVERSION)
-					Expect(err).To(BeNil())
+					DeferCleanup(func() {
+						err = os.Setenv("GOVERSION", oldGOVERSION)
+						Expect(err).To(BeNil())
+					})
 				})
 
 				It("sets the go version from GOVERSION", func() {
@@ -395,11 +390,10 @@ var _ = Describe("Supply", func() {
 					err = os.Setenv("GOVERSION", "latest")
 					Expect(err).To(BeNil())
 					vendorTool = "go_nativevendoring"
-				})
-
-				AfterEach(func() {
-					err = os.Setenv("GOVERSION", oldGOVERSION)
-					Expect(err).To(BeNil())
+					DeferCleanup(func() {
+						err = os.Setenv("GOVERSION", oldGOVERSION)
+						Expect(err).To(BeNil())
+					})
 				})
 
 				It("sets the go version from GOVERSION", func() {
