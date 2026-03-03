@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"slices"
@@ -296,13 +295,13 @@ func (gs *Supplier) isGoPath() (bool, error) {
 		return false, nil
 	}
 
-	files, err := ioutil.ReadDir(filepath.Join(gs.Stager.BuildDir(), "src"))
+	files, err := os.ReadDir(filepath.Join(gs.Stager.BuildDir(), "src"))
 	if err != nil {
 		return false, err
 	}
 
 	for _, file := range files {
-		if file.Mode().IsDir() {
+		if file.IsDir() {
 			err = filepath.Walk(filepath.Join(srcDir, file.Name()), isGoFile)
 			if err != nil {
 				if err.Error() == "found Go file" {

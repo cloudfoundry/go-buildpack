@@ -2,7 +2,6 @@ package supply_test
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -37,15 +36,15 @@ var _ = Describe("Supply", func() {
 	)
 
 	BeforeEach(func() {
-		bpDir, err = ioutil.TempDir("", "go-buildpack.bpDir.")
+		bpDir, err = os.MkdirTemp("", "go-buildpack.bpDir.")
 		Expect(err).To(BeNil())
-		Expect(ioutil.WriteFile(filepath.Join(bpDir, "manifest.yml"), []byte("{}"), 0644)).To(Succeed())
-		Expect(ioutil.WriteFile(filepath.Join(bpDir, "VERSION"), []byte("1.2.3"), 0644)).To(Succeed())
+		Expect(os.WriteFile(filepath.Join(bpDir, "manifest.yml"), []byte("{}"), 0644)).To(Succeed())
+		Expect(os.WriteFile(filepath.Join(bpDir, "VERSION"), []byte("1.2.3"), 0644)).To(Succeed())
 
-		buildDir, err = ioutil.TempDir("", "go-buildpack.build.")
+		buildDir, err = os.MkdirTemp("", "go-buildpack.build.")
 		Expect(err).To(BeNil())
 
-		depsDir, err = ioutil.TempDir("", "go-buildpack.deps.")
+		depsDir, err = os.MkdirTemp("", "go-buildpack.deps.")
 		Expect(err).To(BeNil())
 
 		depsIdx = "04"
@@ -99,7 +98,7 @@ var _ = Describe("Supply", func() {
 				Expect(err).To(BeNil())
 
 				godepsJson = filepath.Join(buildDir, "Godeps", "Godeps.json")
-				err = ioutil.WriteFile(godepsJson, []byte(godepsJsonContents), 0644)
+				err = os.WriteFile(godepsJson, []byte(godepsJsonContents), 0644)
 				Expect(err).To(BeNil())
 			})
 
@@ -190,7 +189,7 @@ var _ = Describe("Supply", func() {
 
 		Context("there is a go.mod file", func() {
 			BeforeEach(func() {
-				Expect(ioutil.WriteFile(filepath.Join(buildDir, "go.mod"), []byte("xxx"), 0666)).To(Succeed())
+				Expect(os.WriteFile(filepath.Join(buildDir, "go.mod"), []byte("xxx"), 0666)).To(Succeed())
 			})
 
 			AfterEach(func() {
@@ -213,7 +212,7 @@ var _ = Describe("Supply", func() {
 
 		Context("there is a .godir file", func() {
 			BeforeEach(func() {
-				err = ioutil.WriteFile(filepath.Join(buildDir, ".godir"), []byte("xxx"), 0644)
+				err = os.WriteFile(filepath.Join(buildDir, ".godir"), []byte("xxx"), 0644)
 			})
 
 			It("logs that .godir is deprecated and returns an error", func() {
@@ -227,7 +226,7 @@ var _ = Describe("Supply", func() {
 
 		Context("there is a glide.yaml file", func() {
 			BeforeEach(func() {
-				err = ioutil.WriteFile(filepath.Join(buildDir, "glide.yaml"), []byte("xxx"), 0644)
+				err = os.WriteFile(filepath.Join(buildDir, "glide.yaml"), []byte("xxx"), 0644)
 				Expect(err).To(BeNil())
 			})
 
@@ -244,13 +243,13 @@ var _ = Describe("Supply", func() {
 				err = os.MkdirAll(filepath.Join(buildDir, "src", "package"), 0755)
 				Expect(err).To(BeNil())
 
-				err = ioutil.WriteFile(filepath.Join(buildDir, "src", "package", "thing.go"), []byte("xxx"), 0644)
+				err = os.WriteFile(filepath.Join(buildDir, "src", "package", "thing.go"), []byte("xxx"), 0644)
 				Expect(err).To(BeNil())
 			})
 		})
 		Context("there is a Gopkg.toml", func() {
 			BeforeEach(func() {
-				err = ioutil.WriteFile(filepath.Join(buildDir, "Gopkg.toml"), []byte("xxx"), 0644)
+				err = os.WriteFile(filepath.Join(buildDir, "Gopkg.toml"), []byte("xxx"), 0644)
 				Expect(err).To(BeNil())
 			})
 
@@ -432,11 +431,11 @@ var _ = Describe("Supply", func() {
 			err = gs.InstallGo()
 			Expect(err).To(BeNil())
 
-			contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "GOROOT"))
+			contents, err := os.ReadFile(filepath.Join(depsDir, depsIdx, "env", "GOROOT"))
 			Expect(err).To(BeNil())
 			Expect(string(contents)).To(Equal(filepath.Join(goInstallDir)))
 
-			contents, err = ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "env", "GO111MODULE"))
+			contents, err = os.ReadFile(filepath.Join(depsDir, depsIdx, "env", "GO111MODULE"))
 			Expect(err).To(BeNil())
 			Expect(string(contents)).To(Equal("auto"))
 		})
@@ -462,7 +461,7 @@ var _ = Describe("Supply", func() {
 			err = gs.WriteGoRootToProfileD()
 			Expect(err).To(BeNil())
 
-			contents, err := ioutil.ReadFile(filepath.Join(depsDir, depsIdx, "profile.d", "goroot.sh"))
+			contents, err := os.ReadFile(filepath.Join(depsDir, depsIdx, "profile.d", "goroot.sh"))
 			Expect(err).To(BeNil())
 
 			Expect(string(contents)).To(ContainSubstring("export GOROOT=$DEPS_DIR/04/go3.4.5"))

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -72,10 +71,10 @@ func CopyBrats(version string) *cutlass.App {
 		version = dep.Version
 	}
 
-	data, err := ioutil.ReadFile(filepath.Join(dir, "Godeps", "Godeps.json"))
+	data, err := os.ReadFile(filepath.Join(dir, "Godeps", "Godeps.json"))
 	Expect(err).ToNot(HaveOccurred())
 	data = bytes.Replace(data, []byte("<%= version %>"), []byte(version), -1)
-	Expect(ioutil.WriteFile(filepath.Join(dir, "Godeps", "Godeps.json"), data, 0644)).To(Succeed())
+	Expect(os.WriteFile(filepath.Join(dir, "Godeps", "Godeps.json"), data, 0644)).To(Succeed())
 
 	return cutlass.New(dir)
 }

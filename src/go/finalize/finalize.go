@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -220,7 +219,7 @@ func (gf *Finalizer) SetupGoPath() error {
 	if goPathInImage {
 		goPath = gf.Stager.BuildDir()
 	} else {
-		tmpDir, err := ioutil.TempDir("", "gobuildpack.gopath")
+		tmpDir, err := os.MkdirTemp("", "gobuildpack.gopath")
 		if err != nil {
 			return err
 		}
@@ -246,7 +245,7 @@ func (gf *Finalizer) SetupGoPath() error {
 	}
 
 	if goPathInImage {
-		files, err := ioutil.ReadDir(gf.Stager.BuildDir())
+		files, err := os.ReadDir(gf.Stager.BuildDir())
 		if err != nil {
 			return err
 		}
@@ -304,7 +303,7 @@ func (gf *Finalizer) RunDepEnsure() error {
 
 	if vendorDirExists {
 		numSubDirs := 0
-		files, err := ioutil.ReadDir(filepath.Join(gf.mainPackagePath(), "vendor"))
+		files, err := os.ReadDir(filepath.Join(gf.mainPackagePath(), "vendor"))
 		if err != nil {
 			return err
 		}
@@ -345,7 +344,7 @@ func (gf *Finalizer) RunGlideInstall() error {
 
 	if vendorDirExists {
 		numSubDirs := 0
-		files, err := ioutil.ReadDir(filepath.Join(gf.mainPackagePath(), "vendor"))
+		files, err := os.ReadDir(filepath.Join(gf.mainPackagePath(), "vendor"))
 		if err != nil {
 			return err
 		}
@@ -477,7 +476,7 @@ func (gf *Finalizer) CreateStartupEnvironment(tempDir string) error {
 		mainPkgName = filepath.Base(gf.PackageList[0])
 	}
 
-	err := ioutil.WriteFile(filepath.Join(tempDir, "buildpack-release-step.yml"), []byte(data.ReleaseYAML(mainPkgName)), 0644)
+	err := os.WriteFile(filepath.Join(tempDir, "buildpack-release-step.yml"), []byte(data.ReleaseYAML(mainPkgName)), 0644)
 	if err != nil {
 		gf.Log.Error("Unable to write release yml: %s", err)
 		return err

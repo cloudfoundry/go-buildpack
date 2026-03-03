@@ -3,7 +3,6 @@ package finalize_test
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -43,14 +42,14 @@ var _ = Describe("Finalize", func() {
 	)
 
 	BeforeEach(func() {
-		depsDir, err = ioutil.TempDir("", "go-buildpack.build.")
+		depsDir, err = os.MkdirTemp("", "go-buildpack.build.")
 		Expect(err).To(BeNil())
 
 		depsIdx = "06"
 		err = os.MkdirAll(filepath.Join(depsDir, depsIdx), 0755)
 		Expect(err).To(BeNil())
 
-		buildDir, err = ioutil.TempDir("", "go-buildpack.build.")
+		buildDir, err = os.MkdirTemp("", "go-buildpack.build.")
 		Expect(err).To(BeNil())
 
 		buffer = new(bytes.Buffer)
@@ -90,7 +89,7 @@ var _ = Describe("Finalize", func() {
 	Describe("NewFinalizer", func() {
 		Context("the vendor tool is godep", func() {
 			BeforeEach(func() {
-				ioutil.WriteFile(filepath.Join(depsDir, depsIdx, "config.yml"), []byte(`name: "go"
+				os.WriteFile(filepath.Join(depsDir, depsIdx, "config.yml"), []byte(`name: "go"
 config:
   GoVersion: 1.4.2
   VendorTool: godep
@@ -109,7 +108,7 @@ config:
 		})
 		Context("the vendor tool is glide", func() {
 			BeforeEach(func() {
-				ioutil.WriteFile(filepath.Join(depsDir, depsIdx, "config.yml"), []byte(`name: "go"
+				os.WriteFile(filepath.Join(depsDir, depsIdx, "config.yml"), []byte(`name: "go"
 config:
   GoVersion: 1.2.4
   VendorTool: glide
@@ -126,7 +125,7 @@ config:
 		})
 		Context("the vendor tool is dep", func() {
 			BeforeEach(func() {
-				ioutil.WriteFile(filepath.Join(depsDir, depsIdx, "config.yml"), []byte(`name: "go"
+				os.WriteFile(filepath.Join(depsDir, depsIdx, "config.yml"), []byte(`name: "go"
 config:
   GoVersion: 1.9.0
   VendorTool: dep
@@ -256,19 +255,19 @@ config:
 			oldGoBin = os.Getenv("GOBIN")
 			oldGoSetupGopathInImage = os.Getenv("GO_SETUP_GOPATH_IN_IMAGE")
 
-			err := ioutil.WriteFile(filepath.Join(buildDir, "main.go"), []byte("xx"), 0644)
+			err := os.WriteFile(filepath.Join(buildDir, "main.go"), []byte("xx"), 0644)
 			Expect(err).To(BeNil())
 
 			err = os.MkdirAll(filepath.Join(buildDir, "vendor"), 0755)
 			Expect(err).To(BeNil())
 
-			err = ioutil.WriteFile(filepath.Join(buildDir, "vendor", "lib.go"), []byte("xx"), 0644)
+			err = os.WriteFile(filepath.Join(buildDir, "vendor", "lib.go"), []byte("xx"), 0644)
 			Expect(err).To(BeNil())
 
-			err = ioutil.WriteFile(filepath.Join(buildDir, "Procfile"), []byte("xx"), 0644)
+			err = os.WriteFile(filepath.Join(buildDir, "Procfile"), []byte("xx"), 0644)
 			Expect(err).To(BeNil())
 
-			err = ioutil.WriteFile(filepath.Join(buildDir, ".profile"), []byte("xx"), 0644)
+			err = os.WriteFile(filepath.Join(buildDir, ".profile"), []byte("xx"), 0644)
 			Expect(err).To(BeNil())
 
 			err = os.MkdirAll(filepath.Join(buildDir, ".cloudfoundry"), 0755)
@@ -277,7 +276,7 @@ config:
 			err = os.MkdirAll(filepath.Join(buildDir, ".profile.d"), 0755)
 			Expect(err).To(BeNil())
 
-			err = ioutil.WriteFile(filepath.Join(buildDir, ".profile.d", "filename.sh"), []byte("xx"), 0644)
+			err = os.WriteFile(filepath.Join(buildDir, ".profile.d", "filename.sh"), []byte("xx"), 0644)
 			Expect(err).To(BeNil())
 		})
 
@@ -473,7 +472,7 @@ config:
 
 		BeforeEach(func() {
 			mainPackageName = "a/package/name"
-			goPath, err = ioutil.TempDir("", "go-buildpack.package")
+			goPath, err = os.MkdirTemp("", "go-buildpack.package")
 			Expect(err).To(BeNil())
 
 			mainPackagePath = filepath.Join(goPath, "src", mainPackageName)
@@ -515,7 +514,7 @@ config:
 
 		BeforeEach(func() {
 			mainPackageName = "a/package/name"
-			goPath, err = ioutil.TempDir("", "go-buildpack.package")
+			goPath, err = os.MkdirTemp("", "go-buildpack.package")
 			Expect(err).To(BeNil())
 
 			mainPackagePath = filepath.Join(goPath, "src", mainPackageName)
@@ -641,7 +640,7 @@ config:
 
 		BeforeEach(func() {
 			mainPackageName = "a/package/name"
-			goPath, err = ioutil.TempDir("", "go-buildpack.package")
+			goPath, err = os.MkdirTemp("", "go-buildpack.package")
 			Expect(err).To(BeNil())
 
 			mainPackagePath = filepath.Join(goPath, "src", mainPackageName)
@@ -984,7 +983,7 @@ config:
 			packageList = []string{"first", "second"}
 			buildFlags = []string{"-a=1", "-b=2"}
 
-			goPath, err = ioutil.TempDir("", "go-buildpack.gopath")
+			goPath, err = os.MkdirTemp("", "go-buildpack.gopath")
 			Expect(err).To(BeNil())
 
 			mainPackagePath = filepath.Join(goPath, "src", "first")
@@ -1102,7 +1101,7 @@ config:
 			err = os.MkdirAll(goDir, 0755)
 			Expect(err).To(BeNil())
 
-			tempDir, err = ioutil.TempDir("", "gobuildpack.releaseyml")
+			tempDir, err = os.MkdirTemp("", "gobuildpack.releaseyml")
 			Expect(err).To(BeNil())
 		})
 
@@ -1110,7 +1109,7 @@ config:
 			err = gf.CreateStartupEnvironment(tempDir)
 			Expect(err).To(BeNil())
 
-			contents, err := ioutil.ReadFile(filepath.Join(tempDir, "buildpack-release-step.yml"))
+			contents, err := os.ReadFile(filepath.Join(tempDir, "buildpack-release-step.yml"))
 			Expect(err).To(BeNil())
 
 			yaml := `---
@@ -1124,7 +1123,7 @@ default_process_types:
 			err = gf.CreateStartupEnvironment(tempDir)
 			Expect(err).To(BeNil())
 
-			contents, err := ioutil.ReadFile(filepath.Join(gf.Stager.DepDir(), "profile.d", "go.sh"))
+			contents, err := os.ReadFile(filepath.Join(gf.Stager.DepDir(), "profile.d", "go.sh"))
 			Expect(err).To(BeNil())
 
 			Expect(string(contents)).To(Equal("PATH=$PATH:$HOME/bin\n"))
@@ -1135,10 +1134,10 @@ default_process_types:
 				err = os.MkdirAll(filepath.Join(depsDir, "06", "go3.4.5"), 0755)
 				Expect(err).To(BeNil())
 
-				err = ioutil.WriteFile(filepath.Join(depsDir, "06", "go3.4.5", "thing.txt"), []byte("abc"), 0644)
+				err = os.WriteFile(filepath.Join(depsDir, "06", "go3.4.5", "thing.txt"), []byte("abc"), 0644)
 				Expect(err).To(BeNil())
 
-				err = ioutil.WriteFile(filepath.Join(depsDir, "06", "config.yml"), []byte("some yaml"), 0644)
+				err = os.WriteFile(filepath.Join(depsDir, "06", "config.yml"), []byte("some yaml"), 0644)
 				Expect(err).To(BeNil())
 			})
 
@@ -1148,7 +1147,7 @@ default_process_types:
 
 				Expect(filepath.Join(depsDir, "06", "go3.4.5")).NotTo(BeADirectory())
 
-				content, err := ioutil.ReadFile(filepath.Join(filepath.Join(depsDir, "06"), "config.yml"))
+				content, err := os.ReadFile(filepath.Join(filepath.Join(depsDir, "06"), "config.yml"))
 				Expect(err).To(BeNil())
 				Expect(string(content)).To(Equal("some yaml"))
 			})
@@ -1214,7 +1213,7 @@ default_process_types:
 				err = gf.CreateStartupEnvironment(tempDir)
 				Expect(err).To(BeNil())
 
-				contents, err := ioutil.ReadFile(filepath.Join(gf.Stager.DepDir(), "profile.d", "zzgopath.sh"))
+				contents, err := os.ReadFile(filepath.Join(gf.Stager.DepDir(), "profile.d", "zzgopath.sh"))
 				Expect(err).To(BeNil())
 
 				Expect(string(contents)).To(ContainSubstring("export GOPATH=$HOME"))
