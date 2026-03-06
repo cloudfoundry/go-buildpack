@@ -182,7 +182,7 @@ func (gf *Finalizer) SetMainPackageName() error {
 	case "go_nativevendoring":
 		gf.MainPackageName = os.Getenv("GOPACKAGENAME")
 		if gf.MainPackageName == "" {
-			gf.Log.Error(warnings.NoGOPACKAGENAMEerror())
+			gf.Log.Error("%s", warnings.NoGOPACKAGENAMEerror())
 			return errors.New("GOPACKAGENAME unset")
 		}
 	case "gomod":
@@ -386,7 +386,7 @@ func (gf *Finalizer) HandleVendorExperiment() error {
 
 	go16 := ver.Major() == 1 && ver.Minor() == 6
 	if !go16 {
-		gf.Log.Error(warnings.UnsupportedGO15VENDOREXPERIMENTerror())
+		gf.Log.Error("%s", warnings.UnsupportedGO15VENDOREXPERIMENTerror())
 		return errors.New("unsupported GO15VENDOREXPERIMENT")
 	}
 
@@ -413,7 +413,7 @@ func (gf *Finalizer) SetInstallPackages() error {
 		useVendorDir := gf.VendorExperiment && !gf.Godep.WorkspaceExists
 
 		if gf.Godep.WorkspaceExists && vendorDirExists {
-			gf.Log.Warning(warnings.GodepsWorkspaceWarning())
+			gf.Log.Warning("%s", warnings.GodepsWorkspaceWarning())
 		}
 
 		if useVendorDir && !vendorDirExists {
@@ -421,7 +421,7 @@ func (gf *Finalizer) SetInstallPackages() error {
 		}
 
 		if len(packages) != 0 {
-			gf.Log.Warning(warnings.PackageSpecOverride(packages))
+			gf.Log.Warning("%s", warnings.PackageSpecOverride(packages))
 		} else if len(gf.Godep.Packages) != 0 {
 			packages = gf.Godep.Packages
 		} else {
@@ -434,7 +434,7 @@ func (gf *Finalizer) SetInstallPackages() error {
 		}
 	} else {
 		if !gf.VendorExperiment && gf.VendorTool == "go_nativevendoring" {
-			gf.Log.Error(warnings.MustUseVendorError())
+			gf.Log.Error("%s", warnings.MustUseVendorError())
 			return errors.New("must use vendor/ for go native vendoring")
 		}
 
@@ -461,7 +461,7 @@ func (gf *Finalizer) CompileApp() error {
 		cmd = "godep"
 	}
 
-	gf.Log.BeginStep(fmt.Sprintf("Running: %s %s", cmd, strings.Join(args, " ")))
+	gf.Log.BeginStep("Running: %s %s", cmd, strings.Join(args, " "))
 
 	err := gf.Command.Execute(gf.mainPackagePath(), os.Stdout, os.Stderr, cmd, args...)
 	if err != nil {

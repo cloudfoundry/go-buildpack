@@ -89,7 +89,7 @@ func (gs *Supplier) SelectVendorTool() error {
 		return err
 	}
 	if isGodir {
-		gs.Log.Error(warnings.GodirError())
+		gs.Log.Error("%s", warnings.GodirError())
 		return errors.New(".godir deprecated")
 	}
 
@@ -178,7 +178,7 @@ func (gs *Supplier) SelectGoVersion() error {
 
 	if gs.VendorTool == "godep" {
 		if goVersion != "" {
-			gs.Log.Warning(warnings.GoVersionOverride(goVersion))
+			gs.Log.Warning("%s", warnings.GoVersionOverride(goVersion))
 		} else {
 			goVersion = gs.Godep.GoVersion
 		}

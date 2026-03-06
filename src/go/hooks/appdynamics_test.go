@@ -8,7 +8,7 @@ import (
 	"github.com/cloudfoundry/go-buildpack/src/go/hooks"
 	"github.com/cloudfoundry/libbuildpack"
 	"github.com/cloudfoundry/libbuildpack/ansicleaner"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
@@ -40,6 +40,7 @@ var _ = Describe("Appdynamics", func() {
 	BeforeEach(func() {
 		buildDir, err = os.MkdirTemp("", "go-buildpack.build.")
 		Expect(err).To(BeNil())
+		DeferCleanup(os.RemoveAll, buildDir)
 
 		depsDir, err = os.MkdirTemp("", "go-buildpack.deps.")
 		Expect(err).To(BeNil())
@@ -56,10 +57,6 @@ var _ = Describe("Appdynamics", func() {
 			Log:     logger,
 			Command: command,
 		}
-	})
-
-	AfterEach(func() {
-		Expect(os.RemoveAll(buildDir)).To(Succeed())
 	})
 
 	Context("GenerateAppdynamicsScript", func() {
@@ -112,10 +109,7 @@ export APPD_KEY_2=APPD_VAL_2`
 		BeforeEach(func() {
 			Expect(os.Getenv("VCAP_SERVICES")).To(Equal(""))
 			os.Setenv("VCAP_SERVICES", `{"service": [{"credentials": {"login": "name"}, "name": "443"}]}`)
-		})
-
-		AfterEach(func() {
-			os.Unsetenv("VCAP_SERVICES")
+			DeferCleanup(os.Unsetenv, "VCAP_SERVICES")
 		})
 
 		It("VCAP_SERVICES has no appdynamics", func() {
@@ -132,10 +126,7 @@ export APPD_KEY_2=APPD_VAL_2`
 			os.Setenv("VCAP_APPLICATION", `{"application_id": "applicationId", "name": "test",  "application_name": "test"}`)
 			os.Setenv("APPD_TIER_NAME", "tier")
 			os.Setenv("APPD_NODE_NAME", "node")
-		})
-
-		AfterEach(func() {
-			os.Unsetenv("VCAP_SERVICES")
+			DeferCleanup(os.Unsetenv, "VCAP_SERVICES")
 		})
 
 		It("VCAP_SERVICES has appdynamics", func() {

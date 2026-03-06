@@ -13,7 +13,7 @@ import (
 	"github.com/cloudfoundry/libbuildpack/ansicleaner"
 
 	"github.com/golang/mock/gomock"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
@@ -51,6 +51,7 @@ var _ = Describe("Finalize", func() {
 
 		buildDir, err = os.MkdirTemp("", "go-buildpack.build.")
 		Expect(err).To(BeNil())
+		DeferCleanup(os.RemoveAll, buildDir)
 
 		buffer = new(bytes.Buffer)
 
@@ -77,13 +78,6 @@ var _ = Describe("Finalize", func() {
 			Godep:            godepConfig,
 			VendorExperiment: vendorExperiment,
 		}
-	})
-
-	AfterEach(func() {
-		mockCtrl.Finish()
-
-		err = os.RemoveAll(buildDir)
-		Expect(err).To(BeNil())
 	})
 
 	Describe("NewFinalizer", func() {
@@ -192,11 +186,10 @@ config:
 					oldGOPACKAGENAME = os.Getenv("GOPACKAGENAME")
 					err = os.Setenv("GOPACKAGENAME", "my-go-app")
 					Expect(err).To(BeNil())
-				})
-
-				AfterEach(func() {
-					err = os.Setenv("GOPACKAGENAME", oldGOPACKAGENAME)
-					Expect(err).To(BeNil())
+					DeferCleanup(func() {
+						err = os.Setenv("GOPACKAGENAME", oldGOPACKAGENAME)
+						Expect(err).To(BeNil())
+					})
 				})
 
 				It("returns the package name from GOPACKAGENAME", func() {
@@ -278,21 +271,21 @@ config:
 
 			err = os.WriteFile(filepath.Join(buildDir, ".profile.d", "filename.sh"), []byte("xx"), 0644)
 			Expect(err).To(BeNil())
+
+			DeferCleanup(func() {
+				err = os.Setenv("GOPATH", oldGoPath)
+				Expect(err).To(BeNil())
+
+				err = os.Setenv("GOBIN", oldGoBin)
+				Expect(err).To(BeNil())
+
+				err = os.Setenv("GO_SETUP_GOPATH_IN_IMAGE", oldGoSetupGopathInImage)
+				Expect(err).To(BeNil())
+			})
 		})
 
 		JustBeforeEach(func() {
 			gf.VendorTool = ""
-		})
-
-		AfterEach(func() {
-			err = os.Setenv("GOPATH", oldGoPath)
-			Expect(err).To(BeNil())
-
-			err = os.Setenv("GOBIN", oldGoBin)
-			Expect(err).To(BeNil())
-
-			err = os.Setenv("GO_SETUP_GOPATH_IN_IMAGE", oldGoSetupGopathInImage)
-			Expect(err).To(BeNil())
 		})
 
 		It("creates <buildDir>/bin", func() {
@@ -429,14 +422,13 @@ config:
 				err = os.Setenv("GO_LINKER_VALUE", "some_string")
 				Expect(err).To(BeNil())
 
-			})
+				DeferCleanup(func() {
+					err = os.Setenv("GO_LINKER_SYMBOL", oldGoLinkerSymbol)
+					Expect(err).To(BeNil())
 
-			AfterEach(func() {
-				err = os.Setenv("GO_LINKER_SYMBOL", oldGoLinkerSymbol)
-				Expect(err).To(BeNil())
-
-				err = os.Setenv("GO_LINKER_VALUE", oldGoLinkerValue)
-				Expect(err).To(BeNil())
+					err = os.Setenv("GO_LINKER_VALUE", oldGoLinkerValue)
+					Expect(err).To(BeNil())
+				})
 			})
 
 			It("contains the ldflags argument", func() {
@@ -474,17 +466,13 @@ config:
 			mainPackageName = "a/package/name"
 			goPath, err = os.MkdirTemp("", "go-buildpack.package")
 			Expect(err).To(BeNil())
+			DeferCleanup(os.RemoveAll, goPath)
 
 			mainPackagePath = filepath.Join(goPath, "src", mainPackageName)
 			err = os.MkdirAll(mainPackagePath, 0755)
 			Expect(err).To(BeNil())
 
 			vendorTool = "glide"
-		})
-
-		AfterEach(func() {
-			err = os.RemoveAll(goPath)
-			Expect(err).To(BeNil())
 		})
 
 		Context("packages are not already vendored", func() {
@@ -516,17 +504,13 @@ config:
 			mainPackageName = "a/package/name"
 			goPath, err = os.MkdirTemp("", "go-buildpack.package")
 			Expect(err).To(BeNil())
+			DeferCleanup(os.RemoveAll, goPath)
 
 			mainPackagePath = filepath.Join(goPath, "src", mainPackageName)
 			err = os.MkdirAll(mainPackagePath, 0755)
 			Expect(err).To(BeNil())
 
 			vendorTool = "dep"
-		})
-
-		AfterEach(func() {
-			err = os.RemoveAll(goPath)
-			Expect(err).To(BeNil())
 		})
 
 		Context("packages are not already vendored", func() {
@@ -566,11 +550,10 @@ config:
 				oldGO15VENDOREXPERIMENT = os.Getenv("GO15VENDOREXPERIMENT")
 				err = os.Setenv("GO15VENDOREXPERIMENT", newGO15VENDOREXPERIMENT)
 				Expect(err).To(BeNil())
-			})
-
-			AfterEach(func() {
-				err = os.Setenv("GO15VENDOREXPERIMENT", oldGO15VENDOREXPERIMENT)
-				Expect(err).To(BeNil())
+				DeferCleanup(func() {
+					err = os.Setenv("GO15VENDOREXPERIMENT", oldGO15VENDOREXPERIMENT)
+					Expect(err).To(BeNil())
+				})
 			})
 
 			Context("GO15VENDOREXPERIMENT is 0", func() {
@@ -609,11 +592,10 @@ config:
 					oldGO15VENDOREXPERIMENT = os.Getenv("GO15VENDOREXPERIMENT")
 					err = os.Setenv("GO15VENDOREXPERIMENT", "foo")
 					Expect(err).To(BeNil())
-				})
-
-				AfterEach(func() {
-					err = os.Setenv("GO15VENDOREXPERIMENT", oldGO15VENDOREXPERIMENT)
-					Expect(err).To(BeNil())
+					DeferCleanup(func() {
+						err = os.Setenv("GO15VENDOREXPERIMENT", oldGO15VENDOREXPERIMENT)
+						Expect(err).To(BeNil())
+					})
 				})
 
 				It("returns an error and logs a message", func() {
@@ -642,14 +624,10 @@ config:
 			mainPackageName = "a/package/name"
 			goPath, err = os.MkdirTemp("", "go-buildpack.package")
 			Expect(err).To(BeNil())
+			DeferCleanup(os.RemoveAll, goPath)
 
 			mainPackagePath = filepath.Join(goPath, "src", mainPackageName)
 			err = os.MkdirAll(mainPackagePath, 0755)
-			Expect(err).To(BeNil())
-		})
-
-		AfterEach(func() {
-			err = os.RemoveAll(goPath)
 			Expect(err).To(BeNil())
 		})
 
@@ -666,11 +644,10 @@ config:
 					oldGoInstallPackageSpec = os.Getenv("GO_INSTALL_PACKAGE_SPEC")
 					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", "a-package-name another-package")
 					Expect(err).To(BeNil())
-				})
-
-				AfterEach(func() {
-					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", oldGoInstallPackageSpec)
-					Expect(err).To(BeNil())
+					DeferCleanup(func() {
+						err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", oldGoInstallPackageSpec)
+						Expect(err).To(BeNil())
+					})
 				})
 
 				It("sets the packages from the env var", func() {
@@ -803,11 +780,10 @@ config:
 					oldGoInstallPackageSpec = os.Getenv("GO_INSTALL_PACKAGE_SPEC")
 					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", "a-package-name another-package")
 					Expect(err).To(BeNil())
-				})
-
-				AfterEach(func() {
-					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", oldGoInstallPackageSpec)
-					Expect(err).To(BeNil())
+					DeferCleanup(func() {
+						err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", oldGoInstallPackageSpec)
+						Expect(err).To(BeNil())
+					})
 				})
 
 				Context("packages are vendored", func() {
@@ -873,11 +849,10 @@ config:
 					oldGoInstallPackageSpec = os.Getenv("GO_INSTALL_PACKAGE_SPEC")
 					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", "a-package-name another-package")
 					Expect(err).To(BeNil())
-				})
-
-				AfterEach(func() {
-					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", oldGoInstallPackageSpec)
-					Expect(err).To(BeNil())
+					DeferCleanup(func() {
+						err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", oldGoInstallPackageSpec)
+						Expect(err).To(BeNil())
+					})
 				})
 
 				Context("packages are vendored", func() {
@@ -929,11 +904,10 @@ config:
 					oldGoInstallPackageSpec = os.Getenv("GO_INSTALL_PACKAGE_SPEC")
 					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", "a-package-name another-package")
 					Expect(err).To(BeNil())
-				})
-
-				AfterEach(func() {
-					err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", oldGoInstallPackageSpec)
-					Expect(err).To(BeNil())
+					DeferCleanup(func() {
+						err = os.Setenv("GO_INSTALL_PACKAGE_SPEC", oldGoInstallPackageSpec)
+						Expect(err).To(BeNil())
+					})
 				})
 
 				Context("packages are not vendored", func() {
@@ -989,14 +963,14 @@ config:
 			mainPackagePath = filepath.Join(goPath, "src", "first")
 			err = os.MkdirAll(mainPackagePath, 0755)
 			Expect(err).To(BeNil())
-		})
 
-		AfterEach(func() {
-			packageList = []string{}
-			buildFlags = []string{}
+			DeferCleanup(func() {
+				packageList = []string{}
+				buildFlags = []string{}
 
-			err = os.RemoveAll(goPath)
-			Expect(err).To(BeNil())
+				err = os.RemoveAll(goPath)
+				Expect(err).To(BeNil())
+			})
 		})
 
 		Context("the tool is godep", func() {
@@ -1160,11 +1134,10 @@ default_process_types:
 				oldGoInstallToolsInImage = os.Getenv("GO_INSTALL_TOOLS_IN_IMAGE")
 				err = os.Setenv("GO_INSTALL_TOOLS_IN_IMAGE", "true")
 				Expect(err).To(BeNil())
-			})
-
-			AfterEach(func() {
-				err = os.Setenv("GO_INSTALL_TOOLS_IN_IMAGE", oldGoInstallToolsInImage)
-				Expect(err).To(BeNil())
+				DeferCleanup(func() {
+					err = os.Setenv("GO_INSTALL_TOOLS_IN_IMAGE", oldGoInstallToolsInImage)
+					Expect(err).To(BeNil())
+				})
 			})
 
 			It("does not remove the go toolchain", func() {
@@ -1194,11 +1167,11 @@ default_process_types:
 
 				err = os.MkdirAll(filepath.Join(buildDir, "pkg"), 0755)
 				Expect(err).To(BeNil())
-			})
 
-			AfterEach(func() {
-				err = os.Setenv("GO_SETUP_GOPATH_IN_IMAGE", oldGoSetupGopathInImage)
-				Expect(err).To(BeNil())
+				DeferCleanup(func() {
+					err = os.Setenv("GO_SETUP_GOPATH_IN_IMAGE", oldGoSetupGopathInImage)
+					Expect(err).To(BeNil())
+				})
 			})
 
 			It("cleans up the pkg directory", func() {
@@ -1226,10 +1199,7 @@ default_process_types:
 		var currentVar string
 		BeforeEach(func() {
 			currentVar, _ = os.LookupEnv("GOCACHE")
-		})
-
-		AfterEach(func() {
-			Expect(os.Setenv("GOCACHE", currentVar)).To(Succeed())
+			DeferCleanup(os.Setenv, "GOCACHE", currentVar)
 		})
 
 		It("Sets GOCACHE inside cache directory", func() {
