@@ -48,8 +48,8 @@ dependencies:
   source_sha256: e1cce9379a24e895714a412c7ddd157d2614d9edbe83a84449b6e1840b4f1226
 - name: go
   version: 1.23.12
-  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.23.12_linux_x64_cflinuxfs4_9d534700.tgz
-  sha256: 9d534700f192bb1144d45bfa5aa037c14619f8a8aa065e2a88a9dfc2229f6724
+  uri: https://buildpacks.cloudfoundry.org/dependencies/go/go_1.23.12_linux_x64_cflinuxfs4_65b8edff.tgz
+  sha256: 65b8edff3f20dee5dded4d873c3285844ae382f9b8ea2329958738c73e8bc9d8
   cf_stacks:
   - cflinuxfs4
   source: https://dl.google.com/go/go1.23.12.src.tar.gz
