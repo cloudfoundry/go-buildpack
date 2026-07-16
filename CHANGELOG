@@ -1,3 +1,17 @@
+v1.11.0 Jul 16, 2026
+======================
+
+* Remove Go 1.23 (EOL) for all stacks (cflinuxfs3, cflinuxfs4, cflinuxfs5)
+
+* Change default Go version from 1.23.x to 1.25.x
+
+* Add go 1.25.12, remove go 1.25.11
+  for stack(s) cflinuxfs4, cflinuxfs5
+
+* Add go 1.26.5, remove go 1.26.4
+  for stack(s) cflinuxfs4, cflinuxfs5
+
+
 v1.10.42 Jan 21, 2026
 ======================
 
