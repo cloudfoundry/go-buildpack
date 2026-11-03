@@ -34,7 +34,7 @@ func init() {
 	flag.BoolVar(&settings.Serial, "serial", false, "run serial buildpack tests")
 	flag.StringVar(&settings.Platform, "platform", "cf", `switchblade platform to test against ("cf" or "docker")`)
 	flag.StringVar(&settings.GitHubToken, "github-token", "", "use the token to make GitHub API requests")
-	flag.StringVar(&settings.Stack, "stack", "cflinuxfs3", "stack to use as default when pusing apps")
+	flag.StringVar(&settings.Stack, "stack", "cflinuxfs4", "stack to use as default when pusing apps")
 }
 
 func TestIntegration(t *testing.T) {
